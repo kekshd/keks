@@ -1,0 +1,39 @@
+
+
+<div>Omg Du hast Keks gefunden. Hör besser sofort auf Mathe zu studieren, da kann man eh nur verlieren. Schau Dir nur an was es schon aus Dir gemacht hat. Du lernst. Freiwillig! Weißt Du was die Soziologen gerade machen? Genau, Urlaub! Und davor? Kaffeeklatsch mit Kuchen. Und Du lernst. Naja, viel Glück. Du wirst es brauchen.
+
+  <h2>Deine Optionen</h2>
+
+  <ul class="chooser">
+    <li>
+      <%= link_to "Gleich loslegen", main_hitme_path, :class => "button big" %>
+      Für ganz Eilige. Nur Fragengebiet wählen und los geht’s. Kein Login notwendig.
+    </li>
+
+    <li>
+      <%= link_to "Gib mir Optionen", main_hitme_path, :class => "button big" %>
+      Erlaubt Dir einzustellen wie viele Fragen Du möchtest, ob Du Nachfragen wünschst, etc.
+    </li>
+
+    <% if signed_in? %>
+    <li>
+      <%= link_to "Ausloggen", signout_path, :class => "button big" %>
+    </li>
+    <% else %>
+    <li>
+      <p class="left">
+        <%= link_to "Einloggen", signin_path, :class => "button big", :style => "margin-bottom: 5px;"%><br/>
+        <%= link_to "Neuer Account", signup_path, :class => "button big" %>
+      </p>
+      <p class="right">
+        Ohne Account sind Deine Daten nur im aktuellen Browser verfügbar. Wenn Du Dir einen Account erstellst kannst Du die Daten überall mithinnehmen. Außerdem bekommen die Obertutoren statistische Daten, wenn Du den Enrollement-Key eingibst. Damit können sie auf häufige Probleme reagieren.
+      </p>
+    </li>
+    <% end %>
+
+  </ul>
+</div>
+
+
+
+<p>

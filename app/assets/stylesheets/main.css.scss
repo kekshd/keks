@@ -1,0 +1,114 @@
+// Place all the styles related to the main controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+  font-family: 'Cabin', sans-serif;
+  text-rendering: optimizelegibility;
+  margin: 0;
+}
+
+body > div, div.box {
+  margin: 40px;
+  border: 1px solid #888;
+  box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);
+  background: #fff;
+  padding: 20px;
+
+  & + h2 {
+    margin-top: 0;
+  }
+}
+
+header {
+  background: #0063A5;
+}
+
+header + div {
+  margin-top: 0;
+  border-top: 0;
+}
+
+h1 {
+  color: #fff;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-size: 45px;
+  text-shadow: 1px 1px 1px #000;
+  margin: 0px;
+  padding: 10px 60px;
+}
+
+nav {
+  padding: 5px 15px;
+  margin: 0 40px;
+  background: #0090D2;
+  box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);
+  border: 1px solid #004A6B;
+  border-bottom: 0;
+
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  color: #fff;
+  text-shadow: 1px 1px rgba(55, 55, 55, 0.7);
+  font-size: 23px;
+
+
+  a {
+    color: inherit;
+    display: inline-block;
+    padding: 5px;
+  }
+
+  > a {
+    float: right;
+  }
+
+  ul {
+    list-style-type: none;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline-block;
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+h2 {
+  margin: 10px 0;
+}
+
+.chooser {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  li {
+    margin: 5px 0;
+  }
+
+  a.button {
+    width: 120px;
+    margin-right: 5px;
+  }
+}
+
+p {
+  &.left {
+    display: table-cell;
+    padding-right: 5px;
+  }
+
+  &.right {
+    display: table-cell;
+    margin: 0;
+  }
+}

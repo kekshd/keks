@@ -1,4 +1,15 @@
 Keks::Application.routes.draw do
+  root :to => "main#overview"
+
+  get "main/overview"
+  get "main/hitme"
+  get "main/help"
+  get "question/tree"
+
+  match '/signup', to: 'users#new'
+  match '/signin', to: 'session#new'
+  match '/signout', to: 'session#destroy', via: :delete
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
