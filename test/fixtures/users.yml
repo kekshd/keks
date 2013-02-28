@@ -1,7 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  nick: MyString
+user:
+  nick: user
+  mail: b@uni-hd.de
+  study_path: 1
+  admin: false
+  remember_token: s-93RhXapYXfhBSWS4NY2A
+  password_digest: $2a$10$tT3ESriKjqcI5os2DwWZNeAlDS1plSSSlSyX4Gmu26H8jpXMJYbR. # asdf
 
-two:
-  nick: MyString
+admin:
+  nick: admin
+  admin: true
+  password_digest: $2a$10$tT3ESriKjqcI5os2DwWZNeAlDS1plSSSlSyX4Gmu26H8jpXMJYbR. # asdf

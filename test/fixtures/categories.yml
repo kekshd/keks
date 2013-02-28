@@ -1,7 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  text: MyString
+catA:
+  title: CategoryA
+  text: This is CategoryA. It has no parent and thus is a root category.
 
-two:
-  text: MyString
+catB:
+  title: CategoryB
+  text: this is CategoryB. It is a child of AnswA and thus not a root category.

@@ -1,0 +1,13 @@
+<br style="clear: both"/>
+
+<div style="margin-top: 25px;">
+<label onclick="$(this).next().focus();">Antw.-Ident</label>
+<%= content_tag :input, answer.text, :name => "category[answers][][ident]" %>
+
+<label onclick="$(this).next().focus();">Antw.-Text</label>
+<textarea name="category[answers][][text]" style="min-width: 320px; height: 70px"></textarea>
+<span>Das Feld kann TeX. Wenn eine Matrix validiert werden soll,<br/>dann darf es eine und nur eine <tt>\begin{pmatrix} … \end{pmatrix}</tt> enthalten.</span>
+
+<label onclick="$(this).next().click();">Korrekt?</label>
+<input type="checkbox" name="category[answers][][correct]"/>
+</div>

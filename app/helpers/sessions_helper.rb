@@ -1,4 +1,6 @@
-module SessionHelper
+# encoding: utf-8
+
+module SessionsHelper
   def sign_in(user)
     cookies.permanent[:remember_token] = user.remember_token
     self.current_user = user
@@ -39,5 +41,14 @@ module SessionHelper
 
   def store_location
     session[:return_to] = request.url
+  end
+
+
+  def admin?
+    current_user && current_user.admin?
+  end
+
+  def require_admin
+    redirect_to(root_url) unless admin?
   end
 end

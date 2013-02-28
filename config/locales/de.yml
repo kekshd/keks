@@ -1,0 +1,10 @@
+de:
+  activerecord:
+    models:
+      user: Nutzer
+    attributes:
+      user:
+        mail: "E-Mail"
+        password: "Passwort"
+        password_confirmation: "Bestätigung"
+        study_path: "Studiengang"

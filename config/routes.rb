@@ -1,4 +1,11 @@
+# encoding: utf-8
+
 Keks::Application.routes.draw do
+  get "admin/overview"
+
+
+  get "admin/add_links"
+
   root :to => "main#overview"
 
   get "main/overview"
@@ -6,9 +13,16 @@ Keks::Application.routes.draw do
   get "main/help"
   get "question/tree"
 
+  resources :users
+  resources :questions
+  resources :categories
+
+  resources :sessions, only: [:new, :create, :destroy]
+
+
   match '/signup', to: 'users#new'
-  match '/signin', to: 'session#new'
-  match '/signout', to: 'session#destroy', via: :delete
+  match '/signin', to: 'sessions#new'
+  match '/signout', to: 'sessions#destroy', via: :delete
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

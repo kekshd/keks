@@ -1,0 +1,30 @@
+<div>
+  <h2>Alle Kategorien</h2>
+
+  <%=link_to "Neue Kategorie anlegen", new_category_path %>
+
+  <table id="index" class="tablesorter">
+    <thead>
+      <tr><th>Ident</th><th>Title</th><th>Wurzel?</th><th>Antworten, die auf sie zeigen</th><th>Verknüpfte Fragen</th></tr>
+    </thead>
+    <tbody>
+      <% @categories.each do |c| %>
+        <tr>
+          <%=content_tag :td, c.ident %>
+          <%=content_tag :td, c.title %>
+          <%=content_tag :td, c.is_root? %>
+          <td>
+            <% c.answers.each do |a| %>
+              <%=link_to a.ident, a %>
+            <% end %>
+          </td>
+          <td>
+            <% c.questions.each do |q| %>
+              <%=link_to q.ident, q %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

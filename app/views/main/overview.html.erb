@@ -17,7 +17,7 @@
 
     <% if signed_in? %>
     <li>
-      <%= link_to "Ausloggen", signout_path, :class => "button big" %>
+      <%= link_to "Ausloggen", signout_path, :class => "button big", method: :delete %>
     </li>
     <% else %>
     <li>

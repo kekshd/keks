@@ -1,11 +1,24 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+:questCA1
+  text: "This is question CA1. It belongs to Category A. How do you do?"
+  parent: catA (Category)
 
-# This model initially had no columns defined.  If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+:questCA2
+  text: "This is question CA2. It belongs to Category A. How is the weather over there?"
+  parent: catA (Category)
+
+:questCA3
+  text: "This is question CA3. It belongs to Category A. Sprechen Sie Deutsch?"
+  parent: catA (Category)
+
+
+:questAA1
+  text: "This is question AA1. It belongs to Answer A. 1111111111111111"
+  parent: answA (Answer)
+
+:questAA2
+  text: "This is question AA2. It belongs to Answer A. 2222222222222222"
+  parent: answA (Answer)
+
+:questAA3
+  text: "This is question AA3. It belongs to Answer A. 3333333333333333"
+  parent: answA (Answer)

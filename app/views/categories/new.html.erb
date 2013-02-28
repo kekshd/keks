@@ -1,0 +1,28 @@
+
+<div>
+  <h2>Neue Kategorie</h2>
+  <p>Wenn diese Kategorie ein neues Themengebiet sein soll, darf kein Eltern-Element angegeben werden. Ansonsten wähle eine Antwort aus, an die diese Kategorie anschließen soll.</p>
+
+
+  <%= form_for(@category) do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+    <%= f.label :ident %>
+    <%= f.text_field :ident %>
+    <span>Benötigt. Muss eindeutig sein bzgl. aller Kategorien.</span>
+
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+    <span>Benötigt</span>
+
+    <%= f.label :text %>
+    <%= f.text_area :text %>
+    <span>Optional</span>
+
+
+    <%= f.label :answers %>
+    <%= f.collection_select 'answer_ids', Answer.all, :id, :name, { :selected => @category.answer_ids }, {:multiple => true, :name => 'category[answer_ids][]'} %>
+    <span>Mehrere mit STRG+Klick auswählen</span>
+
+    <%= f.submit "Kategorie anlegen", class: "button primary big" %>
+  <% end %>
+</div>

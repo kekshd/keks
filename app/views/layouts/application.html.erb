@@ -3,7 +3,7 @@
 <head>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <link href='http://fonts.googleapis.com/css?family=Cabin:400,400italic,700|Yanone Kaffeesatz' rel='stylesheet' type='text/css'>
-  <title>Keks – Klein, Essbar, Kultig, Süß</title>
+  <title>Keks – <%=yield(:title)%></title>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
@@ -13,15 +13,31 @@
     <nav>
       <ul>
         <li><%=link_to "Startseite", :root %></li>
+
+        <% if signed_in? %>
+          <li><%= link_to("Profil", edit_user_path(current_user)) %></li>
+          <% if current_user.admin? %><li><%= link_to("Admin", admin_overview_path) %></li><% end %>
+          <li><%= link_to("Ausloggen", signout_path, method: :delete) %></li>
+        <% else %>
+          <li><%= link_to("Login", signin_path) %></li>
+        <% end %>
+
         <li><%=link_to "Hilfe", main_help_path %></li>
       </ul>
 
-      <%= signed_in? \
-        ? current_user.nick + " " + link_to("Ausloggen", signout_path) \
-        : link_to("Login", signin_path)
-      %>
+      <%= content_tag :span, "eingeloggt als " + current_user.nick if signed_in? %>
     </nav>
   </header>
+
+  <% if flash.any? %>
+    <div class="flash">
+      <ul>
+        <% flash.each do |key, value| %>
+          <%= content_tag(:li, value, class: "alert alert-#{key}") %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
 <%= yield %>
 

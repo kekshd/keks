@@ -2,6 +2,28 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$dark: #0063A5;
+$light: #0090D2;
+$error: #E42020;
+$success: #37A359;
+
+@mixin break-after {
+  &:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+@mixin border-box {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Cabin', sans-serif;
   text-rendering: optimizelegibility;
@@ -9,7 +31,7 @@ body {
 }
 
 body > div, div.box {
-  margin: 40px;
+  margin: 20px 40px;
   border: 1px solid #888;
   box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);
   background: #fff;
@@ -21,7 +43,7 @@ body > div, div.box {
 }
 
 header {
-  background: #0063A5;
+  background: $dark;
 }
 
 header + div {
@@ -41,7 +63,7 @@ h1 {
 nav {
   padding: 5px 15px;
   margin: 0 40px;
-  background: #0090D2;
+  background: $light;
   box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);
   border: 1px solid #004A6B;
   border-bottom: 0;
@@ -52,13 +74,18 @@ nav {
   font-size: 23px;
 
 
-  a {
+  a, span {
     color: inherit;
     display: inline-block;
     padding: 5px;
+    font-weight: bold;
   }
 
-  > a {
+  > span {
+    font-weight: normal;
+  }
+
+  > span, > a {
     float: right;
   }
 
@@ -76,6 +103,7 @@ nav {
 
 a {
   text-decoration: none;
+  color: #0090D2;
 
   &:hover {
     text-decoration: underline;
@@ -111,4 +139,110 @@ p {
     display: table-cell;
     margin: 0;
   }
+}
+
+form {
+  clear: both;
+  @include break-after;
+  line-height: 30px;
+}
+
+label {
+  width: 100px;
+  font-weight: bold;
+  float: left;
+  clear: left;
+}
+
+.field_with_errors label {
+  color: $error;
+}
+
+input + span, select + span, textarea + span,  .field_with_errors + span {
+  float: left;
+  display: block;
+  margin-left: 8px;
+  color: #777;
+}
+
+input, textarea {
+  @include border-box;
+  float: left;
+  display: block;
+  min-width: 320px;
+  padding: 4px;
+  margin: 4px 0;
+  border: 1px solid #aaa;
+  background: #fff;
+  color: #000;
+
+  &:focus {
+    border-color: $dark !important;
+    box-shadow: 0 0 2px $light;
+  }
+
+  &[type=submit] {
+    clear: both;
+    margin: 8px 0;
+    min-width: 0;
+  }
+}
+
+.field_with_errors input {
+  border-color: #B01E1E;
+}
+
+textarea {
+  min-width: 600px;
+  height: 150px;
+}
+
+select {
+  @include border-box;
+  float: left;
+  min-width: 320px;
+  margin: 4px 0;
+  padding-left: 4px;
+  padding-top: 3px;
+  border: 1px solid #aaa;
+  background: #fff;
+
+  &:focus {
+    border-color: $dark !important;
+    box-shadow: 0 0 2px $light;
+  }
+
+  option {
+    background: #fff;
+    color: #000;
+    line-height: 30px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+  }
+}
+
+.error {
+  ul {
+    margin-top: 0;
+    padding-left: 16px;
+  }
+}
+
+
+.flash {
+  ul {
+    margin: 0;
+  }
+}
+
+.alert-error {
+  color: $error;
+}
+
+.alert-success {
+  color: $success;
+}
+
+table {
+  margin-top: 20px;
 }

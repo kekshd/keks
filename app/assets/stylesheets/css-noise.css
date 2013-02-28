@@ -19,10 +19,10 @@ Instructions:
 	position: relative;
 	z-index: 1;
 	}
-		
+
 .noise:before, .body-noise:before {
 	content: "";
-	position: absolute;
+	position: fixed;
 	z-index: -1;
 	top:0;
 	bottom:0;

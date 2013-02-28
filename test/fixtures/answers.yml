@@ -1,9 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  text: MyString
-  correct: 
-
-two:
-  text: MyString
-  correct: 
+answA:
+  text: This is AnswerA. It has the questions questAA1 to questAA3 and also owns CategoryB.
+  correct: false
