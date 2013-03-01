@@ -251,11 +251,19 @@ th {
   text-align: left;
 }
 
-h2 img {
+img {
   vertical-align: middle;
 }
 
 img.latex-block {
   display: block;
   margin: 5px 0;
+}
+
+.tex {
+  line-height: 19px;
+
+  img {
+    vertical-align: text-bottom;
+  }
 }

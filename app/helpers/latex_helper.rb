@@ -28,7 +28,7 @@ module LatexHelper
 
     #~ mixed.gsub!(/§§([^§]+)§§/) { raw tex_to_image_tag($1) }
     #~ mixed.gsub!(/§([^§]+)§/) { raw tex_to_image_tag($1) }
-    raw(mixed)
+    content_tag(:div, raw(mixed), class: 'tex')
   end
 
   def latex_logo_large
