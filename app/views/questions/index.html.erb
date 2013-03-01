@@ -9,9 +9,9 @@
     <tbody>
       <% @questions.each do |q| %>
         <tr>
-          <%=content_tag :td, q.ident %>
+          <%=content_tag :td, link_to(q.ident, question_path(q)) %>
           <%=content_tag :td, q.parent_type %>
-          <%=content_tag :td, q.parent ? link_to(q.parent.ident, q.parent) : "no parent"%>
+          <%=content_tag :td, link_to_parent(q) %>
           <%=content_tag :td, q.text[0..50] %>
           <td>
             <% q.answers.each do |a| %>
@@ -19,7 +19,7 @@
             <% end %>
           </td>
           <td>
-            <%= link_to "Anzeigen/Bearbeiten", question_path(q) %>
+            <%= link_to "Bearbeiten", edit_question_path(q) %>
           </td>
         </tr>
       <% end %>

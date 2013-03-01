@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
     else
       flash.now[:error] = 'Nutzername unbekannt oder Passwort ungültig.'
       render 'new'
-      logger.debug user ? "correct user, wrong password" : "wrong user"
+      logger.warn user ? "correct user, wrong password" : "wrong user"
     end
   end
 

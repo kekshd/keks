@@ -1,0 +1,2 @@
+required packages:
+ruby1.9.1 graphviz texlive-base texlive-latex-base texlive-latex-recommended texlive-fonts-extra texlive-latex-extra

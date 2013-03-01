@@ -16,7 +16,7 @@ class AnswersController < ApplicationController
     @answer = Answer.find(params[:id])
     if @answer.update_attributes(params[:answer])
       flash[:success] = "Antwort aktualisiert"
-      redirect_to Question.find(params[:question_id])
+      redirect_to @question
     else
       render 'edit'
     end
@@ -26,8 +26,6 @@ class AnswersController < ApplicationController
   def create
     @answer = Answer.new(params[:answer])
     @answer.question = @question
-
-    logger.warn PP.pp(@answer,'')
 
     if @answer.save
       flash[:success] = "Antowrt gespeichert"

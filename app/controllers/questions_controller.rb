@@ -23,6 +23,11 @@ class QuestionsController < ApplicationController
 
   def update
     @question = Question.find(params[:id])
+
+    p = params[:parent].split('_')
+    p = (p[0] == "Category") ? Category.find(p[1]) : Answer.find(p[1])
+    @question.parent = p
+
     if @question.update_attributes(params[:question])
       flash[:success] = "Frage aktualisiert"
       redirect_to @question

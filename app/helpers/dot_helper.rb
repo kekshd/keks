@@ -11,6 +11,6 @@ module DotHelper
   end
 
   def render_dot(dot)
-    dot_to_image_tag(%(digraph graphname { size="4,4"; #{dot} }))
+    dot_to_image_tag(%(digraph graphname { #{dot} }))
   end
 end

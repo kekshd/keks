@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 class DotController < ApplicationController
+  before_filter :require_admin
+
   caches_page :simple, :gzip => false
 
   def simple

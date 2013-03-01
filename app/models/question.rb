@@ -7,6 +7,7 @@ class Question < ActiveRecord::Base
   validates :text, :presence => true
 
   has_many :answers
+  has_many :hints, :order => 'sort_hint ASC'
 
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true
@@ -38,6 +39,40 @@ class Question < ActiveRecord::Base
 
   def dot_id
     'q' + ident.gsub(/[^a-z0-9_]/i, '')
+  end
+
+  def dot_region
+    d = ''
+
+    if parent
+      d << parent.dot
+
+      parent.questions.each do |q|
+        d << q.dot
+        d << "#{parent.dot_id} -> #{q.dot_id};"
+      end if parent.respond_to?(:questions)
+
+      parent.categories.each do |c|
+        d << c.dot
+        d << "#{parent.dot_id} -> #{c.dot_id};"
+      end if parent.respond_to?(:categories)
+    end
+
+    answers.each do |a|
+      d << a.dot
+      d << "#{dot_id} -> #{a.dot_id};"
+    end
+
+    hint_ids = []
+    hints.each do |h|
+      hint_ids << h.dot
+      d << h.dot
+      d << "#{dot_id} -> #{h.dot_id};"
+    end
+
+    d << "{ rank=same; #{dot_id} #{hint_ids.join} };"
+
+    d
   end
 
   private

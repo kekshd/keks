@@ -19,6 +19,7 @@ Keks::Application.routes.draw do
   resources :users
   resources :questions do
     resources :answers
+    resources :hints
   end
   resources :categories
 

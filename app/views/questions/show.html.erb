@@ -1,9 +1,9 @@
 <div>
+  <%= render "action_menu" %>
   <h2>Frage <%=@question.ident%></h2>
-  <p><%= link_to "Bearbeiten", edit_question_path(@question) %></p>
 
   <table>
-    <tr><th>Elter</th><td><%= link_to @question.parent.link_text, @question.parent %></td></tr>
+    <tr><th>Elter</th><td><%= link_to_parent(@question) %></td></tr>
     <tr><th>Matrix-Mode?</th><td><%= @question.matrix_validate? %></td></tr>
     <tr><th>Gültig?</th><td><%= @question.complete? %>, <%= @question.incomplete_reason %></td></tr>
     <tr><th>Text</th><td><%=@question.text%></td></tr>
@@ -25,12 +25,42 @@
   </table>
 
   <br/>
-  <%=link_to "Weitere Antwort hinzufügen", new_question_answer_path(@question), class: "button" %>
+  <br/>
+  <br/>
+  <h3>Hinweise</h3>
+  <table id="hinttable" class="tablesorter">
+    <thead><tr><th>Sortierung</th><th>Text</th><th>Aktionen</th></tr></thead>
+    <tbody>
+    <% @question.hints.each do |h| %>
+      <tr>
+        <%= content_tag :td, h.sort_hint %>
+        <%= content_tag :td, h.text[0..100] %>
+        <td><%=link_to 'Bearbeiten', edit_question_hint_path(@question, h) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 
+  <br/>
+
+  <%= render "action_menu" %>
 </div>
 
 <div>
   <h2><%=latex_logo_large%> Preview</h2>
 
   <%= render "render" %>
+  <% @question.hints.each do |h| %>
+    <% @hint = h %>
+    <%= render "hints/render" %>
+  <% end %>
+
+  <% @question.answers.each do |a| %>
+    <% @answer = a %>
+    <%= render "answers/render" %>
+  <% end %>
+</div>
+
+<div>
+  <%=render_dot(@question.dot_region)%>
 </div>

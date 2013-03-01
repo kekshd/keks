@@ -1,0 +1,18 @@
+<%= form_for([@question, @hint]) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+
+  <%= f.label :sort_hint %>
+  <%= f.number_field :sort_hint %>
+  <span>Optional. Ganze Zahl. Wird zur Sortierung der Hinweise verwendet.</span>
+
+
+  <%= f.label :text %>
+  <%= f.text_area :text %>
+  <span>Benötigt</span>
+
+  <%= f.submit :class => 'button primary big' %>
+
+<% end %>
+
+
+<%= link_to 'Zurück zur Frage', question_path(@question) %>
