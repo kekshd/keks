@@ -16,9 +16,10 @@
 überleg ich mir noch
   </p>
 
-  <b>ran an den Rosenkohl</b>
-  <ul>
-    <li><%= link_to "Neue Kategorie", new_category_path %></li>
-    <li><%= link_to "Neue Frage (mit Antworten)", new_question_path %></li>
+  <ul class="button-group">
+    <li><%= link_to "Alle Kategorien", categories_path, class: 'button' %></li>
+    <li><%= link_to "Alle Fragen", questions_path, class: 'button' %></li>
+    <li><%= link_to "Neue Kategorie", new_category_path, class: 'button' %></li>
+    <li><%= link_to "Neue Frage (mit Antworten)", new_question_path, class: 'button' %></li>
   </ul>
 </div>

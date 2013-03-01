@@ -1,0 +1,36 @@
+<div>
+  <h2>Frage <%=@question.ident%></h2>
+  <p><%= link_to "Bearbeiten", edit_question_path(@question) %></p>
+
+  <table>
+    <tr><th>Elter</th><td><%= link_to @question.parent.link_text, @question.parent %></td></tr>
+    <tr><th>Matrix-Mode?</th><td><%= @question.matrix_validate? %></td></tr>
+    <tr><th>Gültig?</th><td><%= @question.complete? %>, <%= @question.incomplete_reason %></td></tr>
+    <tr><th>Text</th><td><%=@question.text%></td></tr>
+  </table>
+
+  <h3>Antworten</h3>
+  <table id="answertable" class="tablesorter">
+    <thead><tr><th>Ident</th><th>Text</th><th>Korrekt?</th><th>Aktionen</th></tr></thead>
+    <tbody>
+    <% @question.answers.each do |a| %>
+      <tr>
+        <%= content_tag :td, a.ident %>
+        <%= content_tag :td, a.text[0..50] %>
+        <%= content_tag :td, a.correct %>
+        <td><%=link_to 'Bearbeiten', edit_question_answer_path(@question, a) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <br/>
+  <%=link_to "Weitere Antwort hinzufügen", new_question_answer_path(@question), class: "button" %>
+
+</div>
+
+<div>
+  <h2><%=latex_logo_large%> Preview</h2>
+
+  <%= render "render" %>
+</div>

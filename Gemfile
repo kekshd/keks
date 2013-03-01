@@ -4,7 +4,7 @@ gem 'rails', '3.2.12'
 gem 'sqlite3'
 gem 'active_enum'
 gem 'thin'
-
+gem 'rails-latex'
 gem 'jquery-tablesorter'
 
 # Gems used only for assets and not required

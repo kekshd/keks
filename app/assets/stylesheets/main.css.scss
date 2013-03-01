@@ -246,3 +246,16 @@ select {
 table {
   margin-top: 20px;
 }
+
+th {
+  text-align: left;
+}
+
+h2 img {
+  vertical-align: middle;
+}
+
+img.latex-block {
+  display: block;
+  margin: 5px 0;
+}

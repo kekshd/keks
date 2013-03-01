@@ -1,0 +1,33 @@
+<%= form_for(@question) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <%= f.label :ident %>
+  <%= f.text_field :ident %>
+  <span>Benötigt. Muss eindeutig sein bzgl. aller Fragen.</span>
+
+  <%= f.label :text %>
+  <%= f.text_area :text %>
+  <span>Benötigt</span>
+
+
+  <%= f.label :parent %>
+  <% selected = "#{@question.parent_type}_#{@question.parent_id}" %>
+  <select name="parent">
+    <option></option>
+    <optgroup label="Antworten">
+      <% Answer.find(:all, :order => :ident).each do |a| %>
+        <% v = "Answer_#{a.id}" %>
+        <%= content_tag(:option, a.question.ident + '/' + a.ident, :value => v, :selected => selected == v) %>
+      <% end %>
+    </optgroup>
+    <optgroup label="Kategorien">
+      <% Category.find(:all, :order => :ident).each do |c| %>
+        <% v = "Category_#{c.id}" %>
+        <%= content_tag(:option, c.ident, :value => v, :selected => selected == v) %>
+      <% end %>
+    </optgroup>
+  </select>
+  <span>ggf. vorhergehende Fragen und Kategorien zuerst anlegen</span>
+
+
+  <%= f.submit @question.new_record? ? "Frage anlegen" : "Speichern", class: "button primary big" %>
+<% end %>

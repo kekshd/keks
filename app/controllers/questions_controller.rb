@@ -1,30 +1,47 @@
+# encoding: utf-8
+
 class QuestionsController < ApplicationController
   before_filter :require_admin
 
+
+  def index
+    @questions = Question.all
+    logger.warn PP.pp(@questions, '')
+  end
 
   def new
     @question = Question.new
   end
 
+  def edit
+    @question = Question.find(params[:id])
+  end
+
+  def show
+    @question = Question.find(params[:id])
+  end
+
+  def update
+    @question = Question.find(params[:id])
+    if @question.update_attributes(params[:question])
+      flash[:success] = "Frage aktualisiert"
+      redirect_to @question
+    else
+      render 'edit'
+    end
+  end
+
+
   def create
-    require "pp"
+    @question = Question.new(params[:question])
 
-    if !params['category'] || !params['category']['answers']  || params['category']['answers'].size < 1
-      flash.now['error'] = 'Mindestens eine Antwort notwendig.'
-      return render 'new'
-    end
-
-    answ = params['category']['answers'].map do |a|
-      Answer.new(a)
-    end
-    params['category'].delete('answers')
-
-    @question = Question.new(params[:category])
-
+    p = params[:parent].split('_')
+    p = (p[0] == "Category") ? Category.find(p[1]) : Answer.find(p[1])
+    @question.parent = p
 
     if @question.save
       flash[:success] = "Frage gespeichert"
-      redirect_to questions_path
+      redirect_to @question
     else
       render 'new'
     end

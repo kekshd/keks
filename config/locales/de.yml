@@ -8,3 +8,8 @@ de:
         password: "Passwort"
         password_confirmation: "Bestätigung"
         study_path: "Studiengang"
+
+  errors:
+    messages:
+      blank: "darf nicht leer sein."
+      taken: "ist schon vergeben."

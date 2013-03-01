@@ -1,0 +1,24 @@
+<%= form_for([@question, @answer]) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <%= f.label :ident %>
+  <%= f.text_field :ident %>
+  <span>
+    Benötigt. Muss eindeutig sein bzgl. der Frage.
+    <br/>Vergeben: <%= @question.answers.map { |a| a.ident }.join(', ') %>
+  </span>
+
+  <%= f.label :text %>
+  <%= f.text_area :text %>
+  <span>Benötigt. Ist genau eine <tt>\begin{pmatrix} … \end{pmatrix}</tt> enthalten, wird<br/>diese zur Validierung genutzt. Es darf dann nur eine Antwort geben. Correct muss auf wahr stehen.</span>
+
+  <%= f.label :correct %>
+  <%= f.check_box :correct %>
+
+
+
+
+
+  <%= f.submit @answer.new_record? ? "Antwort anlegen" : "Speichern", class: "button primary big" %>
+  <br style="clear:both"/><br/>
+  <%=link_to "Zurück zur Frage", @question %>
+<% end %>

@@ -18,4 +18,7 @@ class Category < ActiveRecord::Base
     Answer.any? { |a| a.categories.include?(self) }
   end
 
+  def link_text
+    "Category #{ident}"
+  end
 end

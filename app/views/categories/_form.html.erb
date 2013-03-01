@@ -1,0 +1,24 @@
+<p>Wenn diese Kategorie ein neues Themengebiet sein soll, darf kein Eltern-Element angegeben werden. Ansonsten wähle eine Antwort aus, an die diese Kategorie anschließen soll.</p>
+
+
+<%= form_for(@category) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <%= f.label :ident %>
+  <%= f.text_field :ident %>
+  <span>Benötigt. Muss eindeutig sein bzgl. aller Kategorien.</span>
+
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+  <span>Benötigt</span>
+
+  <%= f.label :text %>
+  <%= f.text_area :text %>
+  <span>Optional</span>
+
+
+  <%= f.label :answers %>
+  <%= f.collection_select 'answer_ids', Answer.all, :id, :link_text_short, { :selected => @category.answer_ids }, {:multiple => true, :name => 'category[answer_ids][]'} %>
+  <span>Welche Antworten sollen auf auf diese Kategorie verweisen?<br/>Wenn keine Antwort ausgewählt wurde, dann handelt es sich um eine Wurzelkategorie.<br/>Mehrere mit STRG+Klick auswählen</span>
+
+  <%= f.submit @category.new_record? ? "Kategorie anlegen" : "Speichern", class: "button primary big" %>
+<% end %>

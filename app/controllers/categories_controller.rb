@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class CategoriesController < ApplicationController
   before_filter :require_admin
 
@@ -16,6 +18,21 @@ class CategoriesController < ApplicationController
       redirect_to admin_overview_path
     else
       render 'new'
+    end
+  end
+
+
+  def edit
+    @category = Category.find(params[:id])
+  end
+
+  def update
+    @category = Category.find(params[:id])
+    if @category.update_attributes(params[:category])
+      flash[:success] = "Kategorie aktualisiert"
+      redirect_to @category
+    else
+      render 'edit'
     end
   end
 end

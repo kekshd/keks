@@ -1,0 +1,30 @@
+<div>
+  <h2>Alle Fragen</h2>
+  <%=link_to "Neue Frage anlegen", new_question_path %>
+
+  <table id="index" class="tablesorter">
+    <thead>
+      <tr><th>Ident</th><th>Elterntyp</th><th>Elternname</th><th>Text</th><th>Antworten</th><th>Aktionen</th></tr>
+    </thead>
+    <tbody>
+      <% @questions.each do |q| %>
+        <tr>
+          <%=content_tag :td, q.ident %>
+          <%=content_tag :td, q.parent_type %>
+          <%=content_tag :td, q.parent ? link_to(q.parent.ident, q.parent) : "no parent"%>
+          <%=content_tag :td, q.text[0..50] %>
+          <td>
+            <% q.answers.each do |a| %>
+              <%= content_tag :span, a.ident, title: a.text, class: a.correct? ? "correct" : "wrong" %>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "Anzeigen/Bearbeiten", question_path(q) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+</div>

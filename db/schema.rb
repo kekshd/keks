@@ -16,9 +16,11 @@ ActiveRecord::Schema.define(:version => 201302281047123) do
   create_table "answers", :force => true do |t|
     t.string   "text"
     t.boolean  "correct"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.string   "ident"
+    t.string   "type"
+    t.integer  "question_id"
   end
 
   create_table "answers_categories", :force => true do |t|

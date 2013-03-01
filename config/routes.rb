@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 Keks::Application.routes.draw do
+  match "latex/:base64_text.png", to: "latex#simple", :as => "render_tex", :via => :get
+
   get "admin/overview"
 
 
@@ -14,7 +16,9 @@ Keks::Application.routes.draw do
   get "question/tree"
 
   resources :users
-  resources :questions
+  resources :questions do
+    resources :answers
+  end
   resources :categories
 
   resources :sessions, only: [:new, :create, :destroy]

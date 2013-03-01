@@ -1,0 +1,19 @@
+\RequirePackage{fix-cm}
+\documentclass{scrartcl}
+\usepackage{fixltx2e}
+\areaset[1cm]{17cm}{26cm}
+\usepackage{amssymb}          % math symbols
+\usepackage{amsmath}          % math stuff
+\usepackage{dsfont}           % double stroke font for e.g. |R
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}         % symbols, e.g. \textrightarrow
+%\usepackage{cmbright}
+%\usepackage{fouriernc} % sharper font for on-screen
+%\usepackage{arev}
+\usepackage[cm]{sfmath}
+\usepackage[active,displaymath,floats,textmath,graphics,sections,tightpage]{preview}
+
+\begin{document}
+<%= yield %>
+\end{document}

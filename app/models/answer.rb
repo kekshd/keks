@@ -3,7 +3,7 @@
 class Answer < ActiveRecord::Base
   attr_accessible :correct, :text, :ident
 
-  validates :ident, :uniqueness => { :scope => :question,
+  validates :ident, :uniqueness => { :scope => :question_id,
     :message => "Antwort-Idents müssen für eine Frage eindeutig sein" }
 
   belongs_to :question
@@ -16,5 +16,14 @@ class Answer < ActiveRecord::Base
 
   def get_parent_category
     return self.question.find_parent_category
+  end
+
+
+  def link_text
+    "Antwort #{link_text_short}"
+  end
+
+  def link_text_short
+    "#{question.ident}/#{ident}"
   end
 end
