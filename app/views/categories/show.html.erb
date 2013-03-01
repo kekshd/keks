@@ -1,0 +1,25 @@
+<div>
+  <ul class="button-group">
+    <li><%=link_to "Alle Kategorien anzeigen", categories_path, class: "button"%></li>
+    <li><%=link_to "Bearbeiten", edit_category_path(@category), class: "button"%></li>
+  </ul>
+
+  <h2>Kategorie <%=@category.ident%></h2>
+
+  <table>
+    <tr><th>Titel</th><td><%=@category.title%></td></tr>
+    <tr><th>Wurzel?</th><td><%=@category.is_root?%></td></tr>
+    <tr><th>hat # Fragen</th><td><%=@category.questions.size %></tr>
+    <tr><th>Verweise hierher</th><td><%=@category.answers.size %></tr>
+  </table>
+</div>
+
+<div>
+  <%=render_dot(@category.dot_region)%>
+
+  <br/><br/>
+  <ul class="button-group">
+    <li><%=link_to "Alle Kategorien anzeigen", categories_path, class: "button"%></li>
+    <li><%=link_to "Bearbeiten", edit_category_path(@category), class: "button"%></li>
+  </ul>
+</div>

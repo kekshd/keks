@@ -3,9 +3,6 @@
 module LatexHelper
   def tex_to_path(tex)
     b = Base64.urlsafe_encode64(tex)
-    logger.error(tex)
-    logger.error(b)
-
     render_tex_path({:base64_text => b})
   end
 

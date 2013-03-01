@@ -31,6 +31,15 @@ class Question < ActiveRecord::Base
     true
   end
 
+  def dot
+    txt = 'F: ' + ident.gsub('"', '')
+    %(#{dot_id} [label="#{txt}"];)
+  end
+
+  def dot_id
+    'q' + ident.gsub(/[^a-z0-9_]/i, '')
+  end
+
   private
   def is_complete_helper
     return false, "keine Antworten" if answers.size == 0

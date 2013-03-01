@@ -21,4 +21,8 @@
   <span>Welche Antworten sollen auf auf diese Kategorie verweisen?<br/>Wenn keine Antwort ausgewählt wurde, dann handelt es sich um eine Wurzelkategorie.<br/>Mehrere mit STRG+Klick auswählen</span>
 
   <%= f.submit @category.new_record? ? "Kategorie anlegen" : "Speichern", class: "button primary big" %>
+
+  <br class="clear"/>
+  <br/>
+  <%= link_to "Zurück zur Kategorien Liste", categories_path %>
 <% end %>

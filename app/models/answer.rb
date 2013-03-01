@@ -26,4 +26,13 @@ class Answer < ActiveRecord::Base
   def link_text_short
     "#{question.ident}/#{ident}"
   end
+
+  def dot
+    txt = 'A: ' + ident.gsub('"', '')
+    %(#{dot_id} [label="#{txt}", shape=hexagon];)
+  end
+
+  def dot_id
+    'a' + ident.gsub(/[^a-z0-9_]/i, '') + question.dot_id
+  end
 end

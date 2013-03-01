@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 Keks::Application.routes.draw do
+  match "dot/:base64_text.png", to: "dot#simple", :as => "render_dot", :via => :get
   match "latex/:base64_text.png", to: "latex#simple", :as => "render_tex", :via => :get
 
   get "admin/overview"

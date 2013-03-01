@@ -10,12 +10,12 @@
     <tbody>
       <% @categories.each do |c| %>
         <tr>
-          <%=content_tag :td, c.ident %>
+          <%=content_tag :td, link_to(c.ident, c) %>
           <%=content_tag :td, c.title %>
           <%=content_tag :td, c.is_root? %>
           <td>
             <% c.answers.each do |a| %>
-              <%=link_to a.ident, a %>
+              <%=link_to a.ident, [a.question, a] %>
             <% end %>
           </td>
           <td>
