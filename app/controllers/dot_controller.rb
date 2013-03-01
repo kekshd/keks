@@ -3,7 +3,7 @@
 class DotController < ApplicationController
   before_filter :require_admin
 
-  caches_page :simple, :gzip => false
+  caches_action :simple, :cache_path => Proc.new { |c| c.request.url }
 
   def simple
     begin
