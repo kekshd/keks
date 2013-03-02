@@ -3,12 +3,15 @@
 <div>
   <h2>Einloggen</h2>
   <%= form_for(:session, url: sessions_path) do |f| %>
-
     <%= f.label :nick %>
     <%= f.text_field :nick %>
 
     <%= f.label :password %>
     <%= f.password_field :password %>
+
+    <%= f.label :remember_me, "Dauerhaft?" %>
+    <%= f.check_box :remember_me %>
+    <span>Ohne Häkchen wirst Du nach dem Schließen des Browsers ausgeloggt.</span>
 
     <%= f.submit "Einloggen", class: "button primary big" %>
   <% end %>

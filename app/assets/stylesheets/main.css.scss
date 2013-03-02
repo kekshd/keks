@@ -168,6 +168,7 @@ input + span, select + span, textarea + span,  .field_with_errors + span {
   margin-left: 8px;
   color: #777;
   line-height: 23px;
+  padding-top: 4px;
 }
 
 input, textarea {
@@ -181,9 +182,14 @@ input, textarea {
   background: #fff;
   color: #000;
 
-  &:focus {
+  &:focus:not([disabled]) {
     border-color: $dark !important;
     box-shadow: 0 0 2px $light;
+  }
+
+  &[disabled] {
+    color: #666;
+    font-style: italic;
   }
 
   &[type=submit] {

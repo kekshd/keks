@@ -1,0 +1,39 @@
+<div>
+  <h2>Dein Profil</h2>
+
+  <%= form_for(@user) do |f| %>
+    <%= render 'shared/error_messages', object: f.object if params[:commit] == "Daten aktualisieren" %>
+
+    <%= f.label :nick %>
+    <%= f.text_field :nick, disabled: true  %>
+    <span>Kann nicht mehr geändert werden.</span>
+
+    <%= f.label :mail %>
+    <%= f.text_field :mail  %>
+    <span>Optional. Nur für „Passwort vergessen“ Funktion</span>
+
+    <%= f.label :study_path %>
+    <%= f.select :study_path, StudyPath.to_select %>
+    <span>Optional, gibt Dir passende Fragen für Deinen Studiengang.</span>
+
+    <%= hidden_field_tag :type, 'datachange' %>
+
+    <%= f.submit "Daten aktualisieren", class: "button" %>
+  <% end %>
+
+  <h2>Passwort ändern</h2>
+
+  <%= form_for(@user) do |f| %>
+    <%= render 'shared/error_messages', object: f.object if params[:commit] == "Passwort ändern"  %>
+
+    <%= f.label :password, "Altes Passw." %>
+    <%= f.password_field :password %>
+
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
+
+    <%= hidden_field_tag :type, 'pwchange' %>
+
+    <%= f.submit "Passwort ändern", class: "button" %>
+  <% end %>
+</div>

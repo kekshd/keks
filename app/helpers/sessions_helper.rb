@@ -2,7 +2,13 @@
 
 module SessionsHelper
   def sign_in(user)
-    cookies.permanent[:remember_token] = user.remember_token
+    if session[:remember_me]
+      logger.info "Logging in user permanently"
+      cookies.permanent[:remember_token] = user.remember_token
+    else
+      logger.info "Logging in user temporarily"
+      cookies[:remember_token] = user.remember_token
+    end
     self.current_user = user
   end
 

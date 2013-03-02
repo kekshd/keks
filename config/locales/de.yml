@@ -9,7 +9,13 @@ de:
         password_confirmation: "Bestätigung"
         study_path: "Studiengang"
 
+
   errors:
     messages:
       blank: "darf nicht leer sein."
       taken: "ist schon vergeben."
+      confirmation: "anders als im Bestätigungsfeld."
+      short: "anders als im Bestätigungsfeld."
+      too_long: "ist zu lang (höchstens %{count} Zeichen)"
+      too_short: "ist zu kurz (mindestens %{count} Zeichen)"
+      wrong_length: "hat die falsche Länge (sollten genau %{count} Zeichen sein)"

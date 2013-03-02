@@ -1,15 +1,8 @@
 # encoding: utf-8
 
 class UsersController < ApplicationController
-  before_filter :signed_in_user,
-                only: [:edit, :update, :destroy]
-  before_filter :correct_user,   only: [:edit, :update]
-  #~ before_filter :admin_user,     only: :destroy
-
-
-  def show
-    @user = User.find(params[:id])
-  end
+  before_filter :signed_in_user, only: [:edit, :update, :destroy]
+  before_filter :correct_user,  only: [:edit, :update]
 
   def new
     @user = User.new
@@ -17,23 +10,27 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
+    @user.nick = params[:user][:nick]
     if @user.save
       sign_in @user
-      flash[:success] = "Du bist jetzt angemeldet. Viel Spaß!"
-      redirect_to :root
+      flash[:success] = "Du bist jetzt angemeldet. Diese Seite ist Deine Profilseite. Hier kannst Du auch einen Schlüssel eintragen, wenn Dir einer mitgeteilt wurde."
+      redirect_to edit_user_path(@user)
     else
       render 'new'
     end
   end
 
   def edit
+    @user = User.find(params[:id])
   end
 
   def update
+    @user.updating_password = params[:type] == 'pwchange'
+
     if @user.update_attributes(params[:user])
       flash[:success] = "Nutzerdaten aktualisiert"
       sign_in @user
-      redirect_to @user
+      redirect_to edit_user_path(@user)
     else
       render 'edit'
     end

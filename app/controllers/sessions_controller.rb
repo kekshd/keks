@@ -4,6 +4,7 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by_nick(params[:session][:nick])
     if user && user.authenticate(params[:session][:password])
+      session[:remember_me] = params[:session][:remember_me] == "1"
       sign_in user
       redirect_back_or main_hitme_path
     else

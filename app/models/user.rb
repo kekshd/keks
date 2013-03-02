@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
 
-  attr_accessible :nick
+  attr_protected :nick
   attr_accessible :mail
 
   attr_accessible :study_path
@@ -19,8 +19,8 @@ class User < ActiveRecord::Base
 
   validates :nick, presence: true, uniqueness: true
   validates :mail, allow_blank: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 4 }
-  validates :password_confirmation, presence: true
+  validates :password, length: { minimum: 4 }, :if => :should_validate_password?
+  validates :password_confirmation, presence: true, :if => :should_validate_password?
   validates_inclusion_of :study_path, in: StudyPath
 
   # http://stackoverflow.com/questions/7919584/rails-3-1-create-one-user-in-console-with-secure-password
@@ -28,9 +28,15 @@ class User < ActiveRecord::Base
   before_save { mail.downcase! }
   before_save :create_remember_token
 
+  attr_accessor :updating_password
+
   private
 
   def create_remember_token
     self.remember_token = SecureRandom.urlsafe_base64
+  end
+
+  def should_validate_password?
+    updating_password || new_record?
   end
 end
