@@ -1,6 +1,5 @@
 <ul class="button-group">
-  <li><%= link_to "Frage Bearbeiten", edit_question_path(@question), class: 'button' %></li>
+  <li><%= link_to "Diese Frage Bearbeiten", edit_question_path(@question), class: 'button' %></li>
   <li><%=link_to "Weitere Antwort", new_question_answer_path(@question), class: "button" %></li>
   <li><%=link_to "Weiterer Hinweis", new_question_hint_path(@question), class: "button" %></li>
-  <li><%=link_to "Zurück zur Fragenliste", questions_path, class: "button" %></li>
 </ul>

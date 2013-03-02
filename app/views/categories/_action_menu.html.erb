@@ -1,0 +1,5 @@
+<ul class="button-group">
+  <li><%=link_to "Bearbeiten", edit_category_path(@category), class: "button"%></li>
+  <li><%=link_to "Neue Frage in dieser Kategorie erstellen", new_question_path(:parent => "Category_#{@category.id}"), class: "button"%></li>
+  <li><%=link_to "Löschen", @category, method: :delete, confirm: "Es wird nur die Kategorie gelöscht, Fragen hängen ggf. in der Luft.\n\nFortfahren?", class: "button danger"%></li>
+</ul>

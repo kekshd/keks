@@ -9,6 +9,8 @@ class CategoriesController < ApplicationController
 
   def new
     @category = Category.new
+    @answer = Answer.find(params['parent']) if params['parent']
+    @category.answers << @answer if @answer
   end
 
   def show
@@ -38,5 +40,16 @@ class CategoriesController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+
+  def destroy
+    @category = Category.find(params[:id])
+    if @category.destroy
+      flash[:success] = "Kategorie gelöscht"
+    else
+      flash[:error] = "Konnte Kategorie nicht löschen. Details vermutlich in den Logs."
+    end
+    redirect_to categories_path
   end
 end

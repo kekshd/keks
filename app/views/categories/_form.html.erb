@@ -25,4 +25,7 @@
   <br class="clear"/>
   <br/>
   <%= link_to "Zurück zur Kategorien Liste", categories_path %>
+  <% if @answer %>
+    <%= link_to "Zurück zur Frage", question_path(@answer.question) %>
+  <% end %>
 <% end %>

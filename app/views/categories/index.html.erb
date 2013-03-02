@@ -1,5 +1,6 @@
 <div>
-  <h2>Alle Kategorien</h2>
+  <%= render "admin/action_menu" %>
+  <h2>Kategorienliste</h2>
 
   <%=link_to "Neue Kategorie anlegen", new_category_path %>
 
@@ -24,7 +25,9 @@
             <% end %>
           </td>
           <td>
+            <%= link_to "Anzeigen", category_path(c) %>
             <%= link_to "Bearbeiten", edit_category_path(c) %>
+            <%= link_to "Neue Frage", new_question_path(:parent => "Category_#{c.id}") %>
           </td>
         </tr>
       <% end %>

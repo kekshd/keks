@@ -30,4 +30,8 @@
 
 
   <%= f.submit @question.new_record? ? "Frage anlegen" : "Speichern", class: "button primary big" %>
+
+  <br class="clear"/>
+  <%= link_to("Zurück zur Kategorie", @category) if @category %>
+  <%= link_to("Zurück zur Frage", @anwer.question) if @anwer %>
 <% end %>

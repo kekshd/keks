@@ -1,4 +1,5 @@
 <div>
+  <%= render "action_menu" %>
   <h2>Statistiken</h2>
 </div>
 
@@ -16,10 +17,5 @@
 überleg ich mir noch
   </p>
 
-  <ul class="button-group">
-    <li><%= link_to "Alle Kategorien", categories_path, class: 'button' %></li>
-    <li><%= link_to "Alle Fragen", questions_path, class: 'button' %></li>
-    <li><%= link_to "Neue Kategorie", new_category_path, class: 'button' %></li>
-    <li><%= link_to "Neue Frage (mit Antworten)", new_question_path, class: 'button' %></li>
-  </ul>
+  <%= render "action_menu" %>
 </div>

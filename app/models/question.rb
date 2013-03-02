@@ -26,15 +26,16 @@ class Question < ActiveRecord::Base
 
   def matrix_validate?
     return false if answers.size != 1
-    a = answers.first
+    a = answers.first.text
     return false if a.count(%(\begin{pmatrix})) != 1
     return false if a.count(%(\end{pmatrix})) != 1
     true
   end
 
-  def dot
+  def dot(active = false)
     txt = 'F: ' + ident.gsub('"', '')
-    %(#{dot_id} [label="#{txt}"];)
+    bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''
+    %(#{dot_id} [label="#{txt}"#{bg}];)
   end
 
   def dot_id
@@ -48,7 +49,7 @@ class Question < ActiveRecord::Base
       d << parent.dot
 
       parent.questions.each do |q|
-        d << q.dot
+        d << q.dot(q == self)
         d << "#{parent.dot_id} -> #{q.dot_id};"
       end if parent.respond_to?(:questions)
 
@@ -56,6 +57,8 @@ class Question < ActiveRecord::Base
         d << c.dot
         d << "#{parent.dot_id} -> #{c.dot_id};"
       end if parent.respond_to?(:categories)
+    else
+      d << dot(true)
     end
 
     answers.each do |a|

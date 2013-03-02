@@ -1,16 +1,16 @@
 <div>
-  <h2>Alle Fragen</h2>
-  <%=link_to "Neue Frage anlegen", new_question_path %>
+  <%= render "admin/action_menu" %>
+
+  <h2>Fragenliste</h2>
 
   <table id="index" class="tablesorter">
     <thead>
-      <tr><th>Ident</th><th>Elterntyp</th><th>Elternname</th><th>Text</th><th>Antworten</th><th>Aktionen</th></tr>
+      <tr><th>Ident</th><th>Elternname</th><th>Text</th><th>Antworten</th><th>Aktionen</th></tr>
     </thead>
     <tbody>
       <% @questions.each do |q| %>
         <tr>
           <%=content_tag :td, link_to(q.ident, question_path(q)) %>
-          <%=content_tag :td, q.parent_type %>
           <%=content_tag :td, link_to_parent(q) %>
           <%=content_tag :td, q.text[0..50] %>
           <td>
@@ -19,7 +19,9 @@
             <% end %>
           </td>
           <td>
+            <%= link_to "Anzeigen", question_path(q) %>
             <%= link_to "Bearbeiten", edit_question_path(q) %>
+            <%= link_to "Neue Antwort", new_question_answer_path(q) %>
           </td>
         </tr>
       <% end %>

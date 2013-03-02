@@ -1,8 +1,6 @@
 <div>
-  <ul class="button-group">
-    <li><%=link_to "Alle Kategorien anzeigen", categories_path, class: "button"%></li>
-    <li><%=link_to "Bearbeiten", edit_category_path(@category), class: "button"%></li>
-  </ul>
+  <%= render "admin/action_menu"%>
+  <%=render "action_menu"%>
 
   <h2>Kategorie <%=@category.ident%></h2>
 
@@ -18,8 +16,5 @@
   <%=render_dot(@category.dot_region)%>
 
   <br/><br/>
-  <ul class="button-group">
-    <li><%=link_to "Alle Kategorien anzeigen", categories_path, class: "button"%></li>
-    <li><%=link_to "Bearbeiten", edit_category_path(@category), class: "button"%></li>
-  </ul>
+  <%=render "action_menu"%>
 </div>

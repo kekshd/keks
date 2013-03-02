@@ -11,6 +11,16 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+
+    if params['parent']
+      s = params['parent'].split('_', 2)
+
+      @answer = Answer.find(s.last.to_i) if s.first == "Answer"
+      @question.parent = @answer if @answer
+
+      @category = Category.find(s.last.to_i) if s.first == "Category"
+      @question.parent = @category if @category
+    end
   end
 
   def edit

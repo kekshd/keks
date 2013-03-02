@@ -1,4 +1,5 @@
 <div>
+  <%= render "admin/action_menu" %>
   <%= render "action_menu" %>
   <h2>Frage <%=@question.ident%></h2>
 
@@ -18,7 +19,11 @@
         <%= content_tag :td, a.ident %>
         <%= content_tag :td, a.text[0..50] %>
         <%= content_tag :td, a.correct %>
-        <td><%=link_to 'Bearbeiten', edit_question_answer_path(@question, a) %></td>
+        <td>
+          <%=link_to 'Bearbeiten', edit_question_answer_path(@question, a) %>
+          <%=link_to 'Neue Kategorie hier', new_category_path(:parent => a.id) %>
+          <%=link_to 'Neue Frage hier', new_question_path(:parent => "Answer_#{a.id}") %>
+        </td>
       </tr>
     <% end %>
     </tbody>

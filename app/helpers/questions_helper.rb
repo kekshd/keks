@@ -4,7 +4,7 @@ module QuestionsHelper
     if q.parent.is_a?(Category)
       link_to(q.parent.link_text, q.parent)
     else
-      link_to(q.parent.link_text, [q, q.parent])
+      link_to(q.parent.link_text, q.parent.question)
     end
   end
 end

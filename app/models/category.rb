@@ -3,7 +3,8 @@
 class Category < ActiveRecord::Base
   attr_accessible :text, :title, :answer_ids, :ident
 
-  validates :ident, :uniqueness => true
+  validates :ident, :uniqueness => true, :presence => true
+  validates :title, :presence => true
 
   # i.e. this category has many questions and acts as parent to them
   has_many :questions, :as => :parent
@@ -22,9 +23,10 @@ class Category < ActiveRecord::Base
     "Category #{ident}"
   end
 
-  def dot
+  def dot(active = false)
     txt = 'K: ' + ident.gsub('"', '')
-    %(#{dot_id} [label="#{txt}", shape=#{is_root? ? 'house' : 'folder'}];)
+    bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''
+    %(#{dot_id} [label="#{txt}" #{bg}, shape=#{is_root? ? 'house' : 'folder'}];)
   end
 
   def dot_id
@@ -32,7 +34,7 @@ class Category < ActiveRecord::Base
   end
 
   def dot_region
-    d = dot
+    d = dot(true)
     questions.each do |q|
       d << q.dot
       d << "#{dot_id} -> #{q.dot_id};"
