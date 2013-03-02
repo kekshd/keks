@@ -29,6 +29,12 @@
   </select>
   <span>ggf. vorhergehende Fragen und Kategorien zuerst anlegen</span>
 
+  <%= f.label :difficulty %>
+  <%= f.select :difficulty, Difficulty.to_select %>
+
+  <%= f.label :study_path %>
+  <%= f.select :study_path, StudyPath.to_select %>
+  <span>(Diese Frage ist gedacht für…)</span>
 
   <%= f.submit @question.new_record? ? "Frage anlegen" : "Speichern", class: "button primary big" %>
 

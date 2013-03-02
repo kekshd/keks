@@ -7,9 +7,6 @@ Keks::Application.routes.draw do
 
   get "admin/overview"
 
-
-  get "admin/add_links"
-
   root :to => "main#overview"
 
   get "main/overview"

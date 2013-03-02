@@ -1,12 +1,14 @@
 <table id="index" class="tablesorter">
   <thead>
-    <tr><th>Ident</th><th>Elternname</th><th>Text</th><th>Antworten</th><th>Aktionen</th></tr>
+    <tr><th>Ident</th><th>Elternname</th><th>Härte</th><th>Studiengang</th><th>Text</th><th>Antworten</th><th>Aktionen</th></tr>
   </thead>
   <tbody>
     <% @questions.each do |q| %>
       <tr>
         <%=content_tag :td, link_to(q.ident, question_path(q)) %>
         <%=content_tag :td, link_to_parent(q) %>
+        <%=content_tag :td, q.difficulty(:name) %>
+        <%=content_tag :td, q.study_path(:name) %>
         <%=content_tag :td, q.text[0..50] %>
         <td>
           <% q.answers.each do |a| %>

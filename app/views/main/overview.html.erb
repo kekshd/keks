@@ -1,4 +1,4 @@
-
+<% provide(:title, "Startseite") %>
 
 <div>Omg Du hast Keks gefunden. Hör besser sofort auf Mathe zu studieren, da kann man eh nur verlieren. Schau Dir nur an was es schon aus Dir gemacht hat. Du lernst. Freiwillig! Weißt Du was die Soziologen gerade machen? Genau, Urlaub! Und davor? Kaffeeklatsch mit Kuchen. Und Du lernst. Naja, viel Glück. Du wirst es brauchen.
 
@@ -6,7 +6,7 @@
 
   <ul class="chooser">
     <li>
-      <%= link_to "Gleich loslegen", main_hitme_path, :class => "button big" %>
+      <%= link_to "Gleich loslegen", main_hitme_path(:anchor => "hide-options"), :class => "button big" %>
       Für ganz Eilige. Nur Fragengebiet wählen und los geht’s. Kein Login notwendig.
     </li>
 
@@ -33,7 +33,3 @@
 
   </ul>
 </div>
-
-
-
-<p>

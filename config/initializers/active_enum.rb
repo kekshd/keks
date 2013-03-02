@@ -23,6 +23,12 @@ class StudyPath < ActiveEnum::Base
   value :id => 4, :name => 'Lehramt'
 end
 
+class Difficulty < ActiveEnum::Base
+  value :id => 10, :name => 'Leicht'
+  value :id => 20, :name => 'Mittel'
+  value :id => 30, :name => 'Schwer'
+end
+
 class EnrollmentKeys < ActiveEnum::Base
   value :id => 1, :name => 'TestEnrollment'
 end

@@ -8,22 +8,26 @@ class User < ActiveRecord::Base
 
 
   attr_protected :nick
+  validates :nick, presence: true, uniqueness: true
+
   attr_accessible :mail
+  validates :mail, allow_blank: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
 
   attr_accessible :study_path
   enumerate :study_path
+  validates_inclusion_of :study_path, in: StudyPath
 
   attr_accessible :password, :password_confirmation
-
-  attr_protected :admin
-
-  attr_protected :enrollment_keys
-
-  validates :nick, presence: true, uniqueness: true
-  validates :mail, allow_blank: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 4 }, :if => :should_validate_password?
   validates :password_confirmation, presence: true, :if => :should_validate_password?
-  validates_inclusion_of :study_path, in: StudyPath
+
+  attr_protected :admin
+  attr_protected :enrollment_keys
+
+
+
+
+
 
   # http://stackoverflow.com/questions/7919584/rails-3-1-create-one-user-in-console-with-secure-password
 

@@ -1,7 +1,28 @@
+<% provide(:title, "Fragen beantworten") %>
+
 <div>
   <h2>Optionen</h2>
-  <div class="toggle">
-    le Rebecca Ezzz
+  <div class="toggle clear smallform" id="options">
+    <script>if(window.location.hash == "#hide-options") $("#options").hide(); </script>
+    <%= label_tag :quantity, 'Anzahl' %>
+    <%= number_field_tag :quantity, 10, :in => 5..100, :step => 5 %>
+    <span>Wie viele Fragen möchtest Du haben?</span>
+
+
+    <%= label_tag :study_path, "Studiengang" %>
+    <%= select_tag :study_path, options_for_select(StudyPath.to_select) %>
+    <span>Wähle Deinen Studiengang um extra Fragen dafür anzuzeigen</span>
+
+    <%= label_tag :subquestions, 'Nachfragen' %>
+    <%= check_box_tag :subquestions, 1, true %>
+    <span>Setze das Häkchen, wenn Du – abhängig von Deiner Antwort – ggf. Nachfragen möchtest.</span>
+
+    <br class="clear"/><br/>
+    <b>Schwierigkeitsgrade</b><br/>
+    <% Difficulty.all.each do |id, name| %>
+      <%= label_tag "difficulty[#{id}]", name, style: "font-weight: normal" %>
+      <%= check_box_tag "difficulty[#{id}]", id, true %>
+    <% end %>
   </div>
 
   <h2>Kategorie</h2>

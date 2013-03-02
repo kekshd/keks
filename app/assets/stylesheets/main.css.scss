@@ -156,6 +156,7 @@ label {
   font-weight: bold;
   float: left;
   clear: left;
+  cursor: pointer;
 }
 
 .field_with_errors label {
@@ -171,6 +172,11 @@ input + span, select + span, textarea + span,  .field_with_errors + span {
   padding-top: 4px;
 }
 
+input[type=checkbox] + span {
+  margin-top: -1px;
+  padding-top: 0;
+}
+
 input, textarea {
   @include border-box;
   float: left;
@@ -182,9 +188,10 @@ input, textarea {
   background: #fff;
   color: #000;
 
-  &:focus:not([disabled]) {
+  &:focus {
     border-color: $dark !important;
     box-shadow: 0 0 2px $light;
+    outline: none;
   }
 
   &[disabled] {
@@ -221,6 +228,7 @@ select {
   &:focus {
     border-color: $dark !important;
     box-shadow: 0 0 2px $light;
+    outline: none;
   }
 
   option {
@@ -229,6 +237,13 @@ select {
     line-height: 30px;
     padding-bottom: 4px;
     padding-left: 4px;
+  }
+}
+
+.smallform {
+  input, textarea, select {
+    min-width: 100px;
+    width: 100px;
   }
 }
 
@@ -281,10 +296,37 @@ img.latex-block {
 
 .clear, #preview, #preview > div {
   clear: both;
+
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 }
 
 #preview {
   border-top: 1px solid #AAAAAA;
   border-bottom: 1px solid #AAAAAA;
   margin-left: 100px;
+}
+
+
+.toggle-head {
+  cursor: pointer;
+  &:after {
+    color: #777;
+    padding-left: 10px;
+  }
+}
+
+.toggle-closed {
+  &:after {
+    content: "▾";
+  }
+}
+
+.toggle-opened {
+  &:after {
+    content: "▴";
+  }
 }

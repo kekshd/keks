@@ -2,9 +2,16 @@
 
 class Question < ActiveRecord::Base
   attr_accessible :text, :answers, :ident
-
   validates :ident, :uniqueness => true, :presence => true
   validates :text, :presence => true
+
+  attr_accessible :difficulty
+  enumerate :difficulty
+  validates_inclusion_of :difficulty, in: Difficulty
+
+  attr_accessible :study_path
+  enumerate :study_path
+  validates_inclusion_of :study_path, in: StudyPath
 
   has_many :answers, :dependent => :destroy
   has_many :hints, :order => 'sort_hint ASC', :dependent => :destroy
