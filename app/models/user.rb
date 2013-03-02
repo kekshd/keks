@@ -17,6 +17,8 @@ class User < ActiveRecord::Base
 
   attr_protected :admin
 
+  attr_protected :enrollment_keys
+
   validates :nick, presence: true, uniqueness: true
   validates :mail, allow_blank: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 4 }, :if => :should_validate_password?

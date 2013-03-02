@@ -1,8 +1,29 @@
 <div>
+  <h2>Einschreibeschlüssel hinzufügen</h2>
+  <p>Die Schlüssel dienen dazu, Dich bestimmten Veranstaltungen zuzuordnen. Dies ist notwendig, da das Tool für alle offen ist, aber nur die statistischen Daten der lokalen Nutzer interessant sind. Dadurch können etwa Problembereiche entdeckt und nochmal angesprochen werden. Du musst keinen Schlüssel eintragen um das Tool zu benutzen.</p>
+
+  <% unless @user.enrollment_keys.blank? %>
+    <p>
+      <b>Vorhandene Schlüssel:</b> <%= @user.enrollment_keys %>
+    </p>
+  <% end %>
+
+  <%= form_for(@user, url: enroll_user_path(@user), method: :post) do |f| %>
+    <%= render 'shared/error_messages', object: f.object if params[:commit] == "Passwort ändern"  %>
+
+    <%= text_field_tag :enrollment_key %>
+    <%= f.submit "Schlüssel hinzufügen", class: "button", style: "float:left; margin-left: 4px; margin-top: 3px; clear: none" %>
+
+    <%= hidden_field_tag :type, 'enrollment' %>
+  <% end %>
+
+</div>
+
+<div>
   <h2>Dein Profil</h2>
 
   <%= form_for(@user) do |f| %>
-    <%= render 'shared/error_messages', object: f.object if params[:commit] == "Daten aktualisieren" %>
+    <%= render 'shared/error_messages', object: f.object if params[:type] == "datachange" %>
 
     <%= f.label :nick %>
     <%= f.text_field :nick, disabled: true  %>
@@ -24,7 +45,7 @@
   <h2>Passwort ändern</h2>
 
   <%= form_for(@user) do |f| %>
-    <%= render 'shared/error_messages', object: f.object if params[:commit] == "Passwort ändern"  %>
+    <%= render 'shared/error_messages', object: f.object if params[:type] == "pwchange"  %>
 
     <%= f.label :password, "Altes Passw." %>
     <%= f.password_field :password %>

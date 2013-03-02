@@ -18,6 +18,8 @@ Keks::Application.routes.draw do
   get "question/tree"
 
   resources :users
+  match "users/:id/enrollment" => "users#enroll", as: "enroll_user", via: :post
+
   resources :questions do
     resources :answers
     resources :hints

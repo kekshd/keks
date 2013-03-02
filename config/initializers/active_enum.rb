@@ -22,3 +22,7 @@ class StudyPath < ActiveEnum::Base
   value :id => 3, :name => 'Bsc Physik'
   value :id => 4, :name => 'Lehramt'
 end
+
+class EnrollmentKeys < ActiveEnum::Base
+  value :id => 1, :name => 'TestEnrollment'
+end
