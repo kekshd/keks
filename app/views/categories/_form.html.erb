@@ -12,8 +12,9 @@
   <span>Benötigt</span>
 
   <%= f.label :text %>
-  <%= f.text_area :text %>
+  <%= f.text_area :text, "data-preview" => "#preview"  %>
   <span>Optional<%=render "latex/help"%></span>
+  <div id="preview"><%= render_tex(@category.text) %></div>
 
 
   <%= f.label :answers, "Eltern-Elem." %>

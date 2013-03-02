@@ -5,8 +5,9 @@
   <span>Benötigt. Muss eindeutig sein bzgl. aller Fragen.</span>
 
   <%= f.label :text %>
-  <%= f.text_area :text %>
+  <%= f.text_area :text, "data-preview" => "#preview"  %>
   <span>Benötigt<%=render "latex/help"%></span>
+  <div id="preview"><%= render_tex(@question.text) %></div>
 
 
   <%= f.label :parent %>

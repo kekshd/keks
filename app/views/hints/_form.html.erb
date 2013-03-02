@@ -7,8 +7,9 @@
 
 
   <%= f.label :text %>
-  <%= f.text_area :text %>
+  <%= f.text_area :text, "data-preview" => "#preview"  %>
   <span>Benötigt<%=render "latex/help"%></span>
+  <div id="preview"><%= render_tex(@hint.text) %></div>
 
   <%= f.submit :class => 'button primary big' %>
 

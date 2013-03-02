@@ -11,6 +11,7 @@ module LatexHelper
   end
 
   def render_tex(mixed)
+    return '' if mixed.blank?
     imgs = []
     mixed.gsub!(/(§§?)([^§]+)\1/) do
       imgs << tex_to_image_tag($2, $1.size == 2)
