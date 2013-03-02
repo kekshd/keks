@@ -13,4 +13,5 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-tablesorter
+//= require js-routes
 //= require_tree .

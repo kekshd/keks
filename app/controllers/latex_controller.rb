@@ -33,4 +33,13 @@ class LatexController < ApplicationController
 
     send_data png, :type => 'image/png', :disposition => 'inline'
   end
+
+  def complex
+    if params['text'] && params['text'].size < 100000
+      @text = params['text']
+      render 'complex'
+    else
+      render :text => "Kein Text oder Text zu lang"
+    end
+  end
 end

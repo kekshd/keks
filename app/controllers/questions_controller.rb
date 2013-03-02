@@ -61,4 +61,14 @@ class QuestionsController < ApplicationController
       render 'new'
     end
   end
+
+  def destroy
+    @question = Question.find(params[:id])
+    if @question.destroy
+      flash[:success] = "Frage gelöscht"
+    else
+      flash[:error] = "Frage nicht gelöscht. Siehe Log für mehr Informationen."
+    end
+    redirect_to questions_path
+  end
 end

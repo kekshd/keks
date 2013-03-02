@@ -2,7 +2,7 @@
 
 module LatexHelper
   def tex_to_path(tex)
-    b = Base64.urlsafe_encode64(tex)
+    b = Base64.urlsafe_encode64(tex.strip)
     render_tex_path({:base64_text => b})
   end
 
@@ -17,14 +17,12 @@ module LatexHelper
       '§'
     end
 
-    mixed = h(mixed)
+    mixed = ERB::Util.h(mixed)
 
     mixed.gsub!('§') do
       imgs.shift
     end
 
-    #~ mixed.gsub!(/§§([^§]+)§§/) { raw tex_to_image_tag($1) }
-    #~ mixed.gsub!(/§([^§]+)§/) { raw tex_to_image_tag($1) }
     content_tag(:div, raw(mixed), class: 'tex')
   end
 

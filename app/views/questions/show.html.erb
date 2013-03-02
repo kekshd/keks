@@ -12,17 +12,19 @@
 
   <h3>Antworten</h3>
   <table id="answertable" class="tablesorter">
-    <thead><tr><th>Ident</th><th>Text</th><th>Korrekt?</th><th>Aktionen</th></tr></thead>
+    <thead><tr><th>Ident</th><th>Text</th><th>Korrekt?</th><th>#Fragen / #Kat.</th><th>Aktionen</th></tr></thead>
     <tbody>
     <% @question.answers.each do |a| %>
       <tr>
         <%= content_tag :td, a.ident %>
         <%= content_tag :td, a.text[0..50] %>
         <%= content_tag :td, a.correct %>
+        <%= content_tag :td, "#{a.questions.size} / #{a.categories.size}" %>
         <td>
           <%=link_to 'Bearbeiten', edit_question_answer_path(@question, a) %>
           <%=link_to 'Neue Kategorie hier', new_category_path(:parent => a.id) %>
           <%=link_to 'Neue Frage hier', new_question_path(:parent => "Answer_#{a.id}") %>
+          <%=link_to 'Löschen', question_answer_path(@question, a), method: :delete, confirm: "Es wird nur die Antwort gelöscht. #{a.questions.size} hängen danach in der Luft und #{a.categories.size} Kategorien werden möglicherweise zu Wurzel-Kategorien.\n\nFortfahren?" %>
         </td>
       </tr>
     <% end %>
@@ -40,7 +42,10 @@
       <tr>
         <%= content_tag :td, h.sort_hint %>
         <%= content_tag :td, h.text[0..100] %>
-        <td><%=link_to 'Bearbeiten', edit_question_hint_path(@question, h) %></td>
+        <td>
+          <%=link_to 'Bearbeiten', edit_question_hint_path(@question, h) %>
+          <%=link_to 'Löschen', question_hint_path(@question, h), method: :delete, confirm: "Hinweis wirklich löschen?" %>
+        </td>
       </tr>
     <% end %>
     </tbody>

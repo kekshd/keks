@@ -3,30 +3,5 @@
 
   <h2>Fragenliste</h2>
 
-  <table id="index" class="tablesorter">
-    <thead>
-      <tr><th>Ident</th><th>Elternname</th><th>Text</th><th>Antworten</th><th>Aktionen</th></tr>
-    </thead>
-    <tbody>
-      <% @questions.each do |q| %>
-        <tr>
-          <%=content_tag :td, link_to(q.ident, question_path(q)) %>
-          <%=content_tag :td, link_to_parent(q) %>
-          <%=content_tag :td, q.text[0..50] %>
-          <td>
-            <% q.answers.each do |a| %>
-              <%= content_tag :span, a.ident, title: a.text, class: a.correct? ? "correct" : "wrong" %>
-            <% end %>
-          </td>
-          <td>
-            <%= link_to "Anzeigen", question_path(q) %>
-            <%= link_to "Bearbeiten", edit_question_path(q) %>
-            <%= link_to "Neue Antwort", new_question_answer_path(q) %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
+  <%= render "index_table" %>
 </div>

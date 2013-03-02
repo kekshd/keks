@@ -6,8 +6,8 @@ class Question < ActiveRecord::Base
   validates :ident, :uniqueness => true, :presence => true
   validates :text, :presence => true
 
-  has_many :answers
-  has_many :hints, :order => 'sort_hint ASC'
+  has_many :answers, :dependent => :destroy
+  has_many :hints, :order => 'sort_hint ASC', :dependent => :destroy
 
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true

@@ -167,6 +167,7 @@ input + span, select + span, textarea + span,  .field_with_errors + span {
   display: block;
   margin-left: 8px;
   color: #777;
+  line-height: 23px;
 }
 
 input, textarea {
@@ -272,6 +273,12 @@ img.latex-block {
   }
 }
 
-.clear {
+.clear, #preview, #preview > div {
   clear: both;
+}
+
+#preview {
+  border-top: 1px solid #AAAAAA;
+  border-bottom: 1px solid #AAAAAA;
+  margin-left: 100px;
 }

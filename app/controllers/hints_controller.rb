@@ -44,12 +44,12 @@ class HintsController < ApplicationController
   # DELETE /hints/1.json
   def destroy
     @hint = Hint.find(params[:id])
-    @hint.destroy
-
-    respond_to do |format|
-      format.html { redirect_to hints_url }
-      format.json { head :no_content }
+    if @hint.destroy
+      flash[:success] = "Hinweis gelöscht"
+    else
+      flash[:error] = "Hinweis nicht gelöscht. Siehe Log für mehr Informationen."
     end
+    redirect_to @question
   end
 
   private

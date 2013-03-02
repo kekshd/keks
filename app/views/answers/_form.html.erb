@@ -8,8 +8,10 @@
   </span>
 
   <%= f.label :text %>
-  <%= f.text_area :text %>
-  <span>Benötigt. Ist genau eine <tt>\begin{pmatrix} … \end{pmatrix}</tt> enthalten, wird<br/>diese zur Validierung genutzt. Es darf dann nur eine Antwort geben. Correct muss auf wahr stehen.</span>
+  <%= f.text_area :text, "data-preview" => "#preview" %>
+  <span>Benötigt. Ist genau eine <tt>\begin{pmatrix} … \end{pmatrix}</tt> enthalten, wird<br/>diese zur Validierung genutzt. Es darf dann nur eine Antwort geben. Correct muss auf wahr stehen. <br/><%= render "latex/help" %></span>
+
+  <div id="preview"><%= render_tex(@answer.text) %></div>
 
   <%= f.label :correct %>
   <%= f.check_box :correct %>

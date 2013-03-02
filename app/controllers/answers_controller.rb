@@ -28,11 +28,21 @@ class AnswersController < ApplicationController
     @answer.question = @question
 
     if @answer.save
-      flash[:success] = "Antowrt gespeichert"
+      flash[:success] = "Antwort gespeichert"
       redirect_to @question
     else
       render 'new'
     end
+  end
+
+  def destroy
+    @answer = Answer.find(params[:id])
+    if @answer.destroy
+      flash[:success] = "Antwort gelöscht"
+    else
+      flash[:error] = "Antwort konnte nicht gelöscht werden. Vermutlich steht in den Logs mehr."
+    end
+    redirect_to @question
   end
 
   private

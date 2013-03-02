@@ -13,6 +13,12 @@
 </div>
 
 <div>
+  <h2>Fragen in dieser Kategorie</h2>
+  <% @questions = @category.questions %>
+  <%= render "questions/index_table" %>
+</div>
+
+<div>
   <%=render_dot(@category.dot_region)%>
 
   <br/><br/>

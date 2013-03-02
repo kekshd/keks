@@ -53,6 +53,8 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-tablesorter (1.4.1)
       railties (~> 3.1)
+    js-routes (0.8.7)
+      rails (>= 3.2)
     json (1.7.7)
     kgio (2.8.0)
     mail (2.4.4)
@@ -128,6 +130,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   jquery-rails
   jquery-tablesorter
+  js-routes
   rails (= 3.2.12)
   rails-latex
   sass-rails (~> 3.2.3)

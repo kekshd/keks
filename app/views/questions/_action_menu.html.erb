@@ -2,4 +2,5 @@
   <li><%= link_to "Diese Frage Bearbeiten", edit_question_path(@question), class: 'button' %></li>
   <li><%=link_to "Weitere Antwort", new_question_answer_path(@question), class: "button" %></li>
   <li><%=link_to "Weiterer Hinweis", new_question_hint_path(@question), class: "button" %></li>
+  <li><%=link_to "Löschen", question_path(@question), method: :delete, class: "button danger", confirm: "Dies löscht die Frage, alle Hinweise und Antworten. Durch gelöschte Antworten werden Kategorien möglicherweise zu neuen Wurzeln und es ist möglich, dass Fragen in der Luft hängen.\n\nFortfahren?" %></li>
 </ul>
