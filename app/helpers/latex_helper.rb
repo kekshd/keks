@@ -18,7 +18,7 @@ module LatexHelper
       '§'
     end
 
-    mixed = ERB::Util.h(mixed)
+    mixed = ERB::Util.h(mixed).gsub(/([\r\n]){2,}/, '<br/><br/>'.html_safe)
 
     mixed.gsub!('§') do
       imgs.shift

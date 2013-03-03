@@ -14,7 +14,8 @@ Keks::Application.routes.draw do
   get "main/overview"
   get "main/hitme"
   get "main/help"
-  get "question/tree"
+
+
 
   resources :users
   match "users/:id/enrollment" => "users#enroll", as: "enroll_user", via: :post
@@ -23,7 +24,12 @@ Keks::Application.routes.draw do
     resources :answers
     resources :hints
   end
+  get "question/tree"
+  #~ match "questions/:id/json", to: "questions#json", :as => "question_json", via: :get
+
   resources :categories
+  match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get
+
 
   resources :sessions, only: [:new, :create, :destroy]
 

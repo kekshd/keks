@@ -7,11 +7,13 @@
   <h2>Kategorie <%=@category.ident%></h2>
 
   <table>
-    <tr><th>Titel</th><td><%=@category.title%></td></tr>
+    <tr><th>Titel</th><td><%=render_tex @category.title%></td></tr>
     <tr><th>Wurzel?</th><td><%=@category.is_root?%></td></tr>
     <tr><th>hat # Fragen</th><td><%=@category.questions.size %></tr>
     <tr><th>Verweise hierher</th><td><%=@category.answers.size %></tr>
+    <tr><th>Text</th><td><%=render_tex @category.text %></tr>
   </table>
+
 </div>
 
 <div>

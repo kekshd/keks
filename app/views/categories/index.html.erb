@@ -23,7 +23,7 @@
           </td>
           <td>
             <% c.questions.each do |q| %>
-              <%=link_to q.ident, q %>
+              <%=link_to q.ident, q, :class => q.complete? ? "" : "strike" %>
             <% end %>
           </td>
           <td>

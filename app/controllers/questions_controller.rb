@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class QuestionsController < ApplicationController
-  before_filter :require_admin
+  before_filter :require_admin, :except => "render"
 
 
   def index
@@ -70,5 +70,20 @@ class QuestionsController < ApplicationController
       flash[:error] = "Frage nicht gelöscht. Siehe Log für mehr Informationen."
     end
     redirect_to questions_path
+  end
+
+
+  def json
+    @question = Question.find(params[:id])
+    hints = []
+    @question.hints.each do |h|
+      @hint = h
+      hints << render_to_string(partial: '/hints/render.html.erb')
+    end
+
+    render json: {
+      'hints' => hints,
+      'html' => render_to_string(partial: 'render.html.erb')
+    }
   end
 end

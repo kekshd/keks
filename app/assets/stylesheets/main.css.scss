@@ -24,6 +24,17 @@ $success: #37A359;
   box-sizing: border-box;
 }
 
+@mixin gradient-top($from, $to) {
+  background: $from;
+  background: -moz-linear-gradient(top,  $from 0%, $to 30%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(30%,$to));
+  background: -webkit-linear-gradient(top,  $from 0%,$to 30%);
+  background: -o-linear-gradient(top,  $from 0%,$to 30%);
+  background: -ms-linear-gradient(top,  $from 0%,$to 30%);
+  background: linear-gradient(to bottom,  $from 0%,$to 30%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$from', endColorstr='$to',GradientType=0 );
+}
+
 body {
   font-family: 'Cabin', sans-serif;
   text-rendering: optimizelegibility;
@@ -37,8 +48,16 @@ body > div, div.box {
   background: #fff;
   padding: 20px;
 
-  & + h2 {
+  & h2:first-child, h3:first-child {
     margin-top: 0;
+  }
+
+  &.wrong {
+    @include gradient-top(#FFE4E3, #fff);
+  }
+
+  &.correct {
+    @include gradient-top(#E6FFE9, #fff);
   }
 }
 
@@ -46,10 +65,11 @@ header {
   background: $dark;
 }
 
-header + div {
-  margin-top: 0;
-  border-top: 0;
+header + div, noscript + div, noscript div {
+  margin-top: 0 !important;
+  border-top: 0 !important;
 }
+
 
 h1 {
   color: #fff;
@@ -133,6 +153,32 @@ h2 {
   }
 }
 
+.inline-chooser {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: table;
+
+  li {
+    padding-bottom: 15px;
+    display: table-row;
+  }
+
+  li > div {
+    display: table-cell;
+    vertical-align: middle;
+
+    > .button {
+      width: 100%;
+      @include border-box;
+    }
+  }
+
+  li > div + div {
+    padding-left: 10px;
+  }
+}
+
 p {
   &.left {
     display: table-cell;
@@ -157,6 +203,7 @@ label {
   float: left;
   clear: left;
   cursor: pointer;
+  margin: 5px 0;
 }
 
 .field_with_errors label {
@@ -174,7 +221,10 @@ input + span, select + span, textarea + span,  .field_with_errors + span {
 
 input[type=checkbox] + span {
   margin-top: -1px;
-  padding-top: 0;
+}
+
+input[type="checkbox"] {
+  margin-top: 8px;
 }
 
 input, textarea {
@@ -275,6 +325,7 @@ table {
 
 th {
   text-align: left;
+  vertical-align: top;
 }
 
 img {
@@ -329,4 +380,17 @@ img.latex-block {
   &:after {
     content: "▴";
   }
+}
+
+body {
+  counter-reset: count;
+}
+
+.count:after {
+  counter-increment: count;
+  content: " " counter(count);
+}
+
+.strike {
+  text-decoration: line-through;
 }

@@ -5,7 +5,7 @@
   <tbody>
     <% @questions.each do |q| %>
       <tr>
-        <%=content_tag :td, link_to(q.ident, question_path(q)) %>
+        <%=content_tag :td, link_to(q.ident, question_path(q), :class => q.complete? ? "" : "strike") %>
         <%=content_tag :td, link_to_parent(q) %>
         <%=content_tag :td, q.difficulty(:name) %>
         <%=content_tag :td, q.study_path(:name) %>

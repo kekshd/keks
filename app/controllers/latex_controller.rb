@@ -16,8 +16,8 @@ class LatexController < ApplicationController
     begin
       pdf = render_to_string(:template => "latex/simple.pdf", :layout => true)
       png = nil
-      Open3.popen2("gs -q -dQUIET -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dAlignToPixels=0 -dGraphicsAlphaBits=4 -dTextAlphaBits=4 -r472 -dDownScaleFactor=4 -sOutputFile=- -") do |stdin, stdout|
-      #~ Open3.popen2("convert -transparent white -density 100 -antialias - png:-") do |stdin, stdout|
+      Open3.popen2("gs -q -dMaxBitmap=2147483647 -dQUIET -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pngalpha -dAlignToPixels=0 -dGraphicsAlphaBits=4 -dTextAlphaBits=4 -r118 -sOutputFile=- -") do |stdin, stdout|
+      #~ Open3.popen2("gs -q -dMaxBitmap=2147483647 -dQUIET -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dAlignToPixels=0 -dGraphicsAlphaBits=4 -dTextAlphaBits=4  -r472 -dDownScaleFactor=4 -sOutputFile=- -") do |stdin, stdout|
         stdin.puts pdf
         stdin.flush
         stdin.close

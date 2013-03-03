@@ -34,8 +34,8 @@ class Question < ActiveRecord::Base
   def matrix_validate?
     return false if answers.size != 1
     a = answers.first.text
-    return false if a.count(%(\begin{pmatrix})) != 1
-    return false if a.count(%(\end{pmatrix})) != 1
+    return false if a.scan(%(\\begin{pmatrix})).size != 1
+    return false if a.scan(%(\\end{pmatrix})).size != 1
     true
   end
 

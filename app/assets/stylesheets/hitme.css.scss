@@ -1,0 +1,16 @@
+.answer-chooser {
+  display: table;
+  border-spacing: 10px;
+
+  > div {
+    display: table-row;
+
+    a, span {
+      display: table-cell;
+    }
+
+    span {
+      visibility: hidden;
+    }
+  }
+}
