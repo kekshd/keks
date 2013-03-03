@@ -42,11 +42,14 @@ body {
 }
 
 body > div, div.box {
-  margin: 20px 40px;
+  margin: 20px auto;
   border: 1px solid #888;
   box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);
   background: #fff;
   padding: 20px;
+  width: 90%;
+  max-width: 1400px;
+  @include border-box;
 
   & h2:first-child, h3:first-child {
     margin-top: 0;
@@ -76,13 +79,15 @@ h1 {
   font-family: 'Yanone Kaffeesatz', sans-serif;
   font-size: 45px;
   text-shadow: 1px 1px 1px #000;
-  margin: 0px;
-  padding: 10px 60px;
+  padding: 10px 20px;
+  margin: 0px auto;
+  width: 90%;
+  max-width: 1400px;
+  @include border-box;
 }
 
 nav {
   padding: 5px 15px;
-  margin: 0 40px;
   background: $light;
   box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);
   border: 1px solid #004A6B;
@@ -93,6 +98,10 @@ nav {
   text-shadow: 1px 1px rgba(55, 55, 55, 0.7);
   font-size: 23px;
 
+  margin: 0px auto;
+  width: 90%;
+  max-width: 1400px;
+  @include border-box;
 
   a, span {
     color: inherit;
@@ -124,6 +133,7 @@ nav {
 a {
   text-decoration: none;
   color: #0090D2;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;

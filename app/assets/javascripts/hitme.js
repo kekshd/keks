@@ -12,6 +12,12 @@ function parseMatrix(orig) {
   return rows.join("  ");
 }
 
+function showNextHint(elm) {
+  var hidden = $(elm).siblings(":hidden");
+  hidden.first().animate(H.Constants.showAnimation);
+  if(hidden.length === 1) $(elm).animate(H.Constants.hideAnimation);
+}
+
 
 H = {};
 window.H = H;
@@ -160,9 +166,11 @@ H.Hitme.prototype = {
     var boxSelector = '#' + box.attr('id');
 
     var isMatrix = linkBox.hasClass('answer-chooser-matrix');
-    if(isMatrix) {
-      var m = parseMatrix(box.find("textarea").val());
-      answ.data('correct', answ.data('solution') === m);
+    if(isMatrix && answ.is(':first-child')) {
+      var txt = box.find("textarea");
+      var m = parseMatrix(txt.val());
+      txt.attr('disabled', 'disabled');
+      answ.data('correct', window.currentRootQuestion.matrix_solution === m);
     }
 
     var c = answ.data('correct');
@@ -190,11 +198,21 @@ H.Hitme.prototype = {
 
   _showNextRootQuestion: function() {
     this.currentRootQuestionId++;
-    var q = this.currentRootQuestion = this.questions[this.currentRootQuestionId];
+    var q = window.currentRootQuestion = this.questions[this.currentRootQuestionId];
 
     var code = '<div style="display:none" id="blockQ'+q.id+'" class="hideMeOnMore">'
       + q.html
       + '<br/>';
+
+    if(q.hints.length >= 1) {
+      code += '<div>'
+      $.each(q.hints, function(ind, hint) {
+        code += '<div style="display: none;margin: 5px 0">'+hint+'</div>';
+      });
+      code += '<a onclick="showNextHint(this);">Hinweis anzeigen</a>';
+      code += '</div>';
+    }
+
 
     var cls;
 
@@ -205,14 +223,14 @@ H.Hitme.prototype = {
       var a = q.answers[0];
       code += '<div style="float:left;width: 45%">';
       code += '<label for="a'+a.id+'" style="float:none">Deine Lösung</label>';
-      code += '<textarea id="a'+a.id+'" style="float:none"></textarea><br/>';
+      code += '<textarea id="a'+a.id+'" class="matrixmode"></textarea><br/>';
       code += '</div>';
       code += '<div style="float:right;width: 45%" class="initiallyHidden">';
       code += '<strong>Unsere Lösung</strong><br/>';
       code += a.html+'</div>';
       code += '<br class="clear"/>';
       code += '<div class="answer-chooser-matrix button-group">';
-      code += '<a class="button" data-solution="'+q.matrix_solution+'">Antwort übernehmen</a>';
+      code += '<a class="button">Antwort übernehmen</a>';
       code += '<a class="button">Frage überspringen</a>';
       code += '</div>';
     } else {

@@ -1,6 +1,7 @@
 .answer-chooser {
   display: table;
   border-spacing: 10px;
+  margin-left:-10px;
 
   > div {
     display: table-row;
@@ -17,4 +18,11 @@
 
 .initiallyHidden {
   visibility: hidden;
+}
+
+.matrixmode {
+  float: none !important;
+  min-width: 0;
+  width: 260px;
+  height: 180px;
 }

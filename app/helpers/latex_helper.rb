@@ -11,15 +11,15 @@ module LatexHelper
   end
 
   def render_tex(mixed)
-    mixed = mixed.dup # don’t change original string
     return '' if mixed.blank?
+    mixed = mixed.dup # don’t change original string
     imgs = []
     mixed.gsub!(/(§§?)([^§]+)\1/) do
       imgs << tex_to_image_tag($2, $1.size == 2)
       '§'
     end
 
-    mixed = ERB::Util.h(mixed).gsub(/([\r\n]){2,}/, '<br/><br/>'.html_safe)
+    mixed = ERB::Util.h(mixed).gsub(/(\r\n){2,}|\n{2,}|\r{2,}/, '<br/><br/>'.html_safe)
 
     mixed.gsub!('§') do
       imgs.shift
