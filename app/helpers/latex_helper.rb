@@ -11,6 +11,7 @@ module LatexHelper
   end
 
   def render_tex(mixed)
+    mixed = mixed.dup # don’t change original string
     return '' if mixed.blank?
     imgs = []
     mixed.gsub!(/(§§?)([^§]+)\1/) do

@@ -39,6 +39,15 @@ class Question < ActiveRecord::Base
     true
   end
 
+  def matrix_solution
+    return nil unless matrix_validate?
+    a = self.answers.first.text
+    a = a.match(/\\begin\{pmatrix\}(.*)\\end\{pmatrix\}/m)[1]
+    rows = a.split(/[\r\n]+/)
+    rows = rows.map { |r| r.strip.split(/\s+/).join(" ") }
+    rows.join("  ")
+  end
+
   def dot(active = false)
     txt = 'F: ' + ident.gsub('"', '')
     bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''

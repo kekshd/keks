@@ -34,7 +34,7 @@ class CategoriesController < ApplicationController
       hints = []
       q.hints.each do |h|
         @hint = h
-        hints << render_to_string(partial: '/hints/render.html.erb')
+        hints << render_to_string(partial: '/hints/render')
       end
 
       answers = []
@@ -42,9 +42,9 @@ class CategoriesController < ApplicationController
         @answer = a
         answers << {
           correct: a.correct,
-          correctness:  render_to_string(partial: '/answers/render_correctness.html.erb'),
+          correctness: render_to_string(partial: '/answers/render_correctness'),
           id: a.id,
-          html: render_to_string(partial: '/answers/render.html.erb')
+          html: render_to_string(partial: '/answers/render')
         }
       end
 
@@ -52,8 +52,9 @@ class CategoriesController < ApplicationController
         'hints' => hints,
         'answers' => answers,
         'matrix' => q.matrix_validate?,
+        'matrix_solution' => q.matrix_solution,
         'id' => q.id,
-        'html' => render_to_string(partial: '/questions/render.html.erb')
+        'html' => render_to_string(partial: '/questions/render')
       }
     end
 

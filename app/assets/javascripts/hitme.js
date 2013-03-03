@@ -3,6 +3,15 @@ function validateNumberOnly(self) {
   self.val(self.val().replace(/[^0-9]/g, "") || 10);
 }
 
+function parseMatrix(orig) {
+  var s = $.trim(orig);
+  var rows = s.split(/[\r\n]+/);
+  rows = $.map(rows, function(r) {
+    return $.trim(r).split(/\s+/).join(" ");
+  });
+  return rows.join("  ");
+}
+
 
 H = {};
 window.H = H;
@@ -101,11 +110,7 @@ H.Util = {
     s.removeClass('disable').attr('onclick', s.data('oldonclick'));
   },
 
-  renderSkipButton: function() {
-    return '<div><a class="button">Frage überspringen</a><span></span><span>Du hast diese Frage übersprungen</span></div>';
-  },
-
-  animateTableCellShow: function(elms) {
+  animateVisibilityHiddenShow: function(elms) {
     elms.css('visibility','visible').hide().fadeIn('slow');
   }
 }
@@ -137,50 +142,49 @@ H.Hitme.prototype = {
   },
 
   _renderAnswersForQuestion: function(quest) {
-    s = "";
-    if(quest.matrix) {
-      var a = quest.answers[0];
-      s += '<label for="a'+a.id+'">Lösung</label>';
-      s += '<textarea id="a'+a.id+'"></textarea>';
-      s += '<span>Trage hier die Lösung ein. Matrizen schreibst Du einfach mittels Leerzeichen und Zeilenumbrüchen. Die Anzahl der Leerzeichen ist dabei egal.</span>';
-    } else {
-      $.each(quest.answers, function(ind, a) {
-        s += '<div>'
-        s += '<a class="button" id="a'+a.id+'" data-correct="'+a.correct+'">'+a.html+'</a>';
-        s += '<span>'+a.correctness+'</span>';
-        s += '<span>Deine Antwort</span>';
-        s += '</div>';
-      });
-    }
+    var s = "";
+    $.each(quest.answers, function(ind, a) {
+      s += '<div>'
+      s += '<a class="button" id="a'+a.id+'" data-correct="'+a.correct+'">'+a.html+'</a>';
+      s += '<span>'+a.correctness+'</span>';
+      s += '<span>Deine Antwort</span>';
+      s += '</div>';
+    });
     return s;
   },
 
   _handleAnswerClick: function() {
     var answ = $(this);
-    var table = answ.parents('.answer-chooser').first();
-    var box = '#' + answ.parents('div[id^="block"]').attr('id');
+    var table = answ.parents('.answer-chooser, .answer-chooser-matrix').first();
+    var box = answ.parents('div[id^="block"]');
+    var boxSelector = '#' + box.attr('id');
+
+    var isMatrix = table.hasClass('answer-chooser-matrix');
+    if(isMatrix) {
+      var m = parseMatrix(box.find("textarea").val());
+      answ.data('correct', answ.data('solution') === m);
+    }
 
     var c = answ.data('correct');
     switch(c) {
       case "true":
       case true:
-      window.currentHitme.answersGiven.correct.push(box);
+      window.currentHitme.answersGiven.correct.push(boxSelector);
       table.addClass('reveal');
       break;
 
       case "false":
       case false:
-      window.currentHitme.answersGiven.fail.push(box);
+      window.currentHitme.answersGiven.fail.push(boxSelector);
       table.addClass('reveal');
       break;
 
       default:
-      window.currentHitme.answersGiven.skip.push(box);
-      console.log(c);
+      window.currentHitme.answersGiven.skip.push(boxSelector);
     }
 
     table.find('a').addClass('disable');
-    H.Util.animateTableCellShow(answ.siblings().last());
+    H.Util.animateVisibilityHiddenShow(answ.siblings().last());
     window.currentHitme.showNext();
   },
 
@@ -190,14 +194,39 @@ H.Hitme.prototype = {
 
     var code = '<div style="display:none" id="blockQ'+q.id+'" class="hideMeOnMore">'
       + q.html
-      + '<br/><div class="answer-chooser">'
-      + this._renderAnswersForQuestion(q)
-      + H.Util.renderSkipButton()
-      + '</div>'
-      + '</div>';
+      + '<br/>';
+
+    var cls;
+
+    if(q.matrix) {
+      cls = 'answer-chooser-matrix';
+
+      code += 'Trage unten die Lösung ein. Matrizen schreibst Du einfach mittels Leerzeichen und Zeilenumbrüchen. Die Anzahl der Leerzeichen ist dabei egal.<br/><br/>'
+      var a = q.answers[0];
+      code += '<div style="float:left;width: 45%">';
+      code += '<label for="a'+a.id+'" style="float:none">Deine Lösung</label>';
+      code += '<textarea id="a'+a.id+'" style="float:none"></textarea><br/>';
+      code += '</div>';
+      code += '<div style="float:right;width: 45%" class="initiallyHidden">';
+      code += '<strong>Unsere Lösung</strong><br/>';
+      code += a.html+'</div>';
+      code += '<br class="clear"/>';
+      code += '<div class="answer-chooser-matrix button-group">';
+      code += '<a class="button" data-solution="'+q.matrix_solution+'">Antwort übernehmen</a>';
+      code += '<a class="button">Frage überspringen</a>';
+      code += '</div>';
+    } else {
+      cls = 'answer-chooser';
+      code += '<div class="answer-chooser">'
+        + this._renderAnswersForQuestion(q)
+        +'<div><a class="button">Frage überspringen</a><span></span><span>Du hast diese Frage übersprungen</span></div>'
+        + '</div>';
+    }
+
+    code += '</div>';
 
     $(code).appendTo('body').animate(H.Constants.showAnimation, H.Constants.stayAtBottom);
-    $('.answer-chooser:last').one('click', 'a', this._handleAnswerClick);
+    $('.'+cls+':last').one('click', 'a', this._handleAnswerClick);
   },
 
   _showFinishDialog: function() {
@@ -214,7 +243,7 @@ H.Hitme.prototype = {
 
     $(code).appendTo('body').animate(H.Constants.showAnimation, H.Constants.stayAtBottom);
 
-    H.Util.animateTableCellShow($('.reveal > div > span:nth-child(2)'));
+    H.Util.animateVisibilityHiddenShow($('.reveal > div > span:nth-child(2), .reveal .initiallyHidden'));
 
     var allCorr = this.answersGiven.correct.diff(this.answersGiven.fail).join(',');
     var anyFail = this.answersGiven.fail.join(',');
