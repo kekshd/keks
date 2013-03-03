@@ -155,11 +155,11 @@ H.Hitme.prototype = {
 
   _handleAnswerClick: function() {
     var answ = $(this);
-    var table = answ.parents('.answer-chooser, .answer-chooser-matrix').first();
+    var linkBox = answ.parents('.answer-chooser, .answer-chooser-matrix').first();
     var box = answ.parents('div[id^="block"]');
     var boxSelector = '#' + box.attr('id');
 
-    var isMatrix = table.hasClass('answer-chooser-matrix');
+    var isMatrix = linkBox.hasClass('answer-chooser-matrix');
     if(isMatrix) {
       var m = parseMatrix(box.find("textarea").val());
       answ.data('correct', answ.data('solution') === m);
@@ -170,20 +170,20 @@ H.Hitme.prototype = {
       case "true":
       case true:
       window.currentHitme.answersGiven.correct.push(boxSelector);
-      table.addClass('reveal');
+      box.addClass('reveal');
       break;
 
       case "false":
       case false:
       window.currentHitme.answersGiven.fail.push(boxSelector);
-      table.addClass('reveal');
+      box.addClass('reveal');
       break;
 
       default:
       window.currentHitme.answersGiven.skip.push(boxSelector);
     }
 
-    table.find('a').addClass('disable');
+    linkBox.find('a').addClass('disable');
     H.Util.animateVisibilityHiddenShow(answ.siblings().last());
     window.currentHitme.showNext();
   },
