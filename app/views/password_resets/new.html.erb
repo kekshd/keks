@@ -1,0 +1,13 @@
+<% provide(:title, "Passwort vergessen") %>
+
+<div>
+  <h2>Passwort vergessen</h2>
+  <p>Trage hier Deine E-Mail Adresse ein. Anschließend erhälst Du per Mail einen Link mit dem Du fortfahren kannst. Wenn Du Dein Passwort vergessen hast, aber keine E-Mail Adresse hinterlegt hast, dann ist eine Wiederherstellung nicht möglich. Lege Dir in diesem Fall einen neuen Account an.
+
+
+  <%= form_tag password_resets_path, :method => :post do %>
+      <%= label_tag :mail %>
+      <%= text_field_tag :mail, params[:mail] %>
+    <%= submit_tag "Passwort zurücksetzen", :class => "button primary" %>
+  <% end %>
+</div>
