@@ -126,6 +126,11 @@ H.Hitme = function(categoryElement) {
 
 // members
 H.Hitme.prototype = {
+  giveMore: function() {
+    $('.hideMeOnMore').remove();
+    H.hitme(this.cat);
+  },
+
   rootQuestionsAvailable: function(_this, data) {
     _this.questions = data;
     _this.showNext();
@@ -183,7 +188,7 @@ H.Hitme.prototype = {
     this.currentRootQuestionId++;
     var q = this.currentRootQuestion = this.questions[this.currentRootQuestionId];
 
-    var code = '<div style="display:none; border-spacing: 10px;" id="blockQ'+q.id+'">'
+    var code = '<div style="display:none" id="blockQ'+q.id+'" class="hideMeOnMore">'
       + q.html
       + '<br/><div class="answer-chooser">'
       + this._renderAnswersForQuestion(q)
@@ -198,9 +203,13 @@ H.Hitme.prototype = {
   _showFinishDialog: function() {
     var sum = this.answersGiven.correct.length + this.answersGiven.fail.length;
 
-    var code = '<div style="display:none;">'
+    var code = '<div style="display:none;" class="hideMeOnMore">'
       + '<h3>Fertig!</h3>'
       + '<p>Du hast den aktuellen Block abgeschlossen. Insgesamt hast Du '+sum+' Fragen beantwortet und davon '+this.answersGiven.fail.length+' falsch. Scrolle nach oben um jeweils die Antworten für die Fragen zu sehen.</p>'
+      + '<div class="button-group">'
+      + '<a onclick="window.currentHitme.giveMore();" class="button big">Gib mir nochmal '+$('#quantity').val()+'!</a>'
+      + '<a href="'+Routes.main_hitme_path()+'" class="button big">Einstellungen ändern</a>'
+      + '</div>';
       + '</div>';
 
     $(code).appendTo('body').animate(H.Constants.showAnimation, H.Constants.stayAtBottom);

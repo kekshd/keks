@@ -3,7 +3,7 @@
 Keks::Application.routes.draw do
   resources :password_resets
 
-  match "dot/:base64_text.png", to: "dot#simple", :as => "render_dot", :via => :get
+  match "dot/:sha256.png", to: "dot#simple", :as => "render_dot", :via => :get
   match "latex/:base64_text.png", to: "latex#simple", :as => "render_tex", :via => :get
   match "preview", to: "latex#complex", :as => "render_preview", :via => :post
 
