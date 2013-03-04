@@ -49,6 +49,7 @@ class CategoriesController < ApplicationController
       end
 
       json << {
+        'starred' => signed_in? ? current_user.starred.include?(q) : false,
         'hints' => hints,
         'answers' => answers,
         'matrix' => q.matrix_validate?,

@@ -19,6 +19,9 @@ Keks::Application.routes.draw do
 
   resources :users
   match "users/:id/enrollment" => "users#enroll", as: "enroll_user", via: :post
+  match "users/:id/starred" => "users#starred", as: "starred", via: :get
+  match "questions/:id/star" => "questions#star", as: "star_question", via: :get
+  match "questions/:id/unstar" => "questions#unstar", as: "unstar_question", via: :get
 
   resources :questions do
     resources :answers

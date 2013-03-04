@@ -1,8 +1,26 @@
 # encoding: utf-8
 
 class QuestionsController < ApplicationController
-  before_filter :require_admin, :except => "render"
+  before_filter :require_admin, :except => [:render, :star, :unstar]
+  before_filter :signed_in_user, :only => [:star, :unstar]
 
+  def star
+    @question = Question.find(params[:id])
+    return render :json => "keine Frage" if !@question
+    begin
+      current_user.starred << @question
+    rescue; end unless current_user.starred.include?(@question)
+    render :json => current_user.starred.include?(@question)
+  end
+
+  def unstar
+    @question = Question.find(params[:id])
+    return render :json => false if !@question
+    #~ begin
+      current_user.starred.delete(@question)
+    #~ rescue; end
+    render :json => current_user.starred.include?(@question)
+  end
 
   def index
     @questions = Question.all

@@ -15,6 +15,7 @@ class Question < ActiveRecord::Base
 
   has_many :answers, :dependent => :destroy
   has_many :hints, :order => 'sort_hint ASC', :dependent => :destroy
+  has_and_belongs_to_many :starred_by, :class_name => :User, :join_table => :starred
 
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true

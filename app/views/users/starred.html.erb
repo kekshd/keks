@@ -1,0 +1,26 @@
+<% provide(:title, "Dein gemerkten Fragen") %>
+
+<div>
+  <h2>Gemerkte Fragen</h2>
+  <p>Du kannst Dir Fragen merken, wenn Du ihre Antwort gerade nicht weißt oder jemanden fragen möchtest. Klicke dazu bei einer Frage jeweils oben rechts auf „Frage merken“ um sie später hier anzuzeigen. Das Entfernen funktioniert auf die gleiche Weise.</p>
+
+  <p>Auf dieser Seite kannst Du Dir die Fragen nur ansehen, beantworten geht jedoch nicht -- wäre ja auch zu einfach, oder?</p>
+</div>
+
+<% @user.starred.each do |q| %>
+  <div>
+    <h3 class="count">Frage</h3>
+    <%=render_tex q.text %>
+    <br/>
+    <% if q.matrix_validate? %>
+      <strong>Antwort:</strong> Hier wäre das Ergebnis in ein Textfeld einzutragen.
+    <% else %>
+      <strong>Antwortmöglichkeiten:</strong>
+      <ul style="margin-top: 10px;margin-bottom:0">
+        <% q.answers.each do |a| %>
+          <li><%=render_tex a.text %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>

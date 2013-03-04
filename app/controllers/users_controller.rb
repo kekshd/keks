@@ -1,16 +1,21 @@
 # encoding: utf-8
 
 class UsersController < ApplicationController
-  before_filter :signed_in_user, only: [:edit, :update, :destroy, :enroll]
-  before_filter :correct_user,  only: [:edit, :update, :enroll]
+  before_filter :signed_in_user, only: [:edit, :update, :destroy, :enroll, :starred]
+  before_filter :correct_user,  only: [:edit, :update, :enroll, :starred]
+
+  def starred
+  end
 
   def new
     @user = User.new
   end
 
   def create
+    nick = params[:user][:nick]
+    params[:user].delete(:nick)
     @user = User.new(params[:user])
-    @user.nick = params[:user][:nick]
+    @user.nick = nick
     if @user.save
       sign_in @user
       flash[:success] = "Du bist jetzt angemeldet. Diese Seite ist Deine Profilseite. Hier kannst Du auch einen Einschreibeschlüssel eintragen, wenn Dir einer mitgeteilt wurde."

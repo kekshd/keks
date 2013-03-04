@@ -18,6 +18,35 @@ function showNextHint(elm) {
   if(hidden.length === 1) $(elm).animate(H.Constants.hideAnimation);
 }
 
+function renderStarred(question) {
+  c = "";
+  c += '<div class="star">';
+
+  c += question.starred ? '&#9733; ' : '';
+  c += '<a onclick="handleStarredClick(this)" '
+  c += 'data-id="'+question.id+'" ';
+  c += 'data-starred="'+question.starred+'">Frage ';
+  c += question.starred ? 'gemerkt' : 'merken';
+  c += '</a></div>';
+
+  return c;
+}
+
+function handleStarredClick(link) {
+  var l = $(link);
+  var s = l.data('starred');
+  var id = l.data('id');
+  var r = s ? Routes.unstar_question_path(id) : Routes.star_question_path(id);
+
+  $.ajax({
+    url: r,
+  }).done(function(data) {
+    var fakeQ = {id: id, starred: data};
+    l.parent().replaceWith(renderStarred(fakeQ));
+  }).fail(function() {
+    l.text('irgendwas ist kaputt…').addClass('disable');
+  });
+}
 
 H = {};
 window.H = H;
@@ -212,6 +241,8 @@ H.Hitme.prototype = {
       code += '<a onclick="showNextHint(this);">Hinweis anzeigen</a>';
       code += '</div>';
     }
+
+    code += renderStarred(q);
 
 
     var cls;

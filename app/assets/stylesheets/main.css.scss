@@ -42,6 +42,12 @@ body {
 }
 
 body > div, div.box {
+  // no op that allows content inside to be placed relatively to the
+  // container
+  position: relative;
+  top: 0;
+  left: 0;
+
   margin: 20px auto;
   border: 1px solid #888;
   box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);
@@ -184,8 +190,11 @@ h2 {
     }
   }
 
-  li > div + div {
+  li > .tex {
     padding-left: 10px;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
 
@@ -403,4 +412,10 @@ body {
 
 .strike {
   text-decoration: line-through;
+}
+
+.star {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
