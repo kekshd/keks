@@ -11,6 +11,7 @@ class Answer < ActiveRecord::Base
   # i.e. this answer has many questions and acts as parent to them
   has_many :questions, :as => :parent
 
+  has_many :stats
 
   has_and_belongs_to_many :categories
 

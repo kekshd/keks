@@ -8,6 +8,8 @@
   <table>
     <tr><th>Elter</th><td><%= link_to_parent(@question) %></td></tr>
     <tr><th>Härte</th><td><%= @question.difficulty(:name) %></td></tr>
+    <tr><th>richtig?</th><td><%= number_to_percentage(@question.correct_ratio*100, :precision => 2) %> (<%=@question.correct_count%>)</td></tr>
+    <tr><th>übersprungen?</th><td><%= number_to_percentage(@question.skip_ratio*100, :precision => 2) %> (<%=@question.skip_count%>)</td></tr>
     <tr><th>Studiengang</th><td><%= @question.study_path(:name) %></td></tr>
     <tr><th>Matrix-Mode?</th><td><%= @question.matrix_validate? %></td></tr>
     <tr><th>Gültig?</th><td><%= @question.complete? %>, <%= @question.incomplete_reason %></td></tr>

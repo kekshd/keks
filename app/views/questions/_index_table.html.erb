@@ -1,6 +1,18 @@
+<% def n(n); number_to_percentage(n*100, :precision => 0); end %>
+
 <table id="index" class="tablesorter">
   <thead>
-    <tr><th>Ident</th><th>Elternname</th><th>Härte</th><th>Studiengang</th><th>Text</th><th>Antworten</th><th>Aktionen</th></tr>
+    <tr>
+      <th>Ident</th>
+      <th>Elternname</th>
+      <th>Härte</th>
+      <th>&nbsp;✔&nbsp;</th>
+      <th>&nbsp;↷&nbsp;</th>
+      <th>Studiengang</th>
+      <th>Text</th>
+      <th>Antworten</th>
+      <th>Aktionen</th>
+    </tr>
   </thead>
   <tbody>
     <% @questions.each do |q| %>
@@ -8,6 +20,8 @@
         <%=content_tag :td, link_to(q.ident, question_path(q), :class => q.complete? ? "" : "strike") %>
         <%=content_tag :td, link_to_parent(q) %>
         <%=content_tag :td, q.difficulty(:name) %>
+        <%=content_tag :td, n(q.correct_ratio) %>
+        <%=content_tag :td, n(q.skip_ratio) %>
         <%=content_tag :td, q.study_path(:name) %>
         <%=content_tag :td, q.text[0..50] %>
         <td>

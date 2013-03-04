@@ -48,6 +48,21 @@ function handleStarredClick(link) {
   });
 }
 
+function getQuestionById(id) {
+  var quest = null;
+  $.each(window.currentHitme.questions, function(ind, q) {
+    if(q.id === id) {
+      quest = q;
+      return false;
+    }
+  });
+  return quest;
+}
+
+function storeStats(quest_id, answ_id) {
+  $.post(Routes.new_stat_path(quest_id, answ_id));
+}
+
 H = {};
 window.H = H;
 
@@ -180,7 +195,9 @@ H.Hitme.prototype = {
     var s = "";
     $.each(quest.answers, function(ind, a) {
       s += '<div>'
-      s += '<a class="button" id="a'+a.id+'" data-correct="'+a.correct+'">'+a.html+'</a>';
+      s += '<a class="button" id="a'+a.id+'"';
+      s += ' data-correct="'+a.correct+'" data-qid="'+quest.id+'"';
+      s += ' data-aid="'+a.id+'">'+a.html+'</a>';
       s += '<span>'+a.correctness+'</span>';
       s += '<span>Deine Antwort</span>';
       s += '</div>';
@@ -191,16 +208,20 @@ H.Hitme.prototype = {
   _handleAnswerClick: function() {
     var answ = $(this);
     var linkBox = answ.parents('.answer-chooser, .answer-chooser-matrix').first();
-    var box = answ.parents('div[id^="block"]');
-    var boxSelector = '#' + box.attr('id');
+    var boxSelector = '#blockQ' + answ.data('qid');
+    var box = $(boxSelector);
 
-    var isMatrix = linkBox.hasClass('answer-chooser-matrix');
-    if(isMatrix && answ.is(':first-child')) {
+    var isMatrix = getQuestionById(answ.data('qid')).matrix;
+    if(isMatrix && answ.data('aid') === 1) {
       var txt = box.find("textarea");
       var m = parseMatrix(txt.val());
       txt.attr('disabled', 'disabled');
-      answ.data('correct', window.currentRootQuestion.matrix_solution === m);
+      var isCorr = window.currentRootQuestion.matrix_solution === m;
+      answ.data('correct', isCorr);
+      if(!isCorr) answ.data('aid', 0);
     }
+
+    storeStats(answ.data('qid'), answ.data('aid'));
 
     var c = answ.data('correct');
     switch(c) {
@@ -261,14 +282,14 @@ H.Hitme.prototype = {
       code += a.html+'</div>';
       code += '<br class="clear"/>';
       code += '<div class="answer-chooser-matrix button-group">';
-      code += '<a class="button">Antwort übernehmen</a>';
-      code += '<a class="button">Frage überspringen</a>';
+      code += '<a class="button" data-qid="'+q.id+'" data-aid="1">Antwort übernehmen</a>';
+      code += '<a class="button" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a>';
       code += '</div>';
     } else {
       cls = 'answer-chooser';
       code += '<div class="answer-chooser">'
         + this._renderAnswersForQuestion(q)
-        +'<div><a class="button">Frage überspringen</a><span></span><span>Du hast diese Frage übersprungen</span></div>'
+        +'<div><a class="button" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a><span></span><span>Du hast diese Frage übersprungen</span></div>'
         + '</div>';
     }
 

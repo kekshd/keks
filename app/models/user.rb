@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :starred, :class_name => :Question, :join_table => :starred
 
+  has_many :stats
+
 
   attr_protected :nick
   validates :nick, presence: true, uniqueness: true
