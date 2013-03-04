@@ -10,6 +10,9 @@
 <% @user.starred.each do |q| %>
   <div>
     <h3 class="count">Frage</h3>
+    <script>
+      document.write(renderStarred({id: <%=q.id%>, starred: true}));
+    </script>
     <%=render_tex q.text %>
     <br/>
     <% if q.matrix_validate? %>
