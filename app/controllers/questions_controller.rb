@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class QuestionsController < ApplicationController
-  before_filter :require_admin, :except => [:render, :star, :unstar]
+  before_filter :require_admin, :except => [:star, :unstar]
   before_filter :signed_in_user, :only => [:star, :unstar]
 
   def star

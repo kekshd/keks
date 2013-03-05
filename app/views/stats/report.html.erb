@@ -1,0 +1,22 @@
+<div>
+  <h2>Statistik für Einschreibeschlüssel „<%=@key%>“</h2>
+  <%=render_tex "Es werden alle Fragen geplottet, die in den letzten 91 Tagen von jemandem mit obigen Einschreibeschlüssel bearbeitet wurden. Es werden jeweils 7 Tage zusammengefasst, beginnend ab heute. Auf der Y-Achse ist §§$\\displaystyle\\frac{\\text{richtig beantwortet}}{\\text{richtig} + \\text{falsch}}$§§ in Prozent abgetragen. Man kann auf die Legende klicken um einzelne Fragen ein-/auszublenden."%>
+  <%= high_chart("chart", @h) %>
+</div>
+
+<div>
+  <h2>Metadaten</h2>
+  <ul>
+    <li>Nutzer mit diesem Einschreibeschlüssel: <%=@users.size%></li>
+    <li>Beantwortete Fragen in den letzten 91 Tagen: <%=@last_stats.size%></li>
+    <li>Fragen/Nutzer: <%=@last_stats.size / @users.size.to_f %></li>
+</div>
+
+<div>
+  <h2>Fragenübersicht</h2>
+  <p>
+    Die aggregierten Werte beschreiben jeweils die letzten 30 Tage. Die Tabelle kann durch Klicken auf eine Zelle im Kopf sortiert werden. Der Haken bedeutet, wie häufig die Frage richtig beantwortet wurde, der Pfeil daneben wie häufig eine Frage übersprungen wurde.
+  </p>
+
+  <%= render "/questions/index_table" %>
+</div>

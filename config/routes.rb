@@ -24,16 +24,18 @@ Keks::Application.routes.draw do
   match "questions/:id/unstar" => "questions#unstar", as: "unstar_question", via: :get
   match "stats/:question_id/:answer_id" => "stats#new", as: "new_stat", via: :post
 
-  resources :questions do
-    resources :answers
-    resources :hints
+
+  scope "/admin" do
+    resources :questions do
+      resources :answers
+      resources :hints
+    end
+
+    resources :categories
+    match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get
+
+    match "report/:enrollment_key", to: "stats#report", :as => "stat_report", via: :get
   end
-  get "question/tree"
-  #~ match "questions/:id/json", to: "questions#json", :as => "question_json", via: :get
-
-  resources :categories
-  match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get
-
 
   resources :sessions, only: [:new, :create, :destroy]
 
