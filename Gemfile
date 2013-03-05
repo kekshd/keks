@@ -6,8 +6,8 @@ gem 'active_enum'
 gem 'thin'
 gem 'rails-latex'
 gem 'jquery-tablesorter'
-#gem 'jquery-scrollto-rails'
 gem 'js-routes'
+gem 'lazy_high_charts'
 
 # Gems used only for assets and not required
 # in production environments by default.

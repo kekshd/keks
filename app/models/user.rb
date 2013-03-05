@@ -36,6 +36,25 @@ class User < ActiveRecord::Base
 
   attr_accessor :updating_password
 
+  def correct_ratio
+    all = stats.where("answer_id >= 0").size.to_f
+    all > 0 ? correct_count.to_f/all : 0
+  end
+
+  def skip_ratio
+    all = stats.size.to_f
+    all > 0 ? skip_count.to_f/all : 0
+  end
+
+  def correct_count
+    stats.where("answer_id >= 0").where(:correct => true).size
+  end
+
+  def skip_count
+    stats.where(:answer_id => -1).size
+  end
+
+
   def send_password_reset
     generate_token(:password_reset_token)
     self.password_reset_sent_at = Time.zone.now

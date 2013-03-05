@@ -1,4 +1,5 @@
 <% provide(:title, "Dein Profil") %>
+<% def n(p); number_to_percentage(100*p, :precision => 0); end %>
 
 <div>
   <h2>Einschreibeschlüssel hinzufügen</h2>
@@ -18,11 +19,17 @@
 
     <%= hidden_field_tag :type, 'enrollment' %>
   <% end %>
-
 </div>
 
 <div>
-  <h2>Dein Profil</h2>
+  <h2>Statistik</h2>
+  In den letzten 30 Tagen hast Du <%=@user.correct_count%> (<%=n @user.correct_ratio%>) Fragen richtig beantwortet und <%=@user.skip_count%> (<%=n @user.skip_ratio%>) übersprungen. Außerdem hast Du Dir <%=@user.starred.size%> merken lassen.
+
+  <%= high_chart("chart", @h) %>
+</div>
+
+<div>
+  <h2>Persönliche Daten ändern</h2>
 
   <%= form_for(@user) do |f| %>
     <%= render 'shared/error_messages', object: f.object if params[:type] == "datachange" %>

@@ -14,4 +14,5 @@
 //= require jquery_ujs
 //= require jquery-tablesorter
 //= require js-routes
+//= require highcharts
 //= require_tree .
