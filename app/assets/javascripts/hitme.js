@@ -313,7 +313,7 @@ H.Hitme.prototype = {
 
     $(code).appendTo('body').animate(H.Constants.showAnimation, H.Constants.stayAtBottom);
 
-    H.Util.animateVisibilityHiddenShow($('.reveal > div > span:nth-child(2), .reveal .initiallyHidden'));
+    H.Util.animateVisibilityHiddenShow($('.reveal .answer-chooser > div > span:nth-child(2), .reveal .initiallyHidden'));
 
     var allCorr = this.answersGiven.correct.diff(this.answersGiven.fail).join(',');
     var anyFail = this.answersGiven.fail.join(',');

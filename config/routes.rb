@@ -7,14 +7,13 @@ Keks::Application.routes.draw do
   match "latex/:base64_text.png", to: "latex#simple", :as => "render_tex", :via => :get
   match "preview", to: "latex#complex", :as => "render_preview", :via => :post
 
-  get "admin/overview"
+
 
   root :to => "main#overview"
 
   get "main/overview"
-  get "main/hitme"
-  get "main/help"
-
+  match "hitme", as: "main_hitme", to: "main#hitme"
+  match "help", as: "main_help", to: "main#help"
 
 
   resources :users
@@ -25,6 +24,7 @@ Keks::Application.routes.draw do
   match "stats/:question_id/:answer_id" => "stats#new", as: "new_stat", via: :post
 
 
+  get "admin/overview"
   scope "/admin" do
     resources :questions do
       resources :answers
