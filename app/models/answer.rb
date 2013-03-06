@@ -19,6 +19,14 @@ class Answer < ActiveRecord::Base
     return self.question.find_parent_category
   end
 
+  def get_all_subquestions
+    questions + categories.map { |c| c.questions }.flatten
+  end
+
+  def get_all_subquestion_ids
+    get_all_subquestions.map { |q| q.id }
+  end
+
 
   def link_text
     "Antwort #{link_text_short}"

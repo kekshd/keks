@@ -22,6 +22,13 @@ class Question < ActiveRecord::Base
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true
 
+  def correct_ratio_user(user)
+    user_stats = stats.where(:user_id => user.id)
+    all = user_stats.where("answer_id >= 0")
+    correct = all.where(:correct => true)
+    all.size > 0 ? correct.size/all.size.to_f : 0
+  end
+
   # returns the ratio of correct answers. Skipped ones are not counted.
   def correct_ratio
     all = stats.where("answer_id >= 0").size.to_f

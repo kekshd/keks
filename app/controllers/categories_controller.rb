@@ -9,55 +9,22 @@ class CategoriesController < ApplicationController
     cnt = params[:count].to_i
     return render :json => {error: "No count given"} if cnt <= 0 || cnt >= 100
 
-    diff = params[:difficulty] ? params[:difficulty].split("_") : []
-    diff = diff.map { |d| d.to_i == 0 ? nil : d.to_i}.compact
-    diff.reject! { |d| !Difficulty.ids.include?(d) }
-    return render :json => {error: "no difficulties given"} if diff.empty?
-
-    sp = params[:study_path]
-    if sp
-      return render :json => {error: "invalid study path given"} if !StudyPath.ids.include?(sp.to_i)
-      sp = [1, sp]
-    else
-      sp = [1]
-    end
+    diff = difficulties_from_param
+    sp = study_path_ids_from_param
 
     qs = cat.questions.where(:difficulty => diff, :study_path => sp)
-    logger.warn PP.pp(qs)
     qs.reject! { |q| !q.complete? }
-    qs = qs.sample(cnt)
+    if signed_in?
+      # select questions depending on how often they were answered
+      # correctly.
+      qs = roulette(qs, current_user, cnt)
+    else
+      # uniform distrubtion
+      qs = qs.sample(cnt)
+    end
 
     json = []
-    qs.each do |q|
-      @question = q
-
-      hints = []
-      q.hints.each do |h|
-        @hint = h
-        hints << render_to_string(partial: '/hints/render')
-      end
-
-      answers = []
-      q.answers.each do |a|
-        @answer = a
-        answers << {
-          correct: a.correct,
-          correctness: render_to_string(partial: '/answers/render_correctness'),
-          id: a.id,
-          html: render_to_string(partial: '/answers/render')
-        }
-      end
-
-      json << {
-        'starred' => signed_in? ? current_user.starred.include?(q) : false,
-        'hints' => hints,
-        'answers' => answers,
-        'matrix' => q.matrix_validate?,
-        'matrix_solution' => q.matrix_solution,
-        'id' => q.id,
-        'html' => render_to_string(partial: '/questions/render')
-      }
-    end
+    json = qs.map { |q| json_for_question(q) }
 
     render json: json
   end
