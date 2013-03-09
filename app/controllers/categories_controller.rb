@@ -7,24 +7,17 @@ class CategoriesController < ApplicationController
     cat = Category.find(params[:id])
 
     cnt = params[:count].to_i
-    return render :json => {error: "No count given"} if cnt <= 0 || cnt >= 100
+    return render :json => {error: "No count given"} if cnt <= 0 || cnt > 100
 
     diff = difficulties_from_param
     sp = study_path_ids_from_param
 
     qs = cat.questions.where(:difficulty => diff, :study_path => sp)
-    qs.reject! { |q| !q.complete? }
-    if signed_in?
-      # select questions depending on how often they were answered
-      # correctly.
-      qs = roulette(qs, current_user, cnt)
-    else
-      # uniform distrubtion
-      qs = qs.sample(cnt)
-    end
+    reject_unsuitable_questions!(qs)
+    qs = get_question_sample(qs, cnt)
 
     json = []
-    json = qs.map { |q| json_for_question(q) }
+    json = qs.map { |q| json_for_question(q, 5) }
 
     render json: json
   end

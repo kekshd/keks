@@ -10,7 +10,7 @@ module ApplicationHelper
       return [1]
     end
 
-    [1, sp]
+    [1, sp.to_i]
   end
 
   def difficulties_from_param
@@ -21,6 +21,44 @@ module ApplicationHelper
 
     logger.warn "No difficulties given, selecting first"
     return [Difficulty.ids.first]
+  end
+
+  def reject_unsuitable_questions!(qs)
+    diff = difficulties_from_param
+    sp = study_path_ids_from_param
+    qs.reject! do |q|
+      !q.complete? || !diff.include?(q.difficulty) || !sp.include?(q.study_path)
+    end
+  end
+
+  def get_question_sample(qs, cnt)
+    if signed_in?
+      # select questions depending on how often they were answered
+      # correctly.
+      roulette(qs, current_user, cnt)
+    else
+      # uniform distribution
+      qs.sample(cnt)
+    end
+  end
+
+  def get_subquestion_for_answer(a, max_depth)
+    logger.warn "\n\n\n"
+    logger.warn max_depth
+    logger.warn a
+    logger.warn a.get_all_subquestions
+    logger.warn " hier ======="
+    sq = max_depth > 0 ? a.get_all_subquestions : []
+    reject_unsuitable_questions!(sq)
+
+    logger.warn sq
+    if sq.size > 0
+      sq = get_question_sample(sq, 1)
+      sq = json_for_question(sq.first, max_depth - 1)
+    else
+      sq = nil
+    end
+    sq
   end
 
   # roulette wheel selection for questions, depending on correct answer

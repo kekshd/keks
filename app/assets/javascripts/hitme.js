@@ -1,6 +1,9 @@
 function validateNumberOnly(self) {
   self = $(self);
-  self.val(self.val().replace(/[^0-9]/g, "") || 10);
+  var val = parseInt(self.val().replace(/[^0-9]/g, "") || 10);
+  var max = parseInt(self.attr('max') || 999999);
+  var min = parseInt(self.attr('min') ||-999999);
+  self.val(Math.max(min, Math.min(max, val)));
 }
 
 function parseMatrix(orig) {
@@ -14,8 +17,8 @@ function parseMatrix(orig) {
 
 function showNextHint(elm) {
   var hidden = $(elm).siblings(":hidden");
-  hidden.first().animate(H.Constants.showAnimation);
-  if(hidden.length === 1) $(elm).animate(H.Constants.hideAnimation);
+  hidden.first().animate(CONST.showAnimation);
+  if(hidden.length === 1) $(elm).animate(CONST.hideAnimation);
 }
 
 function renderStarred(question) {
@@ -63,6 +66,111 @@ function storeStats(quest_id, answ_id) {
   $.post(Routes.new_stat_path(quest_id, answ_id));
 }
 
+
+function ensureValidDifficultySelection() {
+  var any = false;
+  $('input[type=checkbox][name^=difficulty]').each(function() {
+    if($(this).is('checked')) {
+      any = true;
+      return false;
+    }
+  });
+  if(!any) $('input[type=checkbox][name^=difficulty]:first').prop('checked', true);
+}
+
+
+function disableOptions()  {
+  $('#options input').attr("disabled", "disabled");
+  $('#options').animate(CONST.hideAnimation);
+}
+
+function enableOptions() {
+  $('#options input').removeAttr("disabled");
+}
+
+
+function hideOtherCategories(clickedCategory) {
+  var c = clickedCategory;
+  c.parents('li').siblings().animate(CONST.hideAnimation);
+  c.data('oldonclick', c.attr('onclick'));
+  c.attr('onclick', '').addClass('disable');
+}
+
+function getDifficulties() {
+  var diff = [];
+  $('input[type=checkbox][name^=difficulty]').each(function() {
+    if(this.checked) {
+      diff.push($(this).val());
+    }
+  });
+  return diff.join("_");
+}
+
+function getStudyPath() {
+  var diff = [];
+  $('input[type=checkbox][name^=difficulty]').each(function() {
+    if(this.checked) {
+      diff.push($(this).val());
+    }
+  });
+  return diff.join("_");
+}
+
+function showAllCategories() {
+  $('#categories li').animate(CONST.showAnimation);
+  var s = $('a.disable');
+  s.removeClass('disable').attr('onclick', s.data('oldonclick'));
+}
+
+function animateVisibilityHiddenShow(elms) {
+  elms.css('visibility','visible').hide().fadeIn('slow');
+}
+
+function getURLForRootQuestions(categoryElm) {
+  var catId = categoryElm.data('id');
+  var diff = this.getDifficulties();
+  var count = $('#quantity').val();
+  var studyPath = $('#study_path').val();
+
+  var h = {count: count, difficulty: diff, study_path: studyPath}
+
+  return Routes.category_question_path(catId, h);
+}
+
+function getRootQuestions(categoryElm, context, successCallback) {
+  // example: http://localhost:3000/category/5/questions?count=10&difficulty=10_20_30&study_path=3
+  $.ajax({
+    url: getURLForRootQuestions(categoryElm),
+  }).done(function(data) {
+    successCallback(context, data);
+  }).fail(function() {
+    alert("Die Anfrage konnte leider nicht bearbeitet werden. Möglicherweise hat der Server ein Problem.");
+  });
+}
+
+function answersGivenCount() {
+  var a = window.H.answersGiven;
+  return a.fail.length + a.correct.length + a.skip.length;
+}
+
+function maybeInsertSubquestion(aid) {
+  // only try to show subquestion half of the time
+  if(Math.random() < 0.5) return;
+  var q = window.currentQuestion;
+  var s;
+  $.each(q.answers, function(ind, answ) {
+    if(answ.id === parseInt(aid)) {
+      s = answ.subquestion;
+      return false;
+    }
+  });
+  // this answer doesn’t have a subquestion
+  if(!s) return;
+  var c = window.currentHitme;
+  var p = c.questPositionPointer;
+  c.questions.splice(p+1, 0, s);
+}
+
 H = {};
 window.H = H;
 
@@ -73,7 +181,7 @@ Array.prototype.diff = function(a) {
 };
 
 
-H.Constants = {
+window.CONST = {
   hideAnimation: {opacity: 'hide', height: 'hide', marginTop: 'hide',
     marginBottom: 'hide', paddingTop: 'hide', paddingBottom: 'hide'},
   showAnimation: {opacity: 'show', height: 'show', marginTop: 'show',
@@ -85,97 +193,16 @@ H.Constants = {
   }
 }
 
-H.Util = {
-  // example: http://localhost:3000/category/5/questions?count=10&difficulty=10_20_30&study_path=3
-  getURLForRootQuestions: function(self) {
-    var catId = self.data('id');
-    var diff = this.getDifficulties();
-    var count = $('#quantity').val();
-    var studyPath = $('#study_path').val();
-
-    var h = {count: count, difficulty: diff, study_path: studyPath}
-
-    return Routes.category_question_path(catId, h);
-  },
-
-  getRootQuestions: function(self, context, successCallback) {
-    $.ajax({
-      url: this.getURLForRootQuestions(self),
-    }).done(function(data) {
-      successCallback(context, data);
-    }).fail(function() {
-      alert("Die Anfrage konnte leider nicht bearbeitet werden. Möglicherweise hat der Server ein Problem.");
-    });
-  },
-
-  getDifficulties: function() {
-    var diff = [];
-    $('input[type=checkbox][name^=difficulty]').each(function() {
-      if(this.checked) {
-        diff.push($(this).val());
-      }
-    });
-    return diff.join("_");
-  },
-
-  getStudyPath: function() {
-    var diff = [];
-    $('input[type=checkbox][name^=difficulty]').each(function() {
-      if(this.checked) {
-        diff.push($(this).val());
-      }
-    });
-    return diff.join("_");
-  },
-
-  ensureValidDifficultySelection: function() {
-    var any = false;
-    $('input[type=checkbox][name^=difficulty]').each(function() {
-      if($(this).is('checked')) {
-        any = true;
-        return false;
-      }
-    });
-    if(!any) $('input[type=checkbox][name^=difficulty]:first').prop('checked', true);
-  },
-
-  disableOptions: function() {
-    $('#options input').attr("disabled", "disabled");
-    $('#options').animate(H.Constants.hideAnimation);
-  },
-
-  enableOptions: function() {
-    $('#options input').removeAttr("disabled");
-  },
-
-  hideOtherCategories: function(self) {
-    self.parents('li').siblings().animate(H.Constants.hideAnimation);
-    self.data('oldonclick', self.attr('onclick'));
-    self.attr('onclick', '').addClass('disable');
-  },
-
-  showAllCategories: function() {
-    $('#categories li').animate(H.Constants.showAnimation);
-    var s = $('a.disable');
-    s.removeClass('disable').attr('onclick', s.data('oldonclick'));
-  },
-
-  animateVisibilityHiddenShow: function(elms) {
-    elms.css('visibility','visible').hide().fadeIn('slow');
-  }
-}
-
-
 
 // constructor
 H.Hitme = function(categoryElement) {
   this._this = this;
   this.cat = $(categoryElement);
-  H.Util.disableOptions();
-  H.Util.ensureValidDifficultySelection();
-  H.Util.hideOtherCategories(this.cat);
-  H.Util.getRootQuestions(this.cat, this, this.rootQuestionsAvailable);
-  this.currentRootQuestionId = -1;
+  disableOptions();
+  ensureValidDifficultySelection();
+  hideOtherCategories(this.cat);
+  getRootQuestions(this.cat, this, this.rootQuestionsAvailable);
+  this.questPositionPointer = -1;
   this.answersGiven = {correct: [], fail: [], skip: []};
 };
 
@@ -216,7 +243,7 @@ H.Hitme.prototype = {
       var txt = box.find("textarea");
       var m = parseMatrix(txt.val());
       txt.attr('disabled', 'disabled');
-      var isCorr = window.currentRootQuestion.matrix_solution === m;
+      var isCorr = window.currentQuestion.matrix_solution === m;
       answ.data('correct', isCorr);
       if(!isCorr) answ.data('aid', 0);
     }
@@ -229,12 +256,14 @@ H.Hitme.prototype = {
       case true:
       window.currentHitme.answersGiven.correct.push(boxSelector);
       box.addClass('reveal');
+      maybeInsertSubquestion(answ.data('aid'));
       break;
 
       case "false":
       case false:
       window.currentHitme.answersGiven.fail.push(boxSelector);
       box.addClass('reveal');
+      maybeInsertSubquestion(answ.data('aid'));
       break;
 
       default:
@@ -242,13 +271,13 @@ H.Hitme.prototype = {
     }
 
     linkBox.find('a').addClass('disable');
-    H.Util.animateVisibilityHiddenShow(answ.siblings().last());
+    animateVisibilityHiddenShow(answ.siblings().last());
     window.currentHitme.showNext();
   },
 
-  _showNextRootQuestion: function() {
-    this.currentRootQuestionId++;
-    var q = window.currentRootQuestion = this.questions[this.currentRootQuestionId];
+  _showNextQuestion: function() {
+    this.questPositionPointer++;
+    var q = window.currentQuestion = this.questions[this.questPositionPointer];
 
     var code = '<div style="display:none" id="blockQ'+q.id+'" class="hideMeOnMore">'
       + q.html
@@ -295,7 +324,7 @@ H.Hitme.prototype = {
 
     code += '</div>';
 
-    $(code).appendTo('body').animate(H.Constants.showAnimation, H.Constants.stayAtBottom);
+    $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
     $('.'+cls+':last').one('click', 'a', this._handleAnswerClick);
   },
 
@@ -311,9 +340,9 @@ H.Hitme.prototype = {
       + '</div>';
       + '</div>';
 
-    $(code).appendTo('body').animate(H.Constants.showAnimation, H.Constants.stayAtBottom);
+    $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
 
-    H.Util.animateVisibilityHiddenShow($('.reveal .answer-chooser > div > span:nth-child(2), .reveal .initiallyHidden'));
+    animateVisibilityHiddenShow($('.reveal .answer-chooser > div > span:nth-child(2), .reveal .initiallyHidden'));
 
     var allCorr = this.answersGiven.correct.diff(this.answersGiven.fail).join(',');
     var anyFail = this.answersGiven.fail.join(',');
@@ -324,17 +353,21 @@ H.Hitme.prototype = {
   showNext: function() {
     if(this.questions.length === 0) {
       alert("Keine Fragen für die aktuellen Einstellungen gefunden.\n\nVersuche es mit anderen Einstellungen nochmal.");
-      H.Util.enableOptions();
-      H.Util.showAllCategories();
-    } else if(this.questions.length-1 === this.currentRootQuestionId)  {
+      enableOptions();
+      showAllCategories();
+    // no more available questions?
+    } else if(this.questions.length-1 === this.questPositionPointer) {
+      this._showFinishDialog();
+    // reached user defined question limit
+    } else if(answersGivenCount >= parseInt($('#quantity').val())) {
       this._showFinishDialog();
     } else {
-      this._showNextRootQuestion();
+      this._showNextQuestion();
     }
   },
 
   skipCurrentQuestion: function(self) {
-    $(self).animate(H.Constants.hideAnimation);
+    $(self).animate(CONST.hideAnimation);
     this.showNext();
   }
 }

@@ -2,20 +2,17 @@
 
 module JsonHelper
 
-  def json_for_answer(a)
-    @answer = a
+  def json_for_answer(a, max_depth)
     {
       correct: a.correct,
-      subquestions: a,
-      correctness: render_to_string(partial: '/answers/render_correctness'),
+      subquestion: get_subquestion_for_answer(a, max_depth),
+      correctness: render_to_string(partial: '/answers/render_correctness', locals: {answer: a}),
       id: a.id,
-      html: render_to_string(partial: '/answers/render')
+      html: render_to_string(partial: '/answers/render', locals: {answer: a})
     }
   end
 
-  def json_for_question(q)
-    @question = q
-
+  def json_for_question(q, max_depth = 5)
     hints = []
     q.hints.each do |h|
       @hint = h
@@ -23,7 +20,7 @@ module JsonHelper
     end
 
     answers = []
-    q.answers.each { |a| answers << json_for_answer(a) }
+    q.answers.each { |a| answers << json_for_answer(a, max_depth) }
 
     {
       'starred' => signed_in? ? current_user.starred.include?(q) : false,
@@ -32,7 +29,7 @@ module JsonHelper
       'matrix' => q.matrix_validate?,
       'matrix_solution' => q.matrix_solution,
       'id' => q.id,
-      'html' => render_to_string(partial: '/questions/render')
+      'html' => render_to_string(partial: '/questions/render', locals: {question: q})
     }
   end
 end

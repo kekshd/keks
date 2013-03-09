@@ -38,6 +38,16 @@ class Category < ActiveRecord::Base
     questions.each do |q|
       d << q.dot
       d << "#{dot_id} -> #{q.dot_id};"
+
+      q.subquestions.each do |qq|
+        d << qq.dot
+        d << "#{q.dot_id} -> #{qq.dot_id};"
+      end
+
+      q.subcategories.each do |c|
+        d << c.dot
+        d << "#{q.dot_id} -> #{c.dot_id};"
+      end
     end
 
     answers.each do |a|

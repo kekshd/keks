@@ -18,14 +18,19 @@
 
   <h3>Antworten</h3>
   <table id="answertable" class="tablesorter">
-    <thead><tr><th>Ident</th><th>Text</th><th>Korrekt?</th><th>#Fragen / #Kat.</th><th>Aktionen</th></tr></thead>
+    <thead><tr><th>Ident</th><th>Text</th><th>Korrekt?</th><th>Subfragen</th><th>Subkategorie</th><th>Aktionen</th></tr></thead>
     <tbody>
     <% @question.answers.each do |a| %>
       <tr>
         <%= content_tag :td, a.ident %>
         <%= content_tag :td, a.text[0..50] %>
         <%= content_tag :td, a.correct %>
-        <%= content_tag :td, "#{a.questions.size} / #{a.categories.size}" %>
+        <td>
+          <% a.questions.each do |q| %><%= link_to q.ident, q %><% end %>
+        </td>
+        <td>
+          <% a.categories.each do |c| %><%= link_to cident, c %><% end %>
+        </td>
         <td>
           <%=link_to 'Bearbeiten', edit_question_answer_path(@question, a) %>
           <%=link_to 'Neue Kategorie hier', new_category_path(:parent => a.id) %>

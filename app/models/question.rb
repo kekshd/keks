@@ -22,6 +22,14 @@ class Question < ActiveRecord::Base
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true
 
+  def subquestions
+    answers.map { |a| a.questions }.flatten.uniq
+  end
+
+  def subcategories
+    answers.map { |a| a.categories }.flatten.uniq
+  end
+
   def correct_ratio_user(user)
     user_stats = stats.where(:user_id => user.id)
     all = user_stats.where("answer_id >= 0")
@@ -78,7 +86,12 @@ class Question < ActiveRecord::Base
   end
 
   def dot(active = false)
-    txt = 'F: ' + ident.gsub('"', '')
+    id = ident.gsub('"', '')
+
+    # strike text through using a strike through UTF8 character
+    id = id.scan(/./).join('̶')+'̶' if !complete?
+
+    txt = 'F: ' + id
     bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''
     %(#{dot_id} [label="#{txt}"#{bg}];)
   end
@@ -93,6 +106,7 @@ class Question < ActiveRecord::Base
     if parent
       d << parent.dot
 
+      # siblings of the parent
       parent.questions.each do |q|
         d << q.dot(q == self)
         d << "#{parent.dot_id} -> #{q.dot_id};"
@@ -102,6 +116,25 @@ class Question < ActiveRecord::Base
         d << c.dot
         d << "#{parent.dot_id} -> #{c.dot_id};"
       end if parent.respond_to?(:categories)
+
+      # parent of parent
+      if(parent.is_a?(Answer))
+        d << parent.question.dot
+        d << "#{parent.question.dot_id} -> #{parent.dot_id};"
+
+        parent.question.subquestions.each do |qq|
+          next if qq == self
+          d << qq.dot
+          d << "#{parent.question.dot_id} -> #{qq.dot_id};"
+        end
+      end
+
+      if(parent.is_a?(Category))
+        parent.answers.each do |aa|
+          d << aa.dot
+          d << "#{aa.dot_id} -> #{parent.dot_id};"
+        end
+      end
     else
       d << dot(true)
     end
@@ -109,6 +142,16 @@ class Question < ActiveRecord::Base
     answers.each do |a|
       d << a.dot
       d << "#{dot_id} -> #{a.dot_id};"
+
+      a.questions.each do |q|
+        d << q.dot
+        d << "#{a.dot_id} -> #{q.dot_id};"
+      end
+
+      a.categories.each do |c|
+        d << c.dot
+        d << "#{a.dot_id} -> #{c.dot_id};"
+      end
     end
 
     hint_ids = []
@@ -127,6 +170,10 @@ class Question < ActiveRecord::Base
   def is_complete_helper
     return false, "keine Antworten" if answers.size == 0
     return false, "keine richtige Antwort" if answers.none? { |a| a.correct? }
+    psp = parent.question.study_path if parent.is_a?(Answer)
+    if psp && psp != study_path && study_path != 1 && psp != 1
+      return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat."
+    end
     return true, ""
   end
 end

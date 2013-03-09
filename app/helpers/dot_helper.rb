@@ -7,7 +7,7 @@ module DotHelper
   end
 
   def dot_to_image_tag(dot)
-    image_tag(dot_to_path(dot), alt: dot)
+    image_tag(dot_to_path(dot), alt: dot, class: :dotimg)
   end
 
   def render_dot(dot)
