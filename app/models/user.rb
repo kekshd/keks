@@ -40,12 +40,12 @@ class User < ActiveRecord::Base
 
   def correct_ratio
     all = stats.where("answer_id >= 0").size.to_f
-    all > 0 ? correct_count.to_f/all : 0
+    all > 0 ? correct_count.to_f/all : 0.0
   end
 
   def skip_ratio
     all = stats.size.to_f
-    all > 0 ? skip_count.to_f/all : 0
+    all > 0 ? skip_count.to_f/all : 0.0
   end
 
   def correct_count

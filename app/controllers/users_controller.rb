@@ -71,7 +71,7 @@ class UsersController < ApplicationController
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "Deine Daten wurden gelöscht. Beehre uns bald wieder."
-    redirect_to users_url
+    redirect_to root_url
   end
 
   private
