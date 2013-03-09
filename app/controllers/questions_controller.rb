@@ -24,7 +24,6 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.all
-    logger.warn PP.pp(@questions, '')
   end
 
   def new

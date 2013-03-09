@@ -43,15 +43,9 @@ module ApplicationHelper
   end
 
   def get_subquestion_for_answer(a, max_depth)
-    logger.warn "\n\n\n"
-    logger.warn max_depth
-    logger.warn a
-    logger.warn a.get_all_subquestions
-    logger.warn " hier ======="
     sq = max_depth > 0 ? a.get_all_subquestions : []
     reject_unsuitable_questions!(sq)
 
-    logger.warn sq
     if sq.size > 0
       sq = get_question_sample(sq, 1)
       sq = json_for_question(sq.first, max_depth - 1)
