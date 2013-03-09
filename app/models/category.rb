@@ -53,6 +53,9 @@ class Category < ActiveRecord::Base
     answers.each do |a|
       d << a.dot
       d << "#{a.dot_id} -> #{dot_id};"
+
+      d << a.question.dot
+      d << "#{a.question.dot_id} -> #{a.dot_id};"
     end
 
     d

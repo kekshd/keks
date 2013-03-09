@@ -3,6 +3,9 @@
 <div>
   <%= render "action_menu" %>
   <h2>Statistiken</h2>
+  <% EnrollmentKeys.all.each do |id, name| %>
+    <%= link_to name, stat_report_path(name) %>
+  <% end %>
 </div>
 
 <div>
@@ -14,10 +17,19 @@
     Eine Kategorie hat viele Fragen. Eine Frage hat viele Antworten. Eine Antwort verweist auf Kategorien und/oder Fragen. Im Umkehrschluss hat jede Frage <em>genau ein</em> Eltern-Element, nämlich Kategorie ⊕ Antwort. Fehlt dieses Eltern-Element wird die Frage nicht berücksichtigt. Kategorien gehören entweder zu einer Antwort oder haben kein Eltern-Element. Dann sind sie eine Wurzel und werden dem Nutzer am Anfang zur Auswahl angeboten.
   </p>
 
-  <p>
-    <b>Vorgehensweise</b><br/>
-überleg ich mir noch
-  </p>
-
   <%= render "action_menu" %>
 </div>
+
+<div>
+  <h2>Ein Baum sie zu knechten</h2>
+  <p>Du kannst eine vollständige Übersicht aller Kategorien, Fragen, Antworten, Hinweise und deren Verknüpfungen herunterladen. Die Erstellung erfolgt jedes Mal live und dauert daher etwas. Das Ausgabeformat ist SVGZ, das etwa mit Inkscape geöffnet werden kann.</p>
+
+  <p>Auf den meisten Linuxsystemen sollte folgender Befehl den Baum herunterladen und mit Evince anzeigen, sofern Inkscape installiert ist:</p>
+<pre>pushd $TMP \
+  && rm -f tree.svgz \
+  && wget -q <%=tree_url%> \
+  && inkscape tree.svgz --export-pdf=tree.pdf \
+  && evince tree.pdf \
+  && rm tree.svgz; \
+  popd
+</pre>

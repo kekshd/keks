@@ -38,15 +38,12 @@ class StatsController < ApplicationController
     @users = User.find(:all, :conditions => ["enrollment_keys LIKE ?", "%#{@key}%"])
     @last_stats = @users.map { |u| u.stats.unscoped.where("created_at > ?", 91.days.ago) }.flatten
 
-    default_hash = { right: [0]*13, wrong: [0]*13, skipped: [0]*13}
-
     qstats = {}
     time = Time.now
 
     @last_stats.each do |stat|
       qid = stat.question_id
-      qstats[qid] ||= default_hash.clone
-
+      qstats[qid] ||= { right: [0]*13, wrong: [0]*13, skipped: [0]*13}
       insert_stat_in_hash(stat, qstats[qid], time)
     end
 
@@ -55,7 +52,6 @@ class StatsController < ApplicationController
       percent_correct, percent_skipped = raw_to_percentage(data)
       @h.series(:name=> Question.find(qid).ident, :data => percent_correct)
     end
-
 
     @questions = @users.map { |u| u.seen_questions }.flatten.uniq
   end

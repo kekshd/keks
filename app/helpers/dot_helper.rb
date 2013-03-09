@@ -33,4 +33,23 @@ module DotHelper
 
     dot_to_image_tag(dot)
   end
+
+  def get_dot_svgz(dot)
+    dot = %(digraph graphname { #{dot} })
+
+    svgz = nil
+    begin
+      Open3.popen2(%(dot -Tsvgz)) do |stdin, stdout|
+        stdin.puts dot
+        stdin.flush
+        stdin.close
+        svgz = stdout.read
+      end
+      return svgz
+    rescue => e
+      logger.error("uncaught #{e} exception while rendering: #{e.message}")
+      logger.error("Stack trace: #{e.backtrace.map {|l| "  #{l}\n"}.join}")
+      return nil
+    end
+  end
 end

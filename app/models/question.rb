@@ -100,6 +100,21 @@ class Question < ActiveRecord::Base
     'q' + ident.gsub(/[^a-z0-9_]/i, '')
   end
 
+  def dot_hints
+    return '' if hints.none?
+
+    hintTexts = []
+    hints.each do |h|
+      hintTexts << h.dot_text
+    end
+
+    d = ""
+    d << %(HINT#{dot_id} [label="#{hintTexts.join("\\n")}", shape=none];)
+    d << "#{dot_id} -> HINT#{dot_id};"
+    d << "{ rank=same; #{dot_id} HINT#{dot_id} };"
+    d
+  end
+
   def dot_region
     d = ''
 
@@ -154,14 +169,7 @@ class Question < ActiveRecord::Base
       end
     end
 
-    hint_ids = []
-    hints.each do |h|
-      hint_ids << h.dot
-      d << h.dot
-      d << "#{dot_id} -> #{h.dot_id};"
-    end
-
-    d << "{ rank=same; #{dot_id} #{hint_ids.join} };"
+    d << dot_hints
 
     d
   end

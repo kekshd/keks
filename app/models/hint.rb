@@ -8,8 +8,11 @@ class Hint < ActiveRecord::Base
   validates :sort_hint, numericality: true, allow_blank: true
 
   def dot
-    txt = 'H: ' + text.gsub('"', '')[0..15]
-    %(#{dot_id} [label="#{txt}", shape=none];)
+    %(#{dot_id} [label="#{dot_text}", shape=none];)
+  end
+
+  def dot_text
+    'H: ' + text.gsub('"', '')[0..15]
   end
 
   def dot_id

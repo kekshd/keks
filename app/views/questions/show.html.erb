@@ -70,15 +70,14 @@
 <div>
   <h2><%=latex_logo_large%> Preview</h2>
 
-  <%= render "render" %>
+  <%= render "render", question: @question %>
   <% @question.hints.each do |h| %>
     <% @hint = h %>
     <%= render "hints/render" %>
   <% end %>
 
   <% @question.answers.each do |a| %>
-    <% @answer = a %>
-    <%= render "answers/render" %>
+    <%= render "answers/render", answer: a %>
   <% end %>
 </div>
 
