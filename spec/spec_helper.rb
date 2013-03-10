@@ -53,7 +53,24 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+
+
+  config.before do
+    Capybara.javascript_driver = :webkit
+
+    # comment this in to see live action testing in firefox. IRB testing
+    # is likely the better choice though:
+    # http://tom-clements.com/blog/2012/02/25/capybara-on-the-command-line-live-browser-testing-from-irb/
+
+    #~ Capybara.current_driver = :selenium
+    #~ Capybara.javascript_driver = :selenium
+    #~ Capybara.run_server = true
+    #~ Capybara.server_port = 7000
+    #~ Capybara.app_host = "http://localhost:#{Capybara.server_port}"
+  end
 end
 
-
-Capybara.javascript_driver = :webkit
+def wait_for_ajax(page)
+  # firefox driver needs this
+  page.driver.options[:resynchronize] = true if page.driver.respond_to?(:options)
+end

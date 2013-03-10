@@ -49,7 +49,7 @@ FactoryGirl.define do
 
     trait :answers do
       after(:create) do |question|
-        FactoryGirl.create_list(:answer, 2, question: question)
+        FactoryGirl.create_list(:answer_wrong, 2, question: question)
         FactoryGirl.create_list(:answer_correct, 1, question: question)
       end
     end
@@ -71,6 +71,10 @@ FactoryGirl.define do
 
     factory :answer_correct do
       correct true
+    end
+
+    factory :answer_wrong do
+      correct false
     end
   end
 

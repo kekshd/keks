@@ -26,7 +26,10 @@
         <li><%=link_to "Hilfe", main_help_path %></li>
       </ul>
 
-      <%= content_tag :span, "eingeloggt als " + current_user.nick if signed_in? %>
+      <% if signed_in? %>
+        <%= content_tag :span, "eingeloggt als " + current_user.nick %>
+        <%= content_tag :script, "window.loggedIn = true;" %>
+      <% end %>
     </nav>
   </header>
 

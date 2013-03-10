@@ -22,6 +22,7 @@ function showNextHint(elm) {
 }
 
 function renderStarred(question) {
+  if(!window.loggedIn) return '';
   c = "";
   c += '<div class="star">';
 
@@ -63,7 +64,7 @@ function getQuestionById(id) {
 }
 
 function storeStats(quest_id, answ_id) {
-  $.post(Routes.new_stat_path(quest_id, answ_id));
+  $.post(Routes.new_stat_path(quest_id, answ_id), {a: "b"});
 }
 
 
