@@ -13,7 +13,7 @@ describe "Hitme" do
     it { should have_selector('h2',    text: 'Optionen') }
     it { should have_selector('h2',    text: 'Kategorie') }
     # i.e. title not complete
-    it { should_not have_selector('title', text: /^Keks – $/) }
+    it { should_not have_selector('title', text: /^KeKs – $/) }
   end
 
   describe "question answering", :js => true do

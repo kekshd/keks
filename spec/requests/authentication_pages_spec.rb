@@ -11,7 +11,7 @@ describe "Authentication" do
 
     it { should have_selector('h2',    text: 'Einloggen') }
     # i.e. title not complete
-    it { should_not have_selector('title', text: /^Keks – $/) }
+    it { should_not have_selector('title', text: /^KeKs – $/) }
   end
 
   describe "signin" do
