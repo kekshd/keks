@@ -18,9 +18,10 @@ end
 
 class StudyPath < ActiveEnum::Base
   value :id => 1, :name => ' '
-  value :id => 2, :name => 'Bsc Mathe'
-  value :id => 3, :name => 'Bsc Physik'
-  value :id => 4, :name => 'Lehramt'
+  value :id => 2, :name => 'B.Sc. Mathe'
+  value :id => 3, :name => 'B.Sc. Physik'
+  value :id => 4, :name => 'Lehramt Mathe'
+  value :id => 5, :name => 'Lehramt Physik'
 end
 
 class Difficulty < ActiveEnum::Base

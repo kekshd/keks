@@ -10,6 +10,28 @@ class MainController < ApplicationController
   def help
   end
 
+  def feedback
+  end
+
+  def feedback_send
+    if params[:text].empty?
+      flash[:warning] = "Ohne Text kein Feedback. Ohne Feedback KeKs schlecht. Gib uns Text, bitte!"
+      render "feedback"
+    end
+
+    @name = params[:name]
+    @mail = params[:mail]
+    @text = params[:text]
+
+    if UserMailer.feedback(@text, @name, @mail).deliver
+      flash[:success] = "Mail ist raus, vielen Dank!"
+      return redirect_to feedback_path
+    else
+      flash[:error] = "Das System ist kaputt. Kannst Du das bitte ganz klassisch an keks@uni-hd.de senden?"
+      render "feedback"
+    end
+  end
+
 
   def questions
     cats = categories_from_param

@@ -2,8 +2,8 @@
 <% def n(p); number_to_percentage(100*p, :precision => 0); end %>
 
 <div>
-  <h2>Einschreibeschlüssel hinzufügen</h2>
-  <p>Die Schlüssel dienen dazu, Dich bestimmten Veranstaltungen zuzuordnen. Dies ist notwendig, da das Tool für alle offen ist, aber nur die statistischen Daten der lokalen Nutzer interessant sind. Dadurch können etwa Problembereiche entdeckt und nochmal angesprochen werden. Du musst keinen Schlüssel eintragen um das Tool zu benutzen.</p>
+  <h2>Veranstaltungsschlüssel hinzufügen</h2>
+  <p>Den Veranstaltungsschlüssel für die Lineare Algebra 2 erhälst Du in der ersten Vorlesung oder bei Deiner Tutorin bzw. Deinem Tutor. Gib den Schlüssel hier ein, wenn Du möchtest, dass Deine statistischen Daten anonymisiert in die Veranstaltungsstatistik einfließen. Diese Statistik liefert Informationen die die Veranstaltungsleitung nutzen kann um Problembereiche aufzudecken, die dann ggf. nochmal behandelt werden können.</p>
 
   <% unless @user.enrollment_keys.blank? %>
     <p>
@@ -40,11 +40,11 @@
 
     <%= f.label :mail %>
     <%= f.text_field :mail  %>
-    <span>Optional. Nur für „Passwort vergessen“ Funktion</span>
+    <span>Optional. Nur für „Passwort vergessen“ Funktion.</span>
 
     <%= f.label :study_path %>
     <%= f.select :study_path, StudyPath.to_select %>
-    <span>Optional, gibt Dir passende Fragen für Deinen Studiengang.</span>
+    <span>Optional.</span>
 
     <%= hidden_field_tag :type, 'datachange' %>
 

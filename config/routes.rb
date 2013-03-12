@@ -39,6 +39,8 @@ Keks::Application.routes.draw do
 
   #~ match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get
   match "main/questions", to: "main#questions", :as => "main_question", via: :get
+  match "feedback", to: "main#feedback", :as => "feedback", via: :get
+  match "feedback_send", to: "main#feedback_send", :as => "feedback_send", via: :post
 
   resources :sessions, only: [:new, :create, :destroy]
 

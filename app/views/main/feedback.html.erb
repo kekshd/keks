@@ -1,0 +1,30 @@
+<% provide(:title, "Rückmeldung geben") %>
+
+<div>
+  <h2>Rückmeldung geben</h2>
+
+  <p style="text-decoration: blink">KeKs soll Dir helfen.</p>
+  <p>Sag uns, wie wir KeKs für Dich verbessern können.</p>
+
+  <form method="POST" action="<%=feedback_send_path%>">
+    <%= token_tag(nil) %>
+
+    <%= label_tag :text %>
+    <%= text_area_tag :text, @text  %>
+    <span>Benötigt</span>
+
+
+    <%= label_tag :name %>
+    <%= number_field_tag :name, @name %>
+    <span>Optional</span>
+
+
+
+    <%= label_tag :mail %>
+    <%= email_field_tag :mail, @mail %>
+    <span>Optional</span>
+
+
+    <%= submit_tag "Mail absenden", :class => 'button primary big' %>
+  </form>
+</div>

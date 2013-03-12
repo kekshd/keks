@@ -1,7 +1,7 @@
 <% provide(:title, "Startseite") %>
 
 <div>
-  <p>Willkommen zu Keks.<br/>Keks stellt Dir in der Regel recht schnell zu beantwortende Fragen. Damit kannst Du herausfinden, wo Deine Lücken sind und ggf. nochmal nachlesen. Keks kann Dir jedoch nicht helfen zu verstehen, warum eine Antwort so ist wie sie ist – wende Dich in diesem Fall an Deine Tutorin oder Deinen Tutor. Wenn Du nicht sicher bist, ob Dir Keks gefällt probiere es einfach kurz aus – eine Anmeldung ist nicht erforderlich.</p>
+  <p>Willkommen,<br/>hier sind Deine Optionen:</p>
 
 
   <h2>Deine Optionen</h2>
@@ -10,11 +10,6 @@
     <li>
       <%= link_to "Gleich loslegen", main_hitme_path(:anchor => "hide-options"), :class => "button big" %>
       Für ganz Eilige. Nur Fragengebiet wählen und los geht’s. Kein Login notwendig.
-    </li>
-
-    <li>
-      <%= link_to "Gib mir Optionen", main_hitme_path, :class => "button big" %>
-      Erlaubt Dir einzustellen wie viele Fragen Du möchtest, ob Du Nachfragen wünschst, etc.
     </li>
 
     <% if signed_in? %>

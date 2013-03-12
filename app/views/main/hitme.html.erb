@@ -8,16 +8,16 @@
     <script>if(window.location.hash == "#hide-options") $("#options").hide(); </script>
     <%= label_tag :quantity, 'Anzahl' %>
     <%= number_field_tag :quantity, 10, :in => 5..100, :step => 5, :onblur => 'validateNumberOnly(this)'  %>
-    <span>Wie viele Fragen möchtest Du haben?</span>
+    <span>Wie viele Fragen möchtest Du bekommen?</span>
 
 
     <%= label_tag :study_path, "Studiengang" %>
     <%= select_tag :study_path, options_for_select(StudyPath.to_select, :selected => current_user ? current_user.study_path : nil) %>
-    <span>Wähle Deinen Studiengang um extra Fragen dafür anzuzeigen</span>
+    <span>Zu welchem Studiengang sollen die Spezialfragen passen?</span>
 
     <%= label_tag :subquestions, 'Nachfragen' %>
     <%= check_box_tag :subquestions, 1, true %>
-    <span>Setze das Häkchen, wenn Du – abhängig von Deiner Antwort – ggf. Nachfragen möchtest.</span>
+    <span>Möchtest Du Rückfragen, die von Deiner Antwort abhängen?</span>
 
     <br class="clear"/><br/>
     <b>Schwierigkeitsgrade</b><br/>
