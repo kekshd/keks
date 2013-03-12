@@ -36,6 +36,9 @@
   <%= f.select :study_path, StudyPath.to_select %>
   <span>(Diese Frage ist gedacht für…)</span>
 
+  <%= f.label :released %>
+  <%= f.check_box :released %>
+
   <%= f.submit @question.new_record? ? "Frage anlegen" : "Speichern", class: "button primary big" %>
 
   <br class="clear"/>

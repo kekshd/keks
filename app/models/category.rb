@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class Category < ActiveRecord::Base
-  attr_accessible :text, :title, :answer_ids, :ident
+  attr_accessible :text, :title, :answer_ids, :ident, :released, :is_root
 
   validates :ident, :uniqueness => true, :presence => true
   validates :title, :presence => true
@@ -20,7 +20,10 @@ class Category < ActiveRecord::Base
   end
 
   def dot(active = false)
-    txt = 'K: ' + ident.gsub('"', '')
+    id = ident.gsub('"', '')
+    id = id.scan(/./).join('̶')+'̶' if !released?
+
+    txt = 'K: ' + id
     bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''
     %(#{dot_id} [label="#{txt}" #{bg}, shape=#{is_root? ? 'house' : 'folder'}];)
   end

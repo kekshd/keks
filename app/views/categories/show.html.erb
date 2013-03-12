@@ -11,6 +11,7 @@
     <tr><th>Wurzel?</th><td><%=@category.is_root?%></td></tr>
     <tr><th>hat # Fragen</th><td><%=@category.questions.size %></tr>
     <tr><th>Verweise hierher</th><td><%=@category.answers.size %></tr>
+    <tr><th>Freigegeben?</th><td><%=@category.released %></tr>
     <tr><th>Text</th><td><%=render_tex @category.text %></tr>
   </table>
 

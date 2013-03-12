@@ -25,6 +25,9 @@
   <%= f.label :is_root %>
   <%= f.check_box :is_root %>
 
+  <%= f.label :released %>
+  <%= f.check_box :released %>
+
 
   <%= f.submit @category.new_record? ? "Kategorie anlegen" : "Speichern", class: "button primary big" %>
 

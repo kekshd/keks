@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class Question < ActiveRecord::Base
-  attr_accessible :text, :answers, :ident
+  attr_accessible :text, :answers, :ident, :released
   validates :ident, :uniqueness => true, :presence => true
   validates :text, :presence => true
 
@@ -176,6 +176,7 @@ class Question < ActiveRecord::Base
 
   private
   def is_complete_helper
+    return false, "nicht freigegeben" if !released?
     return false, "keine Antworten" if answers.size == 0
     return false, "keine richtige Antwort" if answers.none? { |a| a.correct? }
     psp = parent.question.study_path if parent.is_a?(Answer)

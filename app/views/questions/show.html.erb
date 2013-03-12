@@ -29,7 +29,7 @@
           <% a.questions.each do |q| %><%= link_to q.ident, q %><% end %>
         </td>
         <td>
-          <% a.categories.each do |c| %><%= link_to cident, c %><% end %>
+          <% a.categories.each do |c| %><%= link_to c.ident, c %><% end %>
         </td>
         <td>
           <%=link_to 'Bearbeiten', edit_question_answer_path(@question, a) %>
