@@ -171,28 +171,34 @@ h2 {
   margin: 0;
   padding: 0;
   list-style-type: none;
-  display: table;
 
-  li {
-    padding-bottom: 15px;
-    display: table-row;
-  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: table;
 
-  li > div {
-    display: table-cell;
-    vertical-align: middle;
-
-    > .button {
-      width: 100%;
-      @include border-box;
+    li {
+      padding-bottom: 15px;
+      display: table-row;
     }
-  }
 
-  li > .tex {
-    padding-left: 10px;
+    li > div {
+      display: table-cell;
+      vertical-align: middle;
 
-    padding-top: 10px;
-    padding-bottom: 10px;
+      > .button {
+        width: 100%;
+        @include border-box;
+      }
+    }
+
+    li > .tex {
+      padding-left: 10px;
+
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
   }
 }
 
@@ -378,6 +384,10 @@ img.latex-block {
   margin-left: 100px;
 }
 
+.toggle {
+    width:100% !important;
+    min-width:100% !important;
+}
 
 .toggle-head {
   cursor: pointer;

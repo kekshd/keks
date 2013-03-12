@@ -23,6 +23,16 @@ module ApplicationHelper
     return [Difficulty.ids.first]
   end
 
+  def categories_from_param
+    valid_cats = []
+    (params[:categories] || "").split("_").each do |c|
+      cat = Category.find(c.to_i)
+      next if !cat
+      valid_cats << cat
+    end
+    valid_cats
+  end
+
   def reject_unsuitable_questions!(qs)
     diff = difficulties_from_param
     sp = study_path_ids_from_param

@@ -4,9 +4,9 @@ $(document).ready(function() {
     var head = $(elm).prev();
     if(['H2', 'H3', 'H4', 'H5'].indexOf(head.prop("tagName")) === -1) {
       console.error("found toggle element, but previous element is not a heading. Details have been written to the debug log.");
-      console.debug(elm);
-      console.debug(head);
-      console.debug(head.prop("tagName"));
+      //~ console.debug(elm);
+      //~ console.debug(head);
+      //~ console.debug(head.prop("tagName"));
       return;
     }
 

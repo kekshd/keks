@@ -90,11 +90,10 @@ function enableOptions() {
 }
 
 
-function hideOtherCategories(clickedCategory) {
-  var c = clickedCategory;
-  c.parents('li').siblings().animate(CONST.hideAnimation);
-  c.data('oldonclick', c.attr('onclick'));
-  c.attr('onclick', '').addClass('disable');
+function hideCategories() {
+  $('h3 + .toggle:visible').each(function(i, cat) {
+    $(cat).prev().click();
+  });
 }
 
 function getDifficulties() {
@@ -127,21 +126,20 @@ function animateVisibilityHiddenShow(elms) {
   elms.css('visibility','visible').hide().fadeIn('slow');
 }
 
-function getURLForRootQuestions(categoryElm) {
-  var catId = categoryElm.data('id');
+function getURLForRootQuestions(categoryIds) {
   var diff = this.getDifficulties();
   var count = $('#quantity').val();
   var studyPath = $('#study_path').val();
 
-  var h = {count: count, difficulty: diff, study_path: studyPath}
+  var h = {categories: categoryIds.join("_"), count: count, difficulty: diff, study_path: studyPath}
 
-  return Routes.category_question_path(catId, h);
+  return Routes.main_question_path(h);
 }
 
-function getRootQuestions(categoryElm, context, successCallback) {
-  // example: http://localhost:3000/category/5/questions?count=10&difficulty=10_20_30&study_path=3
+function getRootQuestions(categoryIds, context, successCallback) {
+  // example: http://0.0.0.0:3000/main/questions?categories=6_8&count=10&difficulty=10_20_30&study_path=3
   $.ajax({
-    url: getURLForRootQuestions(categoryElm),
+    url: getURLForRootQuestions(categoryIds),
   }).done(function(data) {
     successCallback(context, data);
   }).fail(function() {
@@ -196,13 +194,20 @@ window.CONST = {
 
 
 // constructor
-H.Hitme = function(categoryElement) {
+H.Hitme = function() {
+  this.cats = $('.inline-chooser .active').map(function(i, m) { return $(m).data("id"); }).get();
+  if(this.cats.length === 0) {
+    alert("Wähle bitte eine Kategorie aus.");
+    return;
+  }
+
+console.log(this.cats);
+
   this._this = this;
-  this.cat = $(categoryElement);
   disableOptions();
   ensureValidDifficultySelection();
-  hideOtherCategories(this.cat);
-  getRootQuestions(this.cat, this, this.rootQuestionsAvailable);
+  hideCategories();
+  getRootQuestions(this.cats, this, this.rootQuestionsAvailable);
   this.questPositionPointer = -1;
   this.answersGiven = {correct: [], fail: [], skip: []};
 };

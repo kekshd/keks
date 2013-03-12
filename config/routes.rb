@@ -37,7 +37,8 @@ Keks::Application.routes.draw do
     match "tree.svgz", to: "admin#tree", :as => "tree", via: :get
   end
 
-  match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get
+  #~ match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get
+  match "main/questions", to: "main#questions", :as => "main_question", via: :get
 
   resources :sessions, only: [:new, :create, :destroy]
 

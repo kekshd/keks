@@ -28,21 +28,34 @@
   </div>
 
   <h2>Kategorie</h2>
-  <ul class="inline-chooser" id="categories">
+  Wähle die Kategorien, aus denen Du Fragen erhalten möchtest und klicke danach auf den Absenden Button unten.<br/><br/>
 
+  <ul class="inline-chooser" id="categories">
     <%
       groups = Category.root_categories.group_by do |c|
         c.title_split[0]
-      end
+      end.sort_by { |a, b| a[0] <=> b[0] }
     %>
 
     <% groups.each do |g| %>
-      <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
-      <% g[1].each do |r| %>
-        <li><div><a class="button big" onclick="H.hitme(this)" data-id="<%=r.id%>"><%=render_tex r.title_split[1] %></a></div><%=render_tex r.text %></li>
-      <% end %>
+      <li>
+        <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
+        <div class="toggle"><ul>
+          <% g[1].each do |r| %>
+            <li>
+              <div>
+                <a class="button big" onclick="$(this).toggleClass('active');" data-id="<%=r.id%>">
+                  <%=render_tex r.title_split[1] %>
+                </a>
+              </div>
+              <%=render_tex r.text %>
+            </li>
+          <% end %>
+        </ul></div>
+      </li>
     <% end %>
-
-
   </ul>
+
+  <h3>Alles Fertig?</h3>
+  <a class="button big" onclick="H.hitme()">Hitme me baby, one more time!</a>
 </div>
