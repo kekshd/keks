@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304202606) do
+ActiveRecord::Schema.define(:version => 20130312130458) do
 
   create_table "answers", :force => true do |t|
     t.string   "text"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20130304202606) do
     t.datetime "updated_at", :null => false
     t.string   "title"
     t.string   "ident"
+    t.boolean  "is_root"
   end
 
   create_table "hints", :force => true do |t|

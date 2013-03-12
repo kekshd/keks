@@ -156,7 +156,7 @@ function answersGivenCount() {
 
 function maybeInsertSubquestion(aid) {
   // only try to show subquestion half of the time
-  if(Math.random() < 0.5) return;
+  //~ if(Math.random() < 0.5) return; // fix as per #5
   var q = window.currentQuestion;
   var s;
   $.each(q.answers, function(ind, answ) {
