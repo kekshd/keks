@@ -15,10 +15,6 @@ class Category < ActiveRecord::Base
     Category.all.keep_if { |c| c.is_root? }
   end
 
-  def is_root?
-    answers.none?
-  end
-
   def link_text
     "Category #{ident}"
   end

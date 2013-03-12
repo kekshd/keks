@@ -21,6 +21,11 @@
   <%= f.collection_select 'answer_ids', Answer.all, :id, :link_text_short, { :selected => @category.answer_ids }, {:multiple => true, :name => 'category[answer_ids][]'} %>
   <span>Welche Antworten sollen auf auf diese Kategorie verweisen?<br/>Wenn keine Antwort ausgewählt wurde, dann handelt es sich um eine Wurzelkategorie.<br/>Mehrere mit STRG+Klick auswählen</span>
 
+
+  <%= f.label :is_root %>
+  <%= f.check_box :is_root %>
+
+
   <%= f.submit @category.new_record? ? "Kategorie anlegen" : "Speichern", class: "button primary big" %>
 
   <br class="clear"/>
