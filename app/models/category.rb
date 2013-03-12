@@ -12,7 +12,12 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :answers
 
   def Category.root_categories
-    Category.all.keep_if { |c| c.is_root? }
+    Category.all.keep_if { |c| c.is_root? && c.released? }
+  end
+
+  def title_split
+    s = title.split(":", 2)
+    return s.size == 2 ? s : ["", title]
   end
 
   def link_text

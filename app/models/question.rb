@@ -177,6 +177,8 @@ class Question < ActiveRecord::Base
   private
   def is_complete_helper
     return false, "nicht freigegeben" if !released?
+    return false, "Eltern-Frage nicht freigegeben" if parent.is_a?(Answer) && !parent.question.released?
+    return false, "Eltern-Kategorie nicht freigegeben" if parent.is_a?(Category) && !parent.released?
     return false, "keine Antworten" if answers.size == 0
     return false, "keine richtige Antwort" if answers.none? { |a| a.correct? }
     psp = parent.question.study_path if parent.is_a?(Answer)

@@ -30,8 +30,19 @@
   <h2>Kategorie</h2>
   <ul class="inline-chooser" id="categories">
 
-    <% Category.root_categories.each do |r| %>
-      <li><div><a class="button big" onclick="H.hitme(this)" data-id="<%=r.id%>"><%=render_tex r.title%></a></div><%=render_tex r.text %></li>
+    <%
+      groups = Category.root_categories.group_by do |c|
+        c.title_split[0]
+      end
+    %>
+
+    <% groups.each do |g| %>
+      <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
+      <% g[1].each do |r| %>
+        <li><div><a class="button big" onclick="H.hitme(this)" data-id="<%=r.id%>"><%=render_tex r.title_split[1] %></a></div><%=render_tex r.text %></li>
+      <% end %>
     <% end %>
+
+
   </ul>
 </div>

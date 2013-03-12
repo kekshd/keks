@@ -13,7 +13,7 @@
     <tbody>
       <% @categories.each do |c| %>
         <tr>
-          <%=content_tag :td, link_to(c.ident, c) %>
+          <%=content_tag :td, link_to(c.ident, c, :class => c.released? ? "" : "strike") %>
           <%=content_tag :td, c.title %>
           <%=content_tag :td, c.is_root? %>
           <td>
