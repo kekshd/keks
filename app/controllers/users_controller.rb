@@ -3,10 +3,14 @@
 class UsersController < ApplicationController
   include StatsHelper
 
-  before_filter :signed_in_user, only: [:edit, :update, :destroy, :enroll, :starred]
-  before_filter :correct_user,  only: [:edit, :update, :enroll, :starred]
+  before_filter :signed_in_user, only: [:edit, :update, :destroy, :enroll, :starred, :history]
+  before_filter :correct_user,  only: [:edit, :update, :enroll, :starred, :history]
 
   def starred
+  end
+
+  def history
+    @stats = @user.stats.find(:all, :order => "created_at DESC", :limit => 50)
   end
 
   def new

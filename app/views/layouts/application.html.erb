@@ -17,6 +17,7 @@
         <% if signed_in? %>
           <li><%= link_to("Profil", edit_user_path(current_user)) %></li>
           <li><%= link_to("Gemerkte Fragen", starred_path(current_user)) %></li>
+          <li><%= link_to("Historie", history_path(current_user)) %></li>
           <% if current_user.admin? %><li><%= link_to("Admin", admin_overview_path) %></li><% end %>
           <li><%= link_to("Ausloggen", signout_path, method: :delete) %></li>
         <% else %>

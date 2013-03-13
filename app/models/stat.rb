@@ -10,4 +10,8 @@ class Stat < ActiveRecord::Base
   def anonymous?
     user_id == -1
   end
+
+  def skipped?
+    answer_id == -1
+  end
 end

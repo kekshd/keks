@@ -1,0 +1,42 @@
+<% provide(:title, "Deine bisherigen Fragen") %>
+
+<div>
+  <h2>Historie</h2>
+  <p>Hier findest Du die Dir zuletzt angezeigten Fragen.</p>
+</div>
+
+<% @stats.each do |s| %>
+  <% q = Question.find(s.question_id) %>
+
+  <div>
+    <h3 class="count"><small>(vor <%=time_ago_in_words s.created_at %>)</small> Frage </h3>
+    <script>
+      document.write(renderStarred({id: <%=q.id%>, starred: <%=@user.starred.include?(q)%>}));
+    </script>
+    <%=render_tex q.text %>
+    <br/>
+    <% if s.skipped? %>
+      <% if q.matrix_validate? %>
+        <strong>Antwort:</strong> Hier wäre das Ergebnis in ein Textfeld einzutragen.
+      <% else %>
+        <strong>Antwortmöglichkeiten:</strong>
+        <ul style="margin-top: 10px;margin-bottom:0">
+          <% q.answers.each do |a| %>
+            <li><%=render_tex a.text %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    <% else %>
+      <% if q.matrix_validate? %>
+        <strong>Antwort:</strong> <%=render_tex q.answers.first.text %>
+      <% else %>
+        <strong>Antwortmöglichkeiten:</strong>
+        <div class="answer-chooser noHide">
+          <% q.answers.each do |a| %>
+            <div><div><%=render_tex a.text%></div><span><%=render "/answers/render_correctness", answer: a%></span><span><%=s.answer_id == a.id ? "Deine Antwort" : "" %></span></div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
