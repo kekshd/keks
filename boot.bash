@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e 
+set -e
 cd /srv/keks
 
 export PATH=/afs/mathi.uni-heidelberg.de/home/keks/gems/bin:$PATH
