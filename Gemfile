@@ -12,6 +12,7 @@ group :assets do
   gem 'sass-rails',         '3.2.6'
   gem 'coffee-rails',       '3.2.2'
   gem 'uglifier',           '1.3.0'
+  gem 'therubyracer'
 end
 
 # javascript
