@@ -9,8 +9,8 @@ export GEM_PATH=/srv/keks/GEMS
 alias ruby="/usr/bin/ruby1.9.1"
 alias gem="/usr/bin/gem1.9.1"
 
-export RAILS_ENV=development
-#export RAILS_ENV=production
+#export RAILS_ENV=development
+export RAILS_ENV=production
 
 export RAILS_RELATIVE_URL_ROOT=/keks
 

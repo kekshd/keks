@@ -67,6 +67,5 @@ Keks::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  # FIXME FIXME FIXME
-  config.action_mailer.default_url_options = { :host => "keks.uni-hd.de" }
+  config.action_mailer.default_url_options = { :host => "www.mathi.uni-heidelberg.de/keks" }
 end
