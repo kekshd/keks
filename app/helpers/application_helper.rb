@@ -1,6 +1,30 @@
 # encoding: utf-8
 
 module ApplicationHelper
+  def url_for(options = nil)
+    if Hash === options && Rails.env.production?
+      options[:protocol] = 'https'
+    end
+    super(options)
+  end
+
+  def redirect_to(options = {}, response_status = {})
+    return super(options, response_status) unless Rails.env.production?
+
+    case options
+    when %{^(\w[\w+.-]*:|//).*}
+      options.sub!(/^http:/, 'https:')
+    when String
+      options = request.protocol.sub('http', 'https') + request.host_with_port + options
+    when :back
+    when Proc
+      url_for(options.merge({:protocol => 'https'}))
+    end
+
+    super(options, response_status)
+  end
+
+
   def study_path_ids_from_param
     sp = params[:study_path]
     return [1] if !sp
