@@ -24,7 +24,7 @@ export PATH=/srv/keks/GEMS/bin:$PATH
 export GEM_HOME=/srv/keks/GEMS
 export GEM_PATH=/srv/keks/GEMS
 ```
-To verify it works, run `ruby -v`. It should print something like `ruby 1.9.2p0 (2010-08-18 revision 29036) [x86_64-linux]`. 
+To verify it works, run `ruby -v`. It should print something like `ruby 1.9.2p0 (2010-08-18 revision 29036) [x86_64-linux]`.
 
 You also need bundler to install all the dependencies for you. Install it by running `gem install bundler`. If everything is setup up correctly you should be able to type `bundle help` and see its man page. Note the spelling: the executable is without `r` while the gem name includes it.
 
@@ -37,11 +37,15 @@ You also need bundler to install all the dependencies for you. Install it by run
 - `rake db:migrate`
 - If your setup works, running `rails server` in the console should spawn a server at `http://localhost:3000` with KeKs. If you have problems, try `bundle exec rails server` instead.
 
+Note you need to be in production mode in order for the sub-URI magic to work.
+
+On each update run `rake assets:precompile` to recompile the JS or CSS files. Similarly run `rake db:migrate` to incorporate changes into the DB.
+
 ### connecting it to the outside world
 `cat /etc/apache2/sites-available/keks`
 ```
  # don’t forget to set in config/environments/production.rb too
- 
+
  ProxyPass /keks/ http://localhost:3000/
  ProxyPassReverse /keks/ http://localhost:3000/
 ```
