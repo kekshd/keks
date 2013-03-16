@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class UserMailer < ActionMailer::Base
-  default from: "breunig@uni-hd.de"
+  default from: "keks@uni-hd.de"
 
   def password_reset(user)
     @user = user
@@ -12,6 +12,6 @@ class UserMailer < ActionMailer::Base
     @text = text
     @name = name
     @mail = addr
-    mail :to => "breunig@uni-hd.de", :subject => "KeKs: Feedback"
+    mail :to => "keks@uni-hd.de", :subject => "KeKs: Feedback", :from => @mail || "keks@uni-hd.de"
   end
 end
