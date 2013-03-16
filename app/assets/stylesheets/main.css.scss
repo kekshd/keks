@@ -68,6 +68,13 @@ body > div, div.box {
 
 #header {
   background: $dark;
+  /* undo body > div rules. Thanks Internet Explorer! */
+  box-shadow: none;
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+  position: static;
+  width: 100%;
 }
 
 #header + div, noscript + div, noscript div {
