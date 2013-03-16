@@ -12,6 +12,7 @@ class UserMailer < ActionMailer::Base
     @text = text
     @name = name
     @mail = addr
-    mail :to => "keks@uni-hd.de", :subject => "KeKs: Feedback", :from => @mail || "keks@uni-hd.de"
+    is_valid = @mail =~ /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/
+    mail :to => "keks@uni-hd.de", :subject => "KeKs: Feedback", :from => is_valid ? @mail : "keks@uni-hd.de"
   end
 end
