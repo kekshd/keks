@@ -12,13 +12,16 @@ module ApplicationHelper
     return super(options, response_status) unless Rails.env.production?
 
     case options
-    when %{^(\w[\w+.-]*:|//).*}
-      options.sub!(/^http:/, 'https:')
     when String
-      options = request.protocol.sub('http', 'https') + request.host_with_port + options
+      if options.start_with?('http://')
+        options.sub!(/^http:/, 'https:')
+      else
+        options = request.protocol.sub('http', 'https') + request.host_with_port + options
+      end
     when :back
     when Proc
-      url_for(options.merge({:protocol => 'https'}))
+    else
+      options = url_for(options.merge({:protocol => 'https'}))
     end
 
     super(options, response_status)
