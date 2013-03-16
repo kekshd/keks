@@ -3,7 +3,7 @@
 module ApplicationHelper
   def url_for(options = nil)
     if Hash === options && Rails.env.production?
-      options[:protocol] = 'https'
+      options[:protocol] = 'https:'
     end
     super(options)
   end
@@ -15,13 +15,14 @@ module ApplicationHelper
     when String
       if options.start_with?('http://')
         options.sub!(/^http:/, 'https:')
+      elsif options =~ /^\w+:\/\//i
       else
         options = request.protocol.sub('http', 'https') + request.host_with_port + options
       end
     when :back
     when Proc
     else
-      options = url_for(options.merge({:protocol => 'https'}))
+      url_for(options.merge({:protocol => 'https:'}))
     end
 
     super(options, response_status)
