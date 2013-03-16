@@ -66,11 +66,11 @@ body > div, div.box {
   }
 }
 
-header {
+#header {
   background: $dark;
 }
 
-header + div, noscript + div, noscript div {
+#header + div, noscript + div, noscript div {
   margin-top: 0 !important;
   border-top: 0 !important;
 }
@@ -88,7 +88,7 @@ h1 {
   @include border-box;
 }
 
-nav {
+#nav {
   padding: 5px 15px;
   background: $light;
   box-shadow: 0 0 10px rgba(40, 40, 40, 0.4);

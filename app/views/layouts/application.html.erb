@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <link href='http://fonts.googleapis.com/css?family=Cabin:400,400italic,700|Yanone Kaffeesatz' rel='stylesheet' type='text/css'>
   <title>KeKs – <%=yield(:title)%></title>
@@ -11,9 +8,9 @@
   <%= csrf_meta_tags %>
 </head>
 <body class="body-noise">
-  <header>
+  <div id="header">
     <h1>KeKs – Kompetenzerweiterndes Kurzfragensystem</h1>
-    <nav>
+    <div id="nav">
       <ul>
         <li><%=link_to "Startseite", :root %></li>
 
@@ -35,8 +32,8 @@
         <%= content_tag :span, "eingeloggt als " + current_user.nick %>
         <%= content_tag :script, "window.loggedIn = true;" %>
       <% end %>
-    </nav>
-  </header>
+    </div>
+  </div>
 
   <% if flash.any? %>
     <div class="flash">
