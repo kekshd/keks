@@ -3,9 +3,9 @@
 set -e
 cd /srv/keks
 
-export PATH=/afs/mathi.uni-heidelberg.de/home/keks/gems/bin:$PATH
-export GEM_HOME=/afs/mathi.uni-heidelberg.de/home/keks/gems
-export GEM_PATH=/afs/mathi.uni-heidelberg.de/home/keks/gems
+export PATH=/srv/keks/GEMS/bin:$PATH
+export GEM_HOME=/srv/keks/GEMS
+export GEM_PATH=/srv/keks/GEMS
 alias ruby="/usr/bin/ruby1.9.1"
 alias gem="/usr/bin/gem1.9.1"
 
