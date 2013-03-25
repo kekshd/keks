@@ -27,6 +27,23 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def release
+    ok = true
+    @category = Category.find(params[:id])
+    @category.released = true
+    ok = @category.save && ok
+    @category.questions.each do |q|
+      q.released = true
+      ok = q.save && ok
+    end
+    if ok
+      flash[:success] = "Kategorie und alle direkten Unterfragen wurden freigegeben"
+    else
+      flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen freigegeben."
+    end
+    redirect_to @category
+  end
+
 
   def edit
     @category = Category.find(params[:id])

@@ -33,6 +33,7 @@ Keks::Application.routes.draw do
     end
 
     resources :categories
+    match "categories/:id/release", to: "categories#release", :as => "release_category", via: :get
     match "report/:enrollment_key", to: "stats#report", :as => "stat_report", via: :get
 
     match "tree.svgz", to: "admin#tree", :as => "tree", via: :get

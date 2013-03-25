@@ -27,6 +27,9 @@
 
   <%= f.label :released %>
   <%= f.check_box :released %>
+  <% unless @category.new_record? %>
+    <span>(<%=link_to "Kategorie + Unterfragen freigeben", release_category_path(@category), confirm: "Dies wird diese Kategorie und alle #{@category.questions.size} direkten Unterfragen freigegeben.\n\nDeine Änderungen werden nicht gespeichert.\nFortfahren?" %>)</span>
+  <% end %>
 
 
   <%= f.submit @category.new_record? ? "Kategorie anlegen" : "Speichern", class: "button primary big" %>
