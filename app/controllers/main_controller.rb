@@ -57,4 +57,8 @@ class MainController < ApplicationController
 
     render json: json
   end
+
+  def random_xkcd
+    render :text => open("http://dynamic.xkcd.com/random/comic/").read
+  end
 end
