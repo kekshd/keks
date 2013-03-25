@@ -23,7 +23,7 @@ module ApplicationHelper
     when Proc
     else
       o = options.merge({:protocol => 'https:'}) rescue options
-      url_for(o)
+      url_for(o).sub(/^http:/, 'https:')
     end
 
     super(options, response_status)
