@@ -80,8 +80,8 @@ class Question < ActiveRecord::Base
     return nil unless matrix_validate?
     a = self.answers.first.text
     a = a.match(/\\begin\{pmatrix\}(.*)\\end\{pmatrix\}/m)[1]
-    rows = a.split(/[\r\n]+/)
-    rows = rows.map { |r| r.strip.split(/\s+/).join(" ") }
+    rows = a.split(/\s*\\\\\s*/)
+    rows = rows.map { |r| r.strip.split(/\s*&\s*/).join(" ") }
     rows.join("  ")
   end
 
