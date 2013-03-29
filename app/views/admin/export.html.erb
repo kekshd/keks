@@ -1,6 +1,7 @@
 <div>Diese Seite ist für das Review von Fragen gedacht. Fragen die noch nicht fertig sind oder noch nicht freigegeben wurden sind mit einem „UNFERTIG“ versehen. <b>Diese Seite ist öffentlich</b>, behandle den Link daher mit Bedacht.</div>
 
-<% Category.root_categories.each do |c| %>
+<% Category.all.each do |c| %>
+  <% next unless c.is_root? %>
   <div>
     <h2><%= c.title %></h2>
     <% c.questions.each do |q| %>
