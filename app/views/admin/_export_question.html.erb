@@ -1,0 +1,40 @@
+<%
+  all_sub_q = []
+  feedback_text = "Liebes KeKs Team,\n\nbzgl. Frage #{question.ident} möchte ich euch sagen:\n\n\n\nViele Grüße\n\nFrage als Admin ansehen:\n#{question_url(question)}"
+%>
+
+
+<h3>
+  <%= question.complete? ? '' : 'UNFERTIGE ' %>
+  Frage: <%= question.ident %>
+  –– <%= link_to "Feedback zu dieser Frage", feedback_path(text: feedback_text) %>
+</h3>
+<%= render_tex(question.text) %>
+<% if question.hints.any? %>
+  <br/>
+  <b>Hinweise:</b>
+  <ol>
+  <% question.hints.each do |h| %>
+    <li><%=render_tex(h.text)%></li>
+  <% end %>
+  </ol>
+<% end %>
+
+<b>Antworten:</b>
+<ol>
+<% question.answers.each do |a| %>
+  <li><%=render('/answers/render', answer: a)%> <%=markup_correct(a)%></li>
+  <% all_sub_q << a.get_all_subquestions %>
+<% end %>
+</ol>
+<hr/>
+
+
+<% all_sub_q = all_sub_q.flatten.uniq#.reject { |q| !q.complete? } %>
+<% if all_sub_q.any? && max_depth >= 0 %>
+  <% all_sub_q.each do |q| %>
+    <div style="padding-left:20px;border-left:1px solid #ddd">
+      <%= render 'export_question', question: q, max_depth: (max_depth-1) %>
+    </div>
+  <% end %>
+<% end %>

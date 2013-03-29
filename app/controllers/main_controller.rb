@@ -11,6 +11,7 @@ class MainController < ApplicationController
   end
 
   def feedback
+    @text = params[:text]
   end
 
   def feedback_send

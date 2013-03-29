@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class AdminController < ApplicationController
-  #~ before_filter :require_admin
+  before_filter :require_admin, :except => [:tree, :export]
 
   def overview
   end
@@ -13,6 +13,9 @@ class AdminController < ApplicationController
     end
 
     send_data get_dot_svgz(dot), filename: "keks-tree-#{Date.today}.svgz"
+  end
+
+  def export
   end
 
   private

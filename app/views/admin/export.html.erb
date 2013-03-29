@@ -1,0 +1,11 @@
+
+
+<% Category.root_categories.each do |c| %>
+  <div>
+    <h2><%= c.title %></h2>
+    <% c.questions.each do |q| %>
+      <% #next unless q.complete? %>
+      <%= render "export_question", question: q, max_depth: 10 %>
+    <% end %>
+  </div>
+<% end %>
