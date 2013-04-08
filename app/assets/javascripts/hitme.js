@@ -201,8 +201,6 @@ H.Hitme = function() {
     return;
   }
 
-console.log(this.cats);
-
   this._this = this;
   disableOptions();
   ensureValidDifficultySelection();
