@@ -338,11 +338,15 @@ H.Hitme.prototype = {
       + '<div class="button-group">'
       + '<a onclick="window.currentHitme.giveMore();" class="button big">Gib mir nochmal '+$('#quantity').val()+'!</a>'
       + '<a href="'+Routes.main_hitme_path()+'" class="button big">Einstellungen ändern</a>'
-      + '</div>'
-      + '<br/><br/>Zur Belohnung ist hier ein zufälliges XKCD-Comic:<br/>'
-      + '<div class="xkcd"></div>'
-      + '<br/>(eigentlich müsste hier ein Link auf XKCD stehen – zu Deinem Schutz fehlt er aber)'
       + '</div>';
+
+    if($('#comiccheckbox').is(':checked')) {
+      code = code
+        + '<br/><br/>Zur Belohnung ist hier ein zufälliges XKCD-Comic:<br/>'
+        + '<div class="xkcd"></div>'
+        + '<br/>(eigentlich müsste hier ein Link auf XKCD stehen – zu Deinem Schutz fehlt er aber)'
+        + '</div>';
+    }
 
     $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
 

@@ -19,6 +19,10 @@
     <%= check_box_tag :subquestions, 1, true %>
     <span>Möchtest Du Rückfragen, die von Deiner Antwort abhängen?</span>
 
+    <%= label_tag :comiccheckbox, 'Comic' %>
+    <%= check_box_tag :comiccheckbox, 1, true %>
+    <span>Soll nach einem Fragenblock ein Comic (XKCD) angezeigt werden?</span>
+
     <br class="clear"/><br/>
     <b>Schwierigkeitsgrade</b><br/>
     <% Difficulty.all.each do |id, name| %>
