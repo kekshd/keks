@@ -108,16 +108,6 @@ function getDifficulties() {
   return diff.join("_");
 }
 
-function getStudyPath() {
-  var diff = [];
-  $('input[type=checkbox][name^=difficulty]').each(function() {
-    if(this.checked) {
-      diff.push($(this).val());
-    }
-  });
-  return diff.join("_");
-}
-
 function showAllCategories() {
   $('#categories .toggle').animate(CONST.showAnimation);
   var s = $('a.disable, #start-button');
