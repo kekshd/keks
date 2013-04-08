@@ -94,6 +94,8 @@ function hideCategories() {
   $('h3 + .toggle:visible').each(function(i, cat) {
     $(cat).prev().click();
   });
+  var s = $('#categories a.button, #start-button');
+  s.addClass('disable').attr('oldonclick', s.data('onclick'));
 }
 
 function getDifficulties() {
@@ -117,8 +119,8 @@ function getStudyPath() {
 }
 
 function showAllCategories() {
-  $('#categories li').animate(CONST.showAnimation);
-  var s = $('a.disable');
+  $('#categories .toggle').animate(CONST.showAnimation);
+  var s = $('a.disable, #start-button');
   s.removeClass('disable').attr('onclick', s.data('oldonclick'));
 }
 
