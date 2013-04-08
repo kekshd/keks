@@ -22,6 +22,8 @@ class StudyPath < ActiveEnum::Base
   value :id => 3, :name => 'B.Sc. Physik'
   value :id => 4, :name => 'Lehramt Mathe'
   value :id => 5, :name => 'Lehramt Physik'
+  value :id => 6, :name => 'B.Sc. Informatik'
+  value :id => 7, :name => 'Lehramt Informatik'
 end
 
 class Difficulty < ActiveEnum::Base
