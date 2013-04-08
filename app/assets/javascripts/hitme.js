@@ -145,6 +145,11 @@ function answersGivenCount() {
 }
 
 function maybeInsertSubquestion(aid) {
+  if(!$('#subquestions').is(':checked')) {
+    // user doesn’t want subquestions, skip
+    return;
+  }
+
   // only try to show subquestion half of the time
   //~ if(Math.random() < 0.5) return; // fix as per #5
   var q = window.currentQuestion;
