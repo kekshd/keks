@@ -16,8 +16,13 @@ class Question < ActiveRecord::Base
   has_many :answers, :dependent => :destroy
   has_many :hints, :order => 'sort_hint ASC', :dependent => :destroy
   has_and_belongs_to_many :starred_by, :class_name => :User, :join_table => :starred
+  before_destroy do |q|
+    sql =  ["DELETE FROM starred WHERE question_id = ?", q.id]
+    connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, sql))
+  end
 
-  has_many :stats
+  # simply remove, no deconstruction and the like
+  has_many :stats, :dependent => :delete_all
 
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true

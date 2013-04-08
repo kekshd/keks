@@ -6,7 +6,10 @@
 </div>
 
 <% @stats.each do |s| %>
-  <% q = Question.find(s.question_id) %>
+  <%
+    next if s.question.nil?
+    q = s.question
+  %>
 
   <div>
     <h3 class="count"><small>(vor <%=time_ago_in_words s.created_at %>)</small> Frage </h3>
