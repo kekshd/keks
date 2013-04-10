@@ -228,3 +228,26 @@
 .button-container .button-group {
     vertical-align: top;
 }
+
+
+.toggleable {
+  padding-right:33px; /* 14 normal, 8 for checkbox */
+}
+
+.toggleable:before {
+  float: left;
+  font-size: 18px;
+  content: '☐';
+  width:24px;
+  overflow: hidden;
+  margin-left: -4px;
+  color: #777;
+}
+
+.toggleable.active:before {
+  content: '☑';
+}
+
+.toggleable.active:before, .toggleable:hover:before {
+  color: #fff;
+}

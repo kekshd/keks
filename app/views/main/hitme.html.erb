@@ -48,7 +48,7 @@
           <% g[1].each do |r| %>
             <li>
               <div>
-                <a class="button big" onclick="$(this).toggleClass('active');" data-id="<%=r.id%>">
+                <a class="button big toggleable" onclick="$(this).toggleClass('active');" data-id="<%=r.id%>">
                   <%=render_tex r.title_split[1] %>
                 </a>
               </div>
