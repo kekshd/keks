@@ -60,6 +60,10 @@ class MainController < ApplicationController
   end
 
   def random_xkcd
-    render :text => open("http://dynamic.xkcd.com/random/comic/").read
+    begin
+      render :text => open("http://dynamic.xkcd.com/random/comic/").read
+    rescue
+      render :text => "Der XKCD Server ist gerade nicht erreichbar. Sorry."
+    end
   end
 end
