@@ -34,4 +34,5 @@ end
 
 class EnrollmentKeys < ActiveEnum::Base
   value :id => 1, :name => 'TestEnrollment'
+  value :id => 2, :name => '2013LA2'
 end
