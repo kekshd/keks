@@ -95,7 +95,7 @@ function hideCategories() {
     $(cat).prev().click();
   });
   var s = $('#categories a.button, #start-button');
-  s.addClass('disable').attr('oldonclick', s.data('onclick'));
+  disableLinks(s);
 }
 
 function getDifficulties() {
@@ -111,11 +111,27 @@ function getDifficulties() {
 function showAllCategories() {
   $('#categories .toggle').animate(CONST.showAnimation);
   var s = $('a.disable, #start-button');
-  s.removeClass('disable').attr('onclick', s.data('oldonclick'));
+  enableLinks(s);
 }
 
 function animateVisibilityHiddenShow(elms) {
   elms.css('visibility','visible').hide().fadeIn('slow');
+}
+
+function disableLinks(selector) {
+  $(selector).each(function(ind, s) {
+    s = $(s);
+    s.addClass('disable')
+      .data('oldonclick', s.attr('onclick'))
+      .attr('onclick', '');
+  });
+}
+
+function enableLinks(selector) {
+  $(selector).each(function(ind, s) {
+    s = $(s);
+    s.removeClass('disable').attr('onclick', s.data('oldonclick'));
+  });
 }
 
 function getURLForRootQuestions(categoryIds) {
@@ -204,6 +220,8 @@ H.Hitme = function() {
   hideCategories();
   getRootQuestions(this.cats, this, this.rootQuestionsAvailable);
   this.questPositionPointer = -1;
+  this.nagAboutSkippedQuestions = true;
+  this.skippedQuestionsData = [];
   this.answersGiven = {correct: [], fail: [], skip: []};
 };
 
@@ -237,6 +255,8 @@ H.Hitme.prototype = {
     var answ = $(this);
     var linkBox = answ.parents('.answer-chooser, .answer-chooser-matrix').first();
     var boxSelector = '#blockQ' + answ.data('qid');
+    // i.e. skipped questions are shown again
+    if(!this.nagAboutSkippedQuestions) boxSelector += 'repeat';
     var box = $(boxSelector);
 
     var isMatrix = getQuestionById(answ.data('qid')).matrix;
@@ -268,6 +288,7 @@ H.Hitme.prototype = {
       break;
 
       default:
+      window.currentHitme.skippedQuestionsData.push(window.currentQuestion);
       window.currentHitme.answersGiven.skip.push(boxSelector);
     }
 
@@ -280,7 +301,12 @@ H.Hitme.prototype = {
     this.questPositionPointer++;
     var q = window.currentQuestion = this.questions[this.questPositionPointer];
 
-    var code = '<div style="display:none" id="blockQ'+q.id+'" class="hideMeOnMore">'
+    var blockId = 'blockQ' + q.id;
+    // i.e. skipped questions are shown again
+    if(!this.nagAboutSkippedQuestions) blockId += 'repeat';
+
+
+    var code = '<div style="display:none" id="'+blockId+'" class="hideMeOnMore">'
       + q.html
       + '<br/>';
 
@@ -312,14 +338,14 @@ H.Hitme.prototype = {
       code += a.html+'</div>';
       code += '<br class="clear"/>';
       code += '<div class="answer-chooser-matrix button-group">';
-      code += '<a class="button" data-qid="'+q.id+'" data-aid="1">Antwort übernehmen</a>';
-      code += '<a class="button" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a>';
+      code += '<a class="button big" data-qid="'+q.id+'" data-aid="1">Antwort übernehmen</a>';
+      code += '<a class="button big" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a>';
       code += '</div>';
     } else {
       cls = 'answer-chooser';
       code += '<div class="answer-chooser">'
         + this._renderAnswersForQuestion(q)
-        +'<div><a class="button" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a><span></span><span>Du hast diese Frage übersprungen</span></div>'
+        +'<div><a class="button big" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a><span></span><span>Du hast diese Frage übersprungen</span></div>'
         + '</div>';
     }
 
@@ -329,7 +355,36 @@ H.Hitme.prototype = {
     $('.'+cls+':last').one('click', 'a', this._handleAnswerClick);
   },
 
+  _reshowSkippedQuestions: function() {
+    var w = window.currentHitme;
+    w.answersGiven.skip = [];
+    w.questions = $.extend(true, [], w.skippedQuestionsData); // deep copy
+    w.questPositionPointer = -1;
+    w.showNext();
+  },
+
+  _showSkippedQuestionsNagDialog: function() {
+    // show only once
+    if(!this.nagAboutSkippedQuestions) return false;
+    this.nagAboutSkippedQuestions = false;
+
+    if(this.answersGiven.skip.length === 0) return false;
+
+    var code = '<div style="display:none;" class="hideMeOnMore reshowskipped">'
+      + '<h3>Übersprungene Fragen</h3>'
+      + '<p>Du hast ' + this.answersGiven.skip.length + ' Frage(n) übersprungen. Sollen sie nochmal angezeigt werden, oder möchtest Du abschließen?</p>'
+      + '<div class="button-group">'
+      + '<a onclick="window.currentHitme._showFinishDialog(); disableLinks(\'.reshowskipped a\');" class="button big">Block abschließen</a>'
+      + '<a onclick="window.currentHitme._reshowSkippedQuestions(); disableLinks(\'.reshowskipped a\');" class="button big">nochmal vorlegen</a>'
+      + '</div>';
+
+    $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
+    return true;
+  },
+
   _showFinishDialog: function() {
+    if(this._showSkippedQuestionsNagDialog()) return;
+
     var sum = this.answersGiven.correct.length + this.answersGiven.fail.length;
 
     var code = '<div style="display:none;" class="hideMeOnMore">'
