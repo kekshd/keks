@@ -8,9 +8,13 @@
   <%
     next if s.question.nil?
     q = s.question
+
+    kls = ""
+    kls = "correct" if s.correct?
+    kls = "wrong" if s.wrong?
   %>
 
-  <div>
+  <div class="<%= kls %>">
     <h3 class="count"><small>(vor <%=time_ago_in_words s.created_at %>)</small> Frage </h3>
     <script>
       document.write(renderStarred({id: <%=q.id%>, starred: <%=@user.starred.include?(q)%>}));

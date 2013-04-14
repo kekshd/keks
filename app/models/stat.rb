@@ -14,4 +14,12 @@ class Stat < ActiveRecord::Base
   def skipped?
     answer_id == -1
   end
+
+  def correct?
+    correct && !skipped?
+  end
+
+  def wrong?
+    !correct && !skipped?
+  end
 end
