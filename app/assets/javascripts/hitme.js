@@ -239,7 +239,7 @@ H.Hitme.prototype = {
 
   _renderAnswersForQuestion: function(quest) {
     var s = "";
-    $.each(quest.answers, function(ind, a) {
+    $.each(shuffle(quest.answers), function(ind, a) {
       s += '<div>'
       s += '<a class="button" id="a'+a.id+'"';
       s += ' data-correct="'+a.correct+'" data-qid="'+quest.id+'"';
