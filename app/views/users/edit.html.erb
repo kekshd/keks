@@ -2,8 +2,8 @@
 <% def n(p); number_to_percentage(100*p, :precision => 0); end %>
 
 <div>
-  <h2>Veranstaltungsschlüssel hinzufügen</h2>
-  <p>Den Veranstaltungsschlüssel für die Lineare Algebra 2 erhälst Du in der ersten Vorlesung oder bei Deiner Tutorin bzw. Deinem Tutor. Gib den Schlüssel hier ein, wenn Du möchtest, dass Deine statistischen Daten anonymisiert in die Veranstaltungsstatistik einfließen. Diese Statistik liefert Informationen die die Veranstaltungsleitung nutzen kann um Problembereiche aufzudecken, die dann ggf. nochmal behandelt werden können.</p>
+  <h2>Vorlesungsschlüssel hinzufügen</h2>
+  <p>Den Vorlesungsschlüssel für die Lineare Algebra 2 erhälst Du in der ersten Vorlesung oder bei Deiner Tutorin bzw. Deinem Tutor. Gib den Schlüssel hier ein, wenn Du möchtest, dass Deine statistischen Daten anonymisiert in die Veranstaltungsstatistik einfließen. Diese Statistik liefert Informationen, die die Veranstaltungsleitung nutzen kann, um Problembereiche aufzudecken, die dann ggf. nochmal behandelt werden können.</p>
 
   <% unless @user.enrollment_keys.blank? %>
     <p>
