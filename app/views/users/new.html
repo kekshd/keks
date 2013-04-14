@@ -3,12 +3,11 @@
 <div>
   <h2>Neuen Account anlegen</h2>
 
-  <p>Mit einem eigenen Account kannst Du Deine Daten überall mithinnehmen. Außerdem kannst Du sogenannte Enrollmentkeys angeben, mit Hilfe deren die ObertutorenInnen statistische Daten erhalten. Damit können sie etwa häufige Fehler nochmal ansprechen. Auf Deine Statistik hast nur Du Zugriff. Weder die DozentInnen noch die TutorInnen können Deine Daten einsehen.
-
   <%= form_for(@user) do |f| %>
     <%= render 'shared/error_messages', object: f.object %>
     <%= f.label :nick %>
     <%= f.text_field :nick %>
+    <span>Kann nicht geändert werden.</span>
 
     <%= f.label :password %>
     <%= f.password_field :password %>
@@ -18,7 +17,7 @@
 
     <%= f.label :mail %>
     <%= f.text_field :mail %>
-    <span>Optional, wird nur benötigt falls Du Dein Passwort vergessen hast.</span>
+    <span>Optional, wird nur benötigt, um die "Passwort vergessen"-Funktion nutzen zu können.</span>
 
     <%= f.label :study_path %>
     <%= f.select :study_path, StudyPath.to_select %>

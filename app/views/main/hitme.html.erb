@@ -24,15 +24,15 @@
     <span>Soll nach einem Fragenblock ein Comic (XKCD) angezeigt werden?</span>
 
     <br class="clear"/><br/>
-    <b>Schwierigkeitsgrade</b><br/>
+    <b>Fragentypen</b><br/>
     <% Difficulty.all.each do |id, name| %>
       <%= label_tag "difficulty[#{id}]", name, style: "font-weight: normal" %>
       <%= check_box_tag "difficulty[#{id}]", id, true %>
     <% end %>
   </div>
 
-  <h2>Kategorie</h2>
-  Wähle die Kategorien, aus denen Du Fragen erhalten möchtest und klicke danach auf den Absenden Button unten.<br/><br/>
+  <h2>Kategorien</h2>
+  Aus welchen Kategorien möchtest Du Fragen erhalten?<br/><br/>
 
   <ul class="inline-chooser" id="categories">
     <%

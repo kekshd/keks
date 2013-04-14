@@ -2,8 +2,8 @@
 <% def n(p); number_to_percentage(100*p, :precision => 0); end %>
 
 <div>
-  <h2>Veranstaltungsschlüssel hinzufügen</h2>
-  <p>Den Veranstaltungsschlüssel für die Lineare Algebra 2 erhälst Du in der ersten Vorlesung oder bei Deiner Tutorin bzw. Deinem Tutor. Gib den Schlüssel hier ein, wenn Du möchtest, dass Deine statistischen Daten anonymisiert in die Veranstaltungsstatistik einfließen. Diese Statistik liefert Informationen die die Veranstaltungsleitung nutzen kann um Problembereiche aufzudecken, die dann ggf. nochmal behandelt werden können.</p>
+  <h2>Vorlesungsschlüssel hinzufügen</h2>
+  <p>Den Vorlesungsschlüssel für die Lineare Algebra 2 erhälst Du in der ersten Vorlesung oder bei Deiner Tutorin bzw. Deinem Tutor. Gib den Schlüssel hier ein, wenn Du möchtest, dass Deine statistischen Daten anonymisiert in die Veranstaltungsstatistik einfließen. Diese Statistik liefert Informationen, die die Veranstaltungsleitung nutzen kann, um Problembereiche aufzudecken, die dann ggf. nochmal behandelt werden können.</p>
 
   <% unless @user.enrollment_keys.blank? %>
     <p>
@@ -23,7 +23,7 @@
 
 <div>
   <h2>Statistik</h2>
-  In den letzten 30 Tagen hast Du <%=@user.correct_count%> (<%=n @user.correct_ratio%>) Fragen richtig beantwortet und <%=@user.skip_count%> (<%=n @user.skip_ratio%>) übersprungen. Außerdem hast Du Dir <%=@user.starred.size%> merken lassen.
+  In den letzten 30 Tagen hast Du <%=@user.correct_count%> (<%=n @user.correct_ratio%>) Fragen richtig beantwortet und <%=@user.skip_count%> (<%=n @user.skip_ratio%>) übersprungen. Außerdem hast Du <%=@user.starred.size%> Fragen merken lassen.
 
   <%= high_chart("chart", @h) %>
 </div>
