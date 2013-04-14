@@ -207,6 +207,7 @@ de:
     title: "Titel"
     password: "Passwort"
     password_confirmation: "Bestätigung"
+    study_path: "Studiengang"
 
   activerecord:
     models:
@@ -215,7 +216,6 @@ de:
       hint: Hinweis
     attributes:
       user:
-        study_path: "Studiengang"
         <<: *common
 
       password_reset:
