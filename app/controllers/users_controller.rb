@@ -90,7 +90,8 @@ class UsersController < ApplicationController
     # data for the last 91 days, grouped in 7 days makes 13 buckets
     data = { right: [0]*13, wrong: [0]*13, skipped: [0]*13}
 
-    last_stats = @user.stats.unscoped.where("created_at > ?", 91.days.ago)
+    # user stats are not scoped by time
+    last_stats = @user.stats.where("created_at > ?", 91.days.ago)
 
     time = Time.now
     last_stats.each do |stat|

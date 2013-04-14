@@ -39,21 +39,25 @@ class User < ActiveRecord::Base
   attr_accessor :updating_password
 
   def correct_ratio
-    all = stats.where("answer_id >= 0").size.to_f
+    all = recent_stats.where("answer_id >= 0").size.to_f
     all > 0 ? correct_count.to_f/all : 0.0
   end
 
   def skip_ratio
-    all = stats.size.to_f
+    all = recent_stats.size.to_f
     all > 0 ? skip_count.to_f/all : 0.0
   end
 
   def correct_count
-    stats.where("answer_id >= 0").where(:correct => true).size
+    recent_stats.where("answer_id >= 0").where(:correct => true).size
   end
 
   def skip_count
-    stats.where(:answer_id => -1).size
+    recent_stats.where(:answer_id => -1).size
+  end
+
+  def recent_stats
+    stats.where("stats.created_at > ?", 30.days.ago)
   end
 
 
