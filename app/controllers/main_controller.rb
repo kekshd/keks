@@ -2,6 +2,7 @@
 
 class MainController < ApplicationController
   def overview
+    return redirect_to main_hitme_url + '#hide-options' if signed_in?
   end
 
   def hitme
