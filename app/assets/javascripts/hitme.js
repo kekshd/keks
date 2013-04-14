@@ -245,7 +245,7 @@ H.Hitme.prototype = {
       s += ' data-correct="'+a.correct+'" data-qid="'+quest.id+'"';
       s += ' data-aid="'+a.id+'">'+a.html+'</a>';
       s += '<span>'+a.correctness+'</span>';
-      s += '<span>Deine Antwort</span>';
+      s += '<span>(dies war Deine Antwort)</span>';
       s += '</div>';
     });
     return s;
