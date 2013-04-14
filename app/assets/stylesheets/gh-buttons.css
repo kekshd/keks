@@ -138,6 +138,11 @@
     font-size: 14px;
 }
 
+.button.huge {
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .button.big.icon:before {
     top: 0;
 }
