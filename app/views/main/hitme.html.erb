@@ -24,7 +24,7 @@
     <span>Soll nach einem Fragenblock ein Comic (XKCD) angezeigt werden?</span>
 
     <br class="clear"/><br/>
-    <b>Schwierigkeitsgrade</b><br/>
+    <b>Fragentypen</b><br/>
     <% Difficulty.all.each do |id, name| %>
       <%= label_tag "difficulty[#{id}]", name, style: "font-weight: normal" %>
       <%= check_box_tag "difficulty[#{id}]", id, true %>
