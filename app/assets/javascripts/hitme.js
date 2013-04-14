@@ -256,7 +256,7 @@ H.Hitme.prototype = {
     var linkBox = answ.parents('.answer-chooser, .answer-chooser-matrix').first();
     var boxSelector = '#blockQ' + answ.data('qid');
     // i.e. skipped questions are shown again
-    if(!this.nagAboutSkippedQuestions) boxSelector += 'repeat';
+    if(!window.currentHitme.nagAboutSkippedQuestions) boxSelector += 'repeat';
     var box = $(boxSelector);
 
     var isMatrix = getQuestionById(answ.data('qid')).matrix;
