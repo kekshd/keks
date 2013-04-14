@@ -7,6 +7,7 @@
     <%= render 'shared/error_messages', object: f.object %>
     <%= f.label :nick %>
     <%= f.text_field :nick %>
+    <span>Kann nicht geändert werden.</span>
 
     <%= f.label :password %>
     <%= f.password_field :password %>
@@ -16,7 +17,7 @@
 
     <%= f.label :mail %>
     <%= f.text_field :mail %>
-    <span>Optional, wird nur benötigt falls Du Dein Passwort vergessen hast.</span>
+    <span>Optional, wird nur benötigt, um die "Passwort vergessen"-Funktion nutzen zu können.</span>
 
     <%= f.label :study_path %>
     <%= f.select :study_path, StudyPath.to_select %>
