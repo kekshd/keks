@@ -33,8 +33,11 @@ module StatsHelper
 
   def render_graph
     LazyHighCharts::HighChart.new('graph') do |f|
+
+      f.options[:legend][:align] = 'right'
+      f.options[:legend][:verticalAlign] = 'top'
       f.options[:chart][:defaultSeriesType] = "line"
-      f.options[:chart][:width] = 600
+      f.options[:chart][:width] = 700
       f.options[:chart][:height] = 280
       f.options[:tooltip][:enabled] = false
       f.options[:plotOptions][:series] = {pointInterval: 7.days, pointStart: (91-7).days.ago}
