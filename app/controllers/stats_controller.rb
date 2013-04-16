@@ -36,7 +36,7 @@ class StatsController < ApplicationController
     return redirect_to admin_overview_path unless EnrollmentKeys.names.include?(@key)
 
     @users = User.find(:all, :conditions => ["enrollment_keys LIKE ?", "%#{@key}%"])
-    @last_stats = @users.map { |u| u.stats.unscoped.where("created_at > ?", 91.days.ago) }.flatten
+    @last_stats = @users.map { |u| u.stats.where("created_at > ?", 91.days.ago) }.flatten
 
     qstats = {}
     time = Time.now
