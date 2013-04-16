@@ -42,6 +42,7 @@ class StatsController < ApplicationController
     time = Time.now
 
     @last_stats.each do |stat|
+      next unless stat.question
       qid = stat.question_id
       qstats[qid] ||= { right: [0]*13, wrong: [0]*13, skipped: [0]*13}
       insert_stat_in_hash(stat, qstats[qid], time)
