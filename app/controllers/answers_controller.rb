@@ -6,6 +6,7 @@ class AnswersController < ApplicationController
 
   def new
     @answer = Answer.new
+    @answer.ident ||= gen_answer_ident(@question)
   end
 
   def edit
@@ -53,5 +54,15 @@ class AnswersController < ApplicationController
       flash[:warning] = "Frage mit dieser ID nicht gefunden."
       redirec_to questions_path
     end
+  end
+
+  def gen_answer_ident(question)
+    idents = question.answers.map { |a| a.ident.to_s }
+    id = question.answers.size + 1
+    5.times do
+      break unless idents.include?(id.to_s)
+      id += 1
+    end
+    id.to_s
   end
 end
