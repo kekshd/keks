@@ -2,5 +2,9 @@
  *
  *= require_self
  *= require jquery-tablesorter/theme.dropbox
- *= require_tree .
+ *= require css-noise
+ *= require gh-buttons
+ *= require hitme
+ *= require main
+ *= require table-sorter
  */

@@ -1,0 +1,19 @@
+.button:hover,
+.button:focus,
+.button:active,
+.button.active {
+  background-color: #3c8dde;
+}
+
+.button.disable,
+.button:disable {
+  background-color: #ECECEC;
+}
+
+div.box.wrong {
+  background: #FFE4E3 !important;
+}
+
+div.box.correct {
+  background: #E6FFE9 !important;
+}
