@@ -11,7 +11,8 @@ module DotHelper
   end
 
   def render_dot(dot)
-    dot = %(digraph graphname { #{dot} })
+    dot = %(digraph graphname { rankdir=LR; #{dot} })
+    dot
 
     sha = Digest::SHA256.hexdigest(dot)
     fn = File.join(Rails.public_path, "dot", sha + ".png")
