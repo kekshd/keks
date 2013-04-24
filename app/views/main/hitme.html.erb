@@ -7,7 +7,7 @@
   <div class="toggle clear smallform" id="options">
     <script>if(window.location.hash == "#hide-options") $("#options").hide(); </script>
     <%= label_tag :quantity, 'Anzahl' %>
-    <%= number_field_tag :quantity, 10, :in => 5..100, :step => 5, :onblur => 'validateNumberOnly(this)'  %>
+    <%= number_field_tag :quantity, 5, :in => 5..100, :step => 5, :onblur => 'validateNumberOnly(this)'  %>
     <span>Wie viele Fragen möchtest Du bekommen?</span>
 
 
