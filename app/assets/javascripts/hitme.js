@@ -208,11 +208,11 @@ window.CONST = {
 
 // constructor
 H.Hitme = function() {
+  // no selection? GONNA SELECT 'EM ALL!
+  if($('.inline-chooser .active').length === 0)
+    $('.inline-chooser .toggleable').addClass('active');
+
   this.cats = $('.inline-chooser .active').map(function(i, m) { return $(m).data("id"); }).get();
-  if(this.cats.length === 0) {
-    alert("Wähle bitte eine Kategorie aus.");
-    return;
-  }
 
   this._this = this;
   disableOptions();
