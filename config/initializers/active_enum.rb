@@ -27,6 +27,7 @@ class StudyPath < ActiveEnum::Base
 end
 
 class Difficulty < ActiveEnum::Base
+  value :id => 5, :name => 'Definitionen'
   value :id => 10, :name => 'Leicht'
   value :id => 20, :name => 'Mittel'
   value :id => 30, :name => 'Schwer'
