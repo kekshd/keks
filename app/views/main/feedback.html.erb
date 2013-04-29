@@ -13,6 +13,10 @@
     <%= text_area_tag :text, @text  %>
     <span>Benötigt</span>
 
+    <% if signed_in? %>
+      <br class="clear"/>
+      <a onclick="$('#name').val('<%=j current_user.nick%>'); $('#mail').val('<%=j current_user.mail %>'); return false;" class="clear">Klicken, um Deine Kontaktdaten zu übernehmen</a>
+    <% end %>
 
     <%= label_tag :name %>
     <%= number_field_tag :name, @name %>
