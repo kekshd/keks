@@ -77,7 +77,7 @@ module ApplicationHelper
       roulette(qs, current_user, cnt)
     else
       # uniform distribution
-      qs.sample(cnt)
+      qs.sample(cnt).shuffle
     end
   end
 
