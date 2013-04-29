@@ -71,14 +71,20 @@ module ApplicationHelper
   end
 
   def get_question_sample(qs, cnt)
+    samp = nil
     if signed_in?
       # select questions depending on how often they were answered
       # correctly.
-      roulette(qs, current_user, cnt)
+      samp = roulette(qs, current_user, cnt)
     else
       # uniform distribution
-      qs.sample(cnt).shuffle
+      samp = qs.sample(cnt)
     end
+    #~ dbgsamp = samp.map { |s| s.id }.join('  ')
+    #~ dbgqs = qs.map { |s| s.id }.join('  ')
+    #~ logger.debug "RANDOM DEBUG: cnt=#{cnt} samp=#{dbgsamp} quests=#{dbgqs}  signed_in=#{signed_in?}"
+
+    samp
   end
 
   def get_subquestion_for_answer(a, max_depth)
@@ -104,7 +110,7 @@ module ApplicationHelper
 
     n.times do
       break if probs.empty?
-      r, inc = rand * probs.max, 0
+      r, inc = rand * probs.sum, 0
       questions.each_index do |i|
         if r < (inc += probs[i])
           selected << questions[i]
