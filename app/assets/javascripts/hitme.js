@@ -31,7 +31,12 @@ function renderStarred(question) {
   c += 'data-id="'+question.id+'" ';
   c += 'data-starred="'+question.starred+'">Frage ';
   c += question.starred ? 'gemerkt' : 'merken';
-  c += '</a></div>';
+  c += '</a>';
+
+  var xx = Routes.perma_question_path(question.id);
+  c += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚓  <a href="'+xx+'" target="_blank">Link zur Frage</a>';
+
+  c += '</div>';
 
   return c;
 }

@@ -8,22 +8,5 @@
 </div>
 
 <% @user.starred.each do |q| %>
-  <div>
-    <h3 class="count">Frage</h3>
-    <script>
-      document.write(renderStarred({id: <%=q.id%>, starred: true}));
-    </script>
-    <%=render_tex q.text %>
-    <br/>
-    <% if q.matrix_validate? %>
-      <strong>Antwort:</strong> Hier wäre das Ergebnis in ein Textfeld einzutragen.
-    <% else %>
-      <strong>Antwortmöglichkeiten:</strong>
-      <ul style="margin-top: 10px;margin-bottom:0">
-        <% q.answers.each do |a| %>
-          <li><%=render_tex a.text %></li>
-        <% end %>
-      </ul>
-    <% end %>
-  </div>
+  <%= render "questions/render_full", q: q %>
 <% end %>

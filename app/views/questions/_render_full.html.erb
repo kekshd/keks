@@ -1,0 +1,26 @@
+<div>
+  <% if defined?(show_question_id) && show_question_id %>
+    <h3>Frage <%= q.id %></h3>
+  <% else %>
+    <h3 class="count">Frage</h3>
+  <% end %>
+  <% if signed_in? %>
+  <script>
+    document.write(renderStarred({id: <%=q.id%>,
+      starred: <%=q.starred_by.include?(current_user) ? "true" : "false"%>}
+    ));
+  </script>
+  <% end %>
+  <%=render_tex q.text %>
+  <br/>
+  <% if q.matrix_validate? %>
+    <strong>Antwort:</strong> Hier wäre das Ergebnis in ein Textfeld einzutragen.
+  <% else %>
+    <strong>Antwortmöglichkeiten:</strong>
+    <ul style="margin-top: 10px;margin-bottom:0">
+      <% q.answers.each do |a| %>
+        <li><%=render_tex a.text %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

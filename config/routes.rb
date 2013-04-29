@@ -22,6 +22,7 @@ Keks::Application.routes.draw do
   match "users/:id/history" => "users#history", as: "history", via: :get
   match "questions/:id/star" => "questions#star", as: "star_question", via: :get
   match "questions/:id/unstar" => "questions#unstar", as: "unstar_question", via: :get
+  match "questions/:id/perma" => "questions#perma", as: "perma_question", via: :get
   match "stats/:question_id/:answer_id" => "stats#new", as: "new_stat", via: :post
 
 

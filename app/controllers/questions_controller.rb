@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class QuestionsController < ApplicationController
-  before_filter :require_admin, :except => [:star, :unstar]
+  before_filter :require_admin, :except => [:star, :unstar, :perma]
   before_filter :signed_in_user, :only => [:star, :unstar]
 
   def star
@@ -45,6 +45,10 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @question = Question.find(params[:id])
+  end
+
+  def perma
     @question = Question.find(params[:id])
   end
 
