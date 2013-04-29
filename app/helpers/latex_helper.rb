@@ -15,7 +15,13 @@ module LatexHelper
     mixed = mixed.dup # don’t change original string
     imgs = []
     mixed.gsub!(/(§§?)([^§]+)\1/) do
-      imgs << tex_to_image_tag($2, $1.size == 2)
+      delims, content = $1, $2
+      # special mode if it’s only emphasized text.
+      if content =~ /^\s*\\emph\{[a-z0-9\s.-]+\}\s*$/i
+        imgs << content.sub("\\emph{", "<em>").sub("}", "</em>")
+      else
+        imgs << tex_to_image_tag(content, delims.size == 2)
+      end
       '§'
     end
 
