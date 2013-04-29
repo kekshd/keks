@@ -47,7 +47,9 @@ class MainController < ApplicationController
 
     qs = []
     cats.each do |cat|
-      qs << cat.questions.where(:difficulty => diff, :study_path => sp)
+      # answers are required to check if a question is complete, so
+      # load those eagerly to avoid n+1 queries. Likewise for the parent.
+      qs << cat.questions.includes(:answers, :parent).where(:difficulty => diff, :study_path => sp)
     end
     qs = qs.flatten.uniq
 
