@@ -66,7 +66,7 @@ module ApplicationHelper
     diff = difficulties_from_param
     sp = study_path_ids_from_param
     qs.reject! do |q|
-      !q.complete? || !diff.include?(q.difficulty) || !sp.include?(q.study_path)
+      !diff.include?(q.difficulty) || !sp.include?(q.study_path) || !q.complete?
     end
   end
 
