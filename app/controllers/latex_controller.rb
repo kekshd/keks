@@ -2,7 +2,7 @@
 
 class LatexController < ApplicationController
 
-  caches_page :simple, :gzip => false
+  caches_page :simple, :gzip => false, :if => Proc.new { params[:base64_text].size <= 250 }
 
 
   def simple
