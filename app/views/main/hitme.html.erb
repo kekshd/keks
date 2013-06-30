@@ -45,7 +45,7 @@
       <li>
         <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
         <div class="toggle"><ul>
-          <% g[1].each do |r| %>
+          <% g[1].sort { |a, b| a.ident <=> b.ident }.each do |r| %>
             <li>
               <div>
                 <a class="button big toggleable" onclick="$(this).toggleClass('active');" data-id="<%=r.id%>">
