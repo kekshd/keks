@@ -11,9 +11,22 @@ class StatsController < ApplicationController
       answ_id = -1
       correct = false
     else
-      answ = quest.answers.find(params[:answer_id]) rescue nil
-      correct = answ.correct? rescue false
-      answ_id = answ.id rescue nil
+      if quest.matrix_validate? # is matrix valid?
+        tmp = params[:answer_id].to_s
+        if tmp == "0"
+          answ_id = 0
+          correct = false
+        end
+
+        if tmp == "1"
+          answ_id = 1
+          correct = true
+        end
+      else # find answer for non-matrix question
+        answ = quest.answers.find(params[:answer_id]) rescue nil
+        correct = answ.correct? rescue false
+        answ_id = answ.id rescue nil
+      end
     end
 
     user_id = signed_in? ? current_user.id : -1;
@@ -26,6 +39,9 @@ class StatsController < ApplicationController
 
       render :json => s.save(:validate => false)
     else
+      logger.warn "Could not save stats: question or answer invalid:"
+      logger.warn " QUESTION: #{PP.pp(quest, "")}"
+      logger.warn " ANSWER:   #{PP.pp(answ, "")}"
       render :json => false
     end
   end
