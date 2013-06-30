@@ -28,9 +28,9 @@ end
 
 class Difficulty < ActiveEnum::Base
   value :id => 5, :name => 'Definitionen'
-  value :id => 10, :name => 'Leicht'
-  value :id => 20, :name => 'Mittel'
-  value :id => 30, :name => 'Schwer'
+  value :id => 10, :name => 'Einsteiger'
+  value :id => 20, :name => 'Fortgeschrittene'
+  #value :id => 30, :name => 'Schwer'
 end
 
 class EnrollmentKeys < ActiveEnum::Base
