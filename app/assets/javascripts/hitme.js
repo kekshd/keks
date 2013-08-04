@@ -363,17 +363,18 @@ H.Hitme.prototype = {
 
 
     var cls;
-    var a = null;
+    var answerId = null;
 
     if(q.matrix) {
       cls = 'answer-chooser-matrix';
 
-      code += 'Trage unten die Lösung ein. Matrizen schreibst Du einfach mittels Leerzeichen und Zeilenumbrüchen. Die Anzahl der Leerzeichen ist dabei egal.<br/><br/>'
-      a = q.answers[0];
+      code += 'Trage unten die Lösung ein. Matrizen schreibst Du einfach mittels Leerzeichen und Zeilenumbrüchen. Die Anzahl der Leerzeichen ist dabei egal.<br/><br/>';
+      var a = q.answers[0];
+      answerId = blockId + a.id;
       code += '<div style="float:left;width: 45%; overflow-y: show; overflow-x: hidden;">';
-      code += '<label for="a'+a.id+'" style="float:none">Deine Lösung</label>';
-      code += '<textarea id="a'+a.id+'" class="matrixmode"></textarea>';
-      code += '<div class="tex previewer" id="a'+a.id+'previewer"></div>';
+      code += '<label for="a'+answerId+'" style="float:none">Deine Lösung</label>';
+      code += '<textarea id="a'+answerId+'" class="matrixmode"></textarea>';
+      code += '<div class="tex previewer" id="a'+answerId+'previewer"></div>';
       code += '<br/>';
       code += '</div>';
       code += '<div style="float:right;width: 45%" class="initiallyHidden">';
@@ -394,15 +395,17 @@ H.Hitme.prototype = {
 
     code += '</div>';
 
-    $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
+    $(code).appendTo('body');
     $('.'+cls+':last').one('click', 'a', this._handleAnswerClick);
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    // render math first, then expand
+    var render = function() { $("#"+blockId).animate(CONST.showAnimation, CONST.stayAtBottom); }
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub, render]);
 
     // add preview for matrix questions
-    if(a) {
+    if(answerId) {
       window.matrixModePreview = null;
-      var textarea = $('#a'+a.id);
-      var previewer = $('#a'+a.id+'previewer');
+      var textarea = $('#a'+answerId);
+      var previewer = $('#a'+answerId+'previewer');
       textarea.keyup(function() {
         if(window.matrixModePreview) clearTimeout(window.matrixModePreview);
         window.matrixModePreview = setTimeout(function() {
