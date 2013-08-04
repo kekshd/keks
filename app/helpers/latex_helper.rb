@@ -8,7 +8,11 @@ module LatexHelper
     imgs = []
     mixed.gsub!(/(§§?)([^§]+)\1/) do
       delims, content = $1, $2
-      imgs << content
+      if content =~ /^\s*\\emph\{[a-z0-9\s.-]+\}\s*$/i
+        imgs << "\\(#{content}\\)"
+      else
+        imgs << content
+      end
       '§'
     end
 
