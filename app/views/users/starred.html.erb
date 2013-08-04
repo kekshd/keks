@@ -3,10 +3,12 @@
 <div>
   <h2>Gemerkte Fragen</h2>
   <p>Du kannst Dir Fragen merken, wenn Du ihre Antwort gerade nicht weißt oder jemanden fragen möchtest. Klicke dazu bei einer Frage jeweils oben rechts auf „Frage merken“ um sie später hier anzuzeigen. Das Entfernen funktioniert auf die gleiche Weise.</p>
-
-  <p>Auf dieser Seite kannst Du Dir die Fragen nur ansehen, beantworten geht jedoch nicht.</p>
 </div>
 
 <% @user.starred.each do |q| %>
-  <%= render "questions/render_full", q: q %>
+  <div>
+    <%= render "questions/render_full", q: q %>
+    <br/>
+    <%=link_to "Diese Frage jetzt beantworten", "#{main_hitme_path}#hide-options#question=#{q.id}" %>
+  </div>
 <% end %>
