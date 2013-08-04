@@ -242,17 +242,23 @@
 .toggleable:before {
   float: left;
   font-size: 18px;
-  content: '☐';
-  width:24px;
+  content: ' ';
+  height: 16px;
+  width:23px;
   overflow: hidden;
   margin-left: -4px;
-  color: #777;
+  background: url('/assets/checkbox.png') no-repeat;
+  background-position: -2px -1px;
+}
+
+.togggleable:hover:before {
+  width: 200px;
 }
 
 .toggleable.active:before {
-  content: '☑';
+  background-position: -26px -21px !important;
 }
 
-.toggleable.active:before, .toggleable:hover:before {
-  color: #fff;
+.toggleable:hover:before {
+  background-position: -2px -21px;
 }
