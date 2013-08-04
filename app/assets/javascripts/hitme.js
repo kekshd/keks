@@ -358,6 +358,7 @@ H.Hitme.prototype = {
 
     $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
     $('.'+cls+':last').one('click', 'a', this._handleAnswerClick);
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
   },
 
   _reshowSkippedQuestions: function() {

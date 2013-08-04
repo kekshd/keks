@@ -6,11 +6,11 @@
   > div {
     display: table-row;
 
-    a, span {
+    > a, > span {
       display: table-cell;
     }
 
-    span {
+    > span {
       visibility: hidden;
     }
   }
