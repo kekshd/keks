@@ -14,7 +14,7 @@ $(document).ready(function() {
       processClass: "tex",
     },
 
-    "HTML-CSS": { scale: 80 }
+    "HTML-CSS": { scale: 90 }
 
   });
 
