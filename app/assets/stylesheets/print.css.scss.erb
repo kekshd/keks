@@ -1,0 +1,27 @@
+body > div, div.box {
+  box-shadow: none;
+  width: 100%;
+}
+
+h1 {
+  width: 100%;
+  font-size: 30px;
+  text-shadow: 0;
+}
+
+a {
+  color: #000 !important;
+}
+
+a[href=""], a:not([href]) {
+  display: none;
+}
+
+a:after {
+  content: " (<%=ABSOLUTE_URL%>" attr(href) ") ";
+  color: #ccc !important;
+}
+
+div#nav {
+  display: none;
+}
