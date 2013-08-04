@@ -4,7 +4,6 @@ gem 'rails',                '3.2.12'
 gem 'sqlite3',              '1.3.7'
 gem 'thin',                 '1.5.0'
 gem 'active_enum',          '0.9.12'
-gem 'rails-latex',          '1.0.11'
 
 # Gems used only for assets and not required
 # in production environments by default.

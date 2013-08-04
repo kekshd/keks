@@ -10,7 +10,7 @@ The project setup…
 
 
 ### required packages
-for production: `ruby1.9.1 graphviz texlive-base texlive-latex-base texlive-latex-recommended texlive-fonts-extra texlive-latex-extra libxml2-dev libxslt-dev ruby1.9.1-dev`
+for production: `ruby1.9.1 graphviz libxml2-dev libxslt-dev ruby1.9.1-dev`
 
 ### getting ruby and gems to work
 I assume KeKs is being run as its own user. To avoid having to set the path to Ruby manually each time, modify your shell-rc file to include
