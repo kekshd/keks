@@ -22,10 +22,10 @@ module LatexHelper
   end
 
   def latex_logo_large
-    content_tag(:div, %|\\(\\Large\\LaTeX\\)|, class: 'tex')
+    content_tag(:div, %|\\(\\Large\\LaTeX\\)|, class: 'tex', style: 'display: inline')
   end
 
   def latex_logo
-    content_tag(:div, %|\\(\\LaTeX\\)|, class: 'tex')
+    content_tag(:div, %|\\(\\LaTeX\\)|, class: 'tex', style: 'display: inline')
   end
 end
