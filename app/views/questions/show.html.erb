@@ -69,6 +69,7 @@
 
 <div>
   <h2><%=latex_logo_large%> Preview</h2>
+  <%=link_to "direkt im Hitme-Modus anschauen (so wie es später die Nutzer sehen)", "#{main_hitme_path}#hide-options#question=#{@question.id}" %>
 
   <%= render "render", question: @question %>
   <% @question.hints.each do |h| %>

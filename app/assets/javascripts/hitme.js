@@ -1,3 +1,12 @@
+function checkForQuestionPreview() {
+  var singleQuestion = getHash("question");
+  if(singleQuestion === undefined || !singleQuestion) return;
+
+  var h = new H.Hitme();
+  window.currentHitme = h;
+  h.setupSingleQuestionMode();
+}
+
 function validateNumberOnly(self) {
   self = $(self);
   var val = parseInt(self.val().replace(/[^0-9]/g, "") || 10);
@@ -162,6 +171,16 @@ function getRootQuestions(categoryIds, context, successCallback) {
   });
 }
 
+function getSingleQuestion(questionId, context, successCallback) {
+  $.ajax({
+    url: Routes.main_single_question_path({id: questionId}),
+  }).done(function(data) {
+    successCallback(context, data);
+  }).fail(function() {
+    alert("Die Anfrage konnte leider nicht bearbeitet werden. Möglicherweise hat der Server ein Problem.");
+  });
+}
+
 function answersGivenCount() {
   var a = window.H.answersGiven;
   return a.fail.length + a.correct.length + a.skip.length;
@@ -225,15 +244,29 @@ H.Hitme = function() {
   disableOptions();
   ensureValidDifficultySelection();
   hideCategories();
-  getRootQuestions(this.cats, this, this.rootQuestionsAvailable);
-  this.questPositionPointer = -1;
-  this.nagAboutSkippedQuestions = true;
-  this.skippedQuestionsData = [];
-  this.answersGiven = {correct: [], fail: [], skip: []};
 };
 
 // members
 H.Hitme.prototype = {
+  setupCategoryQuestionMode: function() {
+    getRootQuestions(this.cats, this, this.rootQuestionsAvailable);
+    this.questPositionPointer = -1;
+    this.nagAboutSkippedQuestions = true;
+    this.skippedQuestionsData = [];
+    this.answersGiven = {correct: [], fail: [], skip: []};
+  },
+
+  setupSingleQuestionMode: function() {
+    $("#quantity").val(1);
+    getSingleQuestion(getHash("question"), this, this.rootQuestionsAvailable);
+
+    this.questPositionPointer = -1;
+    this.nagAboutSkippedQuestions = false;
+    this.skippedQuestionsData = [];
+    this.answersGiven = {correct: [], fail: [], skip: []};
+  },
+
+
   giveMore: function() {
     $('.hideMeOnMore').remove();
     H.hitme(this.cat);
@@ -469,8 +502,9 @@ H.Hitme.prototype = {
 
 
 // convenience generator
-H.hitme = function (categoryElement) {
-  var h = new H.Hitme(categoryElement);
+H.hitme = function() {
+  var h = new H.Hitme();
   window.currentHitme = h;
+  h.setupCategoryQuestionMode();
   return h;
 }

@@ -5,7 +5,7 @@
 <div>
   <h2>Optionen</h2>
   <div class="toggle clear smallform" id="options">
-    <script>if(window.location.hash == "#hide-options") $("#options").hide(); </script>
+    <script>if(hasHash("hide-options")) $("#options").hide(); </script>
     <%= label_tag :quantity, 'Anzahl' %>
     <%= number_field_tag :quantity, 5, :in => 3..100, :step => 5, :onblur => 'validateNumberOnly(this)'  %>
     <span>Wie viele Fragen möchtest Du bekommen?</span>
@@ -63,3 +63,8 @@
   <h3>Alles Fertig?</h3>
   <a class="button huge" onclick="H.hitme()" id="start-button">Los geht’s! <!--Whatever--></a>
 </div>
+
+<script>
+// automatically detect if only a single question should be shown
+$(document).ready(function() { checkForQuestionPreview(); });
+</script>

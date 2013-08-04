@@ -34,6 +34,11 @@ class MainController < ApplicationController
     end
   end
 
+  # renders json suitable for the hitme page containing only a single
+  # question given
+  def single_question
+    render json: [json_for_question(Question.find(params[:id]))]
+  end
 
   def questions
     cats = categories_from_param
@@ -54,6 +59,7 @@ class MainController < ApplicationController
     qs = qs.flatten.uniq
 
     reject_unsuitable_questions!(qs)
+
     qs = get_question_sample(qs, cnt)
 
     json = []

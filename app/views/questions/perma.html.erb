@@ -1,1 +1,5 @@
-<%= render "questions/render_full", q: @question, show_question_id: true %>
+<div>
+  <%= render "questions/render_full", q: @question, show_question_id: true %>
+  <br/><br/>
+  <%=link_to "Diese Frage jetzt beantworten", "#{main_hitme_path}#hide-options#question=#{@question.id}" %>
+</div>
