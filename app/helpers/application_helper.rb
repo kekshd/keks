@@ -39,7 +39,7 @@ module ApplicationHelper
       return [1]
     end
 
-    [1, sp.to_i]
+    [1, sp.to_i].uniq
   end
 
   def difficulties_from_param
@@ -50,16 +50,6 @@ module ApplicationHelper
 
     logger.warn "No difficulties given, selecting first"
     return [Difficulty.ids.first]
-  end
-
-  def categories_from_param
-    valid_cats = []
-    (params[:categories] || "").split("_").each do |c|
-      cat = Category.find(c.to_i)
-      next if !cat
-      valid_cats << cat
-    end
-    valid_cats
   end
 
   def reject_unsuitable_questions!(qs)
@@ -104,10 +94,23 @@ module ApplicationHelper
   # ratio by user. Implementation by Jakub Hampl.
   # http://stackoverflow.com/a/5243844/1684530
   def roulette(questions, user, n)
-    probs = questions.map { |q| [1 - q.correct_ratio_user(user), 0.1].max }
+    # calculate ratio for each question how often it was answered in-
+    # correctly by the user. Effectively, all the code does is:
+    #   probs = questions.map { |q| [1 - q.correct_ratio_user(user), 0.1].max }
+    # but a lot faster.
+    tmp = Stat.unscoped.where(:user_id => user.id, :skipped => false)
+    correct = tmp.where(:correct => true).group(:question_id).size
+    wrong = tmp.where(:correct => false).group(:question_id).size
+
+    probs = questions.map do |q|
+      c = correct[q.id] || 0
+      w = wrong[q.id] || 0
+      cw = c+w
+      [cw == 0 ? 1 : w/(c+w).to_f, 0.1].max
+    end
+
 
     selected = []
-
     n.times do
       break if probs.empty?
       r, inc = rand * probs.sum, 0

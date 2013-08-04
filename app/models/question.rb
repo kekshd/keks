@@ -36,10 +36,10 @@ class Question < ActiveRecord::Base
   end
 
   def correct_ratio_user(user)
-    user_stats = stats.where(:user_id => user.id)
-    all = user_stats.where(:skipped => false)
-    correct = all.where(:correct => true)
-    all.size > 0 ? correct.size/all.size.to_f : 0
+    tmp = stats.where(:user_id => user.id, :skipped => false).group(:correct).count
+    correct = tmp[true] || 0
+    all = (tmp[false] || 0) + correct
+    all > 0 ? correct/all.to_f : 0
   end
 
   # returns the ratio of correct answers. Skipped ones are not counted.
@@ -182,10 +182,10 @@ class Question < ActiveRecord::Base
   private
   def is_complete_helper
     return false, "nicht freigegeben" if !released?
-    return false, "Eltern-Frage nicht freigegeben" if parent.is_a?(Answer) && !parent.question.released?
-    return false, "Eltern-Kategorie nicht freigegeben" if parent.is_a?(Category) && !parent.released?
     return false, "keine Antworten" if answers.size == 0
     return false, "keine richtige Antwort" if answers.none? { |a| a.correct? }
+    return false, "Eltern-Frage nicht freigegeben" if parent_type == "Answer" && !parent.question.released?
+    return false, "Eltern-Kategorie nicht freigegeben" if parent_type == "Category" && !parent.released?
     psp = parent.question.study_path if parent.is_a?(Answer)
     if psp && psp != study_path && study_path != 1 && psp != 1
       return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat."

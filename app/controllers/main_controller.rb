@@ -41,7 +41,7 @@ class MainController < ApplicationController
   end
 
   def questions
-    cats = categories_from_param
+    cats = params[:categories].split("_").map { |c| c.to_i }
     return render :json => {error: "No categories given"} if cats.empty?
 
     cnt = params[:count].to_i
@@ -50,19 +50,20 @@ class MainController < ApplicationController
     diff = difficulties_from_param
     sp = study_path_ids_from_param
 
-    qs = []
-    cats.each do |cat|
-      # answers are required to check if a question is complete, so
-      # load those eagerly to avoid n+1 queries. Likewise for the parent.
-      qs << cat.questions.includes(:answers, :parent).where(:difficulty => diff, :study_path => sp)
-    end
-    qs = qs.flatten.uniq
+    qs = Question.includes(:answers, :parent).where(
+      :parent_type => "Category",
+      :parent_id => cats,
+      :difficulty => diff,
+      :released => true,
+      :study_path => sp)
 
-    reject_unsuitable_questions!(qs)
+    qs.reject! { |q| !q.complete? }
+
+    ## comment in to only show matrix-questions
+    #qs.reject!{ |q| !q.matrix_validate? }
 
     qs = get_question_sample(qs, cnt)
 
-    json = []
     json = qs.map { |q| json_for_question(q, 5) }
 
     render json: json
