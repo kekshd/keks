@@ -30,8 +30,15 @@
   float: none !important;
   min-width: 0;
   width: 260px;
-  height: 180px;
+  height: 120px;
 }
+
+.previewer {
+  position: relative;
+  top: -120px;
+  left: 285px;
+}
+
 
 .xkcd {
   margin: 10px 0;

@@ -330,15 +330,18 @@ H.Hitme.prototype = {
 
 
     var cls;
+    var a = null;
 
     if(q.matrix) {
       cls = 'answer-chooser-matrix';
 
       code += 'Trage unten die Lösung ein. Matrizen schreibst Du einfach mittels Leerzeichen und Zeilenumbrüchen. Die Anzahl der Leerzeichen ist dabei egal.<br/><br/>'
-      var a = q.answers[0];
-      code += '<div style="float:left;width: 45%">';
+      a = q.answers[0];
+      code += '<div style="float:left;width: 45%; overflow-y: show; overflow-x: hidden;">';
       code += '<label for="a'+a.id+'" style="float:none">Deine Lösung</label>';
-      code += '<textarea id="a'+a.id+'" class="matrixmode"></textarea><br/>';
+      code += '<textarea id="a'+a.id+'" class="matrixmode"></textarea>';
+      code += '<div class="tex previewer" id="a'+a.id+'previewer"></div>';
+      code += '<br/>';
       code += '</div>';
       code += '<div style="float:right;width: 45%" class="initiallyHidden">';
       code += '<strong>Unsere Lösung</strong><br/>';
@@ -361,6 +364,25 @@ H.Hitme.prototype = {
     $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
     $('.'+cls+':last').one('click', 'a', this._handleAnswerClick);
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+    // add preview for matrix questions
+    if(a) {
+      window.matrixModePreview = null;
+      var textarea = $('#a'+a.id);
+      var previewer = $('#a'+a.id+'previewer');
+      textarea.keyup(function() {
+        if(window.matrixModePreview) clearTimeout(window.matrixModePreview);
+        window.matrixModePreview = setTimeout(function() {
+          var v = parseMatrix(textarea.val());
+          if(v === "") return previewer.html("");
+          v = v.replace(/  /g, "\\\\");
+          v = v.replace(/ /g, " & ");
+          v = "\\(\\begin{pmatrix} " + v + " \\end{pmatrix}\\)";
+          previewer.html(v);
+          MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }, 100);
+      });
+    }
   },
 
   _reshowSkippedQuestions: function() {
