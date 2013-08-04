@@ -28,6 +28,7 @@ end
 
 class Difficulty < ActiveEnum::Base
   value :id => 5, :name => 'Definitionen'
+  value :id => 7, :name => 'Rechenaufgaben'
   value :id => 10, :name => 'Einsteiger'
   value :id => 20, :name => 'Fortgeschrittene'
   #value :id => 30, :name => 'Schwer'
