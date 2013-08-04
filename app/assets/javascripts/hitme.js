@@ -22,19 +22,21 @@ function showNextHint(elm) {
 }
 
 function renderStarred(question) {
-  if(!window.loggedIn) return '';
   c = "";
   c += '<div class="star">';
 
-  c += question.starred ? '&#9733; ' : '';
-  c += '<a onclick="handleStarredClick(this)" '
-  c += 'data-id="'+question.id+'" ';
-  c += 'data-starred="'+question.starred+'">Frage ';
-  c += question.starred ? 'gemerkt' : 'merken';
-  c += '</a>';
+  if(window.loggedIn) {
+    c += question.starred ? '&#9733; ' : '';
+    c += '<a onclick="handleStarredClick(this)" '
+    c += 'data-id="'+question.id+'" ';
+    c += 'data-starred="'+question.starred+'">Frage ';
+    c += question.starred ? 'gemerkt' : 'merken';
+    c += '</a>';
+    c += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+  }
 
   var xx = Routes.perma_question_path(question.id);
-  c += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚓  <a href="'+xx+'" target="_blank">Link zur Frage</a>';
+  c += '⚓  <a href="'+xx+'" target="_blank">Link zur Frage</a>';
 
   c += '</div>';
 
