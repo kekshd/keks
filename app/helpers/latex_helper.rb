@@ -32,4 +32,11 @@ module LatexHelper
   def latex_logo
     content_tag(:div, %|\\(\\LaTeX\\)|, class: 'tex', style: 'display: inline')
   end
+
+  def short_matrix_str_to_tex(v)
+    v = v.gsub("  ", '\\\\\\') # no idea why three are required.
+    v = v.gsub(" ", " & ")
+    "\\(\\begin{pmatrix} #{v} \\end{pmatrix}\\)"
+  end
+
 end

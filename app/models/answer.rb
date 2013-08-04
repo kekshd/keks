@@ -15,6 +15,13 @@ class Answer < ActiveRecord::Base
 
   has_and_belongs_to_many :categories
 
+  def check_ratio
+    return -1 if question.matrix_validate?
+    all = question.stats.pluck(:selected_answers)
+    me = all - [id]
+    return 1-me.size.to_f/all.size.to_f
+  end
+
   def get_parent_category
     return self.question.find_parent_category
   end

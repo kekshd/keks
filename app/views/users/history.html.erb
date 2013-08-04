@@ -23,7 +23,7 @@
     <br/>
     <% if s.skipped? %>
       <% if q.matrix_validate? %>
-        <strong>Antwort:</strong> Hier wäre das Ergebnis in ein Textfeld einzutragen.
+        <strong>Antwort:</strong> Das Rechenergebnis wäre in ein Textfeld einzutragen.
       <% else %>
         <strong>Antwortmöglichkeiten:</strong>
         <ul style="margin-top: 10px;margin-bottom:0">
@@ -32,14 +32,23 @@
           <% end %>
         </ul>
       <% end %>
-    <% else %>
+      Du hast diese Frage übersprungen. Daher wird Dir das Ergebnis nicht angezeigt.
+    <% else # skipped %>
       <% if q.matrix_validate? %>
-        <strong>Antwort:</strong> <%=render_tex q.answers.first.text %>
+        <div style="float:left">
+          <strong>Deine Antwort:</strong>
+          <%=render_tex short_matrix_str_to_tex(s.selected_answers.first.to_s) %>
+        </div>
+        <div style="float:left;margin-left:20px;">
+          <strong>richtige Antwort:</strong>
+          <%=render_tex q.answers.first.text %>
+        </div>
+        <br class="clear"/>
       <% else %>
         <strong>Antwortmöglichkeiten:</strong>
         <div class="answer-chooser noHide">
           <% q.answers.each do |a| %>
-            <div><div><%=render_tex a.text%></div><span><%=render "/answers/render_correctness", answer: a%></span><span><%=s.answer_id == a.id ? "Deine Antwort" : "" %></span></div>
+            <div><div><%=render_tex a.text%></div><span><%=render "/answers/render_correctness", answer: a%></span><span><%=s.selected_answers.include?(a.id) ? "(Das hattest Du angekreuzt)" : "" %></span></div>
           <% end %>
         </div>
       <% end %>

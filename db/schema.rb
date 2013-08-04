@@ -11,10 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130312132003) do
+ActiveRecord::Schema.define(:version => 20130804191413) do
 
   create_table "answers", :force => true do |t|
-    t.string   "text"
+    t.text     "text"
     t.boolean  "correct"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(:version => 20130312132003) do
   end
 
   create_table "categories", :force => true do |t|
-    t.string   "text"
+    t.text     "text"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "title"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(:version => 20130312132003) do
 
   create_table "hints", :force => true do |t|
     t.integer  "sort_hint"
-    t.string   "text"
+    t.text     "text"
     t.integer  "question_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(:version => 20130312132003) do
     t.string   "parent_type"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.string   "text"
+    t.text     "text"
     t.string   "ident"
     t.integer  "difficulty"
     t.integer  "study_path"
@@ -66,10 +66,11 @@ ActiveRecord::Schema.define(:version => 20130312132003) do
   create_table "stats", :force => true do |t|
     t.integer  "user_id"
     t.integer  "question_id"
-    t.integer  "answer_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.boolean  "correct"
+    t.string   "selected_answers"
+    t.boolean  "skipped",          :default => false
   end
 
   create_table "users", :force => true do |t|

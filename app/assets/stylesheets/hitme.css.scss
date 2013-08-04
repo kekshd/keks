@@ -27,19 +27,25 @@
 }
 
 .matrixmode {
-  float: none !important;
+  float: left;
   min-width: 0;
   width: 260px;
   height: 120px;
 }
 
 .previewer {
-  position: relative;
-  top: -120px;
-  left: 285px;
+  float: left;
+  margin-left: 15px;
 }
 
 
 .xkcd {
   margin: 10px 0;
+}
+
+.answer-submit > span {
+  display: inline-block;
+  line-height:33px;
+  vertical-align: top;
+  margin-left: 10px;
 }

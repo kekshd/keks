@@ -25,9 +25,9 @@ module StatsHelper
     # group by running week
     weeks_ago = (((time - stat.created_at) / 1.day) % 7).to_i
     return if hash[:right][weeks_ago].nil?
-    hash[:skipped][weeks_ago] += 1 if stat.answer_id == -1
-    hash[:right][weeks_ago] += 1 if stat.answer_id >= 0 && stat.correct
-    hash[:wrong][weeks_ago] += 1 if stat.answer_id >= 0 && !stat.correct
+    hash[:skipped][weeks_ago] += 1 if stat.skipped?
+    hash[:right][weeks_ago] += 1 if !stat.skipped? && stat.correct
+    hash[:wrong][weeks_ago] += 1 if !stat.skipped? && !stat.correct
   end
 
 

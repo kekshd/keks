@@ -1,3 +1,31 @@
+// returns a unique ID to be used to identify an element within the
+// webpage. Depends on the current state of the page, i.e. if we already
+// are in ask-skipped-questions-again mode.
+function getUniqId(q, a) {
+  var qid = (typeof q === 'object' ? q.id : q);
+  if(qid === undefined || qid === null) throw('invalid question id');
+  var id = "blockQuest" + qid;
+
+  if(!window.currentHitme.nagAboutSkippedQuestions) id += 'repeat';
+
+  if(a) {
+    id += "_answer" + (typeof a === 'object' ? a.id : a);
+  }
+  return id;
+}
+
+function isAnswerSelectionCorrect(answers) {
+  var correct = true;
+  $.each(answers, function(ind, answ) {
+    answ = $(answ);
+    // answer correct, but not checked
+    if(answ.data('correct') === true && !answ.hasClass("active")) correct = false;
+    // answer wrong, but checked
+    if(answ.data('correct') === false && answ.hasClass("active")) correct = false;
+  });
+  return correct;
+}
+
 function checkForQuestionPreview() {
   var singleQuestion = getHash("question");
   if(singleQuestion === undefined || !singleQuestion) return;
@@ -79,8 +107,15 @@ function getQuestionById(id) {
   return quest;
 }
 
-function storeStats(quest_id, answ_id) {
-  $.post(Routes.new_stat_path(quest_id, answ_id), {a: "b"});
+function storeStats(quest_id, selected_answers, skipped, correct) {
+  if(typeof selected_answers !== 'object') throw('selected_answers must be an array');
+  if(skipped === undefined) throw('skipped not given');
+  if(correct === undefined) throw('correct not given');
+  $.post(Routes.new_stat_path(quest_id), {
+    selected_answers: selected_answers,
+    skipped: skipped,
+    correct: correct
+  });
 }
 
 
@@ -186,10 +221,13 @@ function answersGivenCount() {
   return a.fail.length + a.correct.length + a.skip.length;
 }
 
+// sees if there’s a subquestion for the current answer. If there is,
+// and the user has activated subquestions it will be inserted next.
+// Returns true if a subquestion has been inserted.
 function maybeInsertSubquestion(aid) {
   if(!$('#subquestions').is(':checked')) {
     // user doesn’t want subquestions, skip
-    return;
+    return false;
   }
 
   // only try to show subquestion half of the time
@@ -203,10 +241,11 @@ function maybeInsertSubquestion(aid) {
     }
   });
   // this answer doesn’t have a subquestion
-  if(!s) return;
+  if(!s) return false;
   var c = window.currentHitme;
   var p = c.questPositionPointer;
   c.questions.splice(p+1, 0, s);
+  return true;
 }
 
 H = {};
@@ -281,72 +320,89 @@ H.Hitme.prototype = {
     var s = "";
     $.each(shuffle(quest.answers), function(ind, a) {
       s += '<div>'
-      s += '<a class="button" id="a'+a.id+'"';
+      s += '<a class="button toggleable" id="'+getUniqId(quest, a)+'"';
+      s += ' onclick="$(this).toggleClass(\'active\');"';
       s += ' data-correct="'+a.correct+'" data-qid="'+quest.id+'"';
       s += ' data-aid="'+a.id+'">'+a.html+'</a>';
       s += '<span>'+a.correctness+'</span>';
-      s += '<span>(dies war Deine Antwort)</span>';
+      s += '<span>(das hattest Du angekreuzt)</span>';
       s += '</div>';
     });
     return s;
   },
 
-  _handleAnswerClick: function() {
-    var answ = $(this);
-    var linkBox = answ.parents('.answer-chooser, .answer-chooser-matrix').first();
-    var boxSelector = '#blockQ' + answ.data('qid');
-    // i.e. skipped questions are shown again
-    if(!window.currentHitme.nagAboutSkippedQuestions) boxSelector += 'repeat';
-    var box = $(boxSelector);
+  _handleQuestionSubmit: function() {
+    // gather details
+    //~ var question = getQuestionById($(this).data('qid'));
+    var quest = window.currentQuestion;
+    var answerChooser = $(this).parent().siblings(".answer-chooser, .answer-chooser-matrix").first();
+    var action = $(this).data('action');
+    var boxSelector = '#' + getUniqId(window.currentQuestion);
 
-    var isMatrix = getQuestionById(answ.data('qid')).matrix;
-    if(isMatrix && answ.data('aid') === 1) {
-      var txt = box.find("textarea");
-      var m = parseMatrix(txt.val());
-      txt.attr('disabled', 'disabled');
-      var isCorr = window.currentQuestion.matrix_solution === m;
-      answ.data('correct', isCorr);
-      if(!isCorr) answ.data('aid', 0);
-    }
+    // disable ui
+    $(this).parent().children("a").addClass("disable");
+    answerChooser.find("a").addClass("disable").removeAttr("onclick");
+    answerChooser.find("textarea").attr('disabled', 'disabled');
 
-    storeStats(answ.data('qid'), answ.data('aid'));
-
-    var c = answ.data('correct');
-    switch(c) {
-      case "true":
-      case true:
-      window.currentHitme.answersGiven.correct.push(boxSelector);
-      box.addClass('reveal');
-      maybeInsertSubquestion(answ.data('aid'));
-      break;
-
-      case "false":
-      case false:
-      window.currentHitme.answersGiven.fail.push(boxSelector);
-      box.addClass('reveal');
-      maybeInsertSubquestion(answ.data('aid'));
-      break;
-
-      default:
-      window.currentHitme.skippedQuestionsData.push(window.currentQuestion);
+    // handle action
+    if(action === 'skip') {
+      window.currentHitme.skippedQuestionsData.push(quest);
       window.currentHitme.answersGiven.skip.push(boxSelector);
+      $(this).parent().append("<span>Du hast diese Frage übersprungen</span>");
+      storeStats(quest.id, [], true, false);
+
+    } else if(action === 'save') {
+      $(boxSelector).addClass('reveal');
+      var correct;
+
+      if(quest.matrix) {
+        var m = parseMatrix(answerChooser.find("textarea").val());
+        correct = window.currentQuestion.matrix_solution === m;
+        storeStats(quest.id, [m], false, correct);
+      } else {
+        var answ = answerChooser.find("a");
+        correct = isAnswerSelectionCorrect(answ);
+
+
+        // insert subquestions for selected answers if any
+        var selAnsw = answerChooser.find("a.active");
+        $.each(selAnsw, function(ind, answ) {
+          maybeInsertSubquestion($(answ).data('aid'));
+        });
+
+        // show which questions were selected by the user
+        $.each(selAnsw, function(ind, answ) {
+          animateVisibilityHiddenShow($(answ).siblings().last());
+        });
+
+        var selAnswIds = $.map(selAnsw, function(answ, ind) {
+          return $(answ).data('aid');
+        });
+
+        storeStats(quest.id, selAnswIds, false, correct);
+      }
+
+
+      if(correct) {
+        //~ console.log("q" + quest.id + " answered correctly");
+        window.currentHitme.answersGiven.correct.push(boxSelector);
+      } else {
+        //~ console.log("q" + quest.id + " answered incorrectly");
+        window.currentHitme.answersGiven.fail.push(boxSelector);
+      }
+
+
+    } else {
+      throw('Unsupported action. This is a coding error.');
     }
 
-    linkBox.find('a').addClass('disable');
-    animateVisibilityHiddenShow(answ.siblings().last());
     window.currentHitme.showNext();
   },
 
   _showNextQuestion: function() {
     this.questPositionPointer++;
     var q = window.currentQuestion = this.questions[this.questPositionPointer];
-
-    var blockId = 'blockQ' + q.id;
-    // i.e. skipped questions are shown again
-    if(!this.nagAboutSkippedQuestions) blockId += 'repeat';
-
-
-    var code = '<div style="display:none" id="'+blockId+'" class="hideMeOnMore">'
+    var code = '<div style="display:none" id="'+getUniqId(q.id)+'" class="hideMeOnMore">'
       + q.html
       + '<br/>';
 
@@ -363,57 +419,51 @@ H.Hitme.prototype = {
 
 
     var cls;
-    var answerId = null;
 
+    code += '<div class="answer-chooser'+(q.matrix?"-matrix":"")+'">'
     if(q.matrix) {
-      cls = 'answer-chooser-matrix';
-
-      code += 'Trage unten die Lösung ein. Matrizen schreibst Du einfach mittels Leerzeichen und Zeilenumbrüchen. Die Anzahl der Leerzeichen ist dabei egal.<br/><br/>';
       var a = q.answers[0];
-      answerId = blockId + a.id;
+      code += 'Trage unten die Lösung ein. Matrizen schreibst Du einfach mittels Leerzeichen und Zeilenumbrüchen. Die Anzahl der Leerzeichen ist dabei egal.<br/><br/>';
       code += '<div style="float:left;width: 45%; overflow-y: show; overflow-x: hidden;">';
-      code += '<label for="a'+answerId+'" style="float:none">Deine Lösung</label>';
-      code += '<textarea id="a'+answerId+'" class="matrixmode"></textarea>';
-      code += '<div class="tex previewer" id="a'+answerId+'previewer"></div>';
+      code += '<label for="'+getUniqId(q, a)+'">Deine Lösung</label><br class="clear"/>';
+      code += '<textarea id="'+getUniqId(q, a)+'" class="matrixmode"></textarea>';
+      code += '<div class="tex previewer" id="'+getUniqId(q, a)+'previewer"></div>';
       code += '<br/>';
       code += '</div>';
       code += '<div style="float:right;width: 45%" class="initiallyHidden">';
-      code += '<strong>Unsere Lösung</strong><br/>';
+      code += '<strong>Unsere Lösung</strong><br class="clear"/>';
       code += a.html+'</div>';
       code += '<br class="clear"/>';
-      code += '<div class="answer-chooser-matrix button-group">';
-      code += '<a class="button big" data-qid="'+q.id+'" data-aid="1">Antwort übernehmen</a>';
-      code += '<a class="button big" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a>';
-      code += '</div>';
     } else {
-      cls = 'answer-chooser';
-      code += '<div class="answer-chooser">'
-        + this._renderAnswersForQuestion(q)
-        +'<div><a class="button big" data-qid="'+q.id+'" data-aid="-1">Frage überspringen</a><span></span><span>Du hast diese Frage übersprungen</span></div>'
-        + '</div>';
+      code += this._renderAnswersForQuestion(q);
     }
+    code += '</div>'; // answer-chooser
 
+    code += '<br/><div class="answer-submit button-group">';
+    code += '<a class="button big" data-qid="'+q.id+'" title="Günther Jauch: Sind Sie sich wirklich sicher?" data-action="save">Antwort übernehmen</a>';
+    code += '<a class="button big" data-qid="'+q.id+'" data-action="skip">Frage überspringen</a>';
     code += '</div>';
 
+
+    code += '</div>'; // box
+
     $(code).appendTo('body');
-    $('.'+cls+':last').one('click', 'a', this._handleAnswerClick);
+    $('.answer-submit:last').one('click', 'a', this._handleQuestionSubmit);
     // render math first, then expand
-    var render = function() { $("#"+blockId).animate(CONST.showAnimation, CONST.stayAtBottom); }
+    var render = function() { $("#"+getUniqId(q.id)).animate(CONST.showAnimation, CONST.stayAtBottom); }
     MathJax.Hub.Queue(["Typeset",MathJax.Hub, render]);
 
     // add preview for matrix questions
-    if(answerId) {
+    if(q.matrix) {
       window.matrixModePreview = null;
-      var textarea = $('#a'+answerId);
-      var previewer = $('#a'+answerId+'previewer');
+      var textarea = $('#'+getUniqId(q, a));
+      var previewer = $('#'+getUniqId(q, a)+'previewer');
       textarea.keyup(function() {
         if(window.matrixModePreview) clearTimeout(window.matrixModePreview);
         window.matrixModePreview = setTimeout(function() {
           var v = parseMatrix(textarea.val());
           if(v === "") return previewer.html("");
-          v = v.replace(/  /g, "\\\\");
-          v = v.replace(/ /g, " & ");
-          v = "\\(\\begin{pmatrix} " + v + " \\end{pmatrix}\\)";
+          v = shortMatrixStrToTeX(v);
           previewer.html(v);
           MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         }, 100);

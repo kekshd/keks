@@ -4,44 +4,47 @@ class StatsController < ApplicationController
   before_filter :require_admin, only: :report
 
   def new
-    quest = Question.find(params[:question_id]) rescue nil
+    begin
+      quest = Question.find(params[:question_id])
+      raise "could not find question" if quest.nil?
 
-    # accept skipped answers (-1) as well as all others that exist.
-    if params[:answer_id].to_s == "-1"
-      answ_id = -1
-      correct = false
-    else
-      if quest.matrix_validate? # is matrix valid?
-        tmp = params[:answer_id].to_s
-        if tmp == "0"
-          answ_id = 0
-          correct = false
-        end
-
-        if tmp == "1"
-          answ_id = 1
-          correct = true
-        end
-      else # find answer for non-matrix question
-        answ = quest.answers.find(params[:answer_id]) rescue nil
-        correct = answ.correct? rescue false
-        answ_id = answ.id rescue nil
+      [:question_id, :skipped, :correct].each do |p|
+        raise "param #{p} missing" if params[p].nil?
       end
-    end
 
-    user_id = signed_in? ? current_user.id : -1;
-    if quest && answ_id
+      # if nothing was checked, selected_answers will not be
+      # transmitted due to the way array transmission works in HTML
+      answers = params[:selected_answers] || []
+
+      skipped = params[:skipped] == "true" ? true : false
+      correct = params[:correct] == "true" ? true : false
+
+      if skipped
+        answers = []
+        correct = false
+      end
+
+      # keep valid answers only if in non-matrix mode
+      unless quest.matrix_validate?
+        answers = answers.map { |a| a.to_i }
+        answers.reject! { |a| quest.answers.find(a).nil? }
+      end
+
+      user_id = signed_in? ? current_user.id : -1;
+
       s = Stat.new
       s.question = quest
-      s.answer_id = answ_id
       s.user_id = user_id
       s.correct = correct
+      s.skipped = skipped
+      s.selected_answers = answers
 
       render :json => s.save(:validate => false)
-    else
-      logger.warn "Could not save stats: question or answer invalid:"
+    rescue Exception => e
+      logger.warn "Could not save stats: debug output:"
+      logger.warn " MSG: #{e.message}"
       logger.warn " QUESTION: #{PP.pp(quest, "")}"
-      logger.warn " ANSWER:   #{PP.pp(answ, "")}"
+      logger.warn " PARAMS:   #{PP.pp(params, "")}"
       render :json => false
     end
   end

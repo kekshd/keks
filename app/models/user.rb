@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   attr_accessor :updating_password
 
   def correct_ratio
-    all = recent_stats.where("answer_id >= 0").size.to_f
+    all = recent_stats.where(:skipped => false).size.to_f
     all > 0 ? correct_count.to_f/all : 0.0
   end
 
@@ -49,11 +49,11 @@ class User < ActiveRecord::Base
   end
 
   def correct_count
-    recent_stats.where("answer_id >= 0").where(:correct => true).size
+    recent_stats.wherewhere(:skipped => false, :correct => true).size
   end
 
   def skip_count
-    recent_stats.where(:answer_id => -1).size
+    recent_stats.where(:skipped => true).size
   end
 
   def recent_stats

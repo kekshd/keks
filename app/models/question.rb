@@ -37,14 +37,14 @@ class Question < ActiveRecord::Base
 
   def correct_ratio_user(user)
     user_stats = stats.where(:user_id => user.id)
-    all = user_stats.where("answer_id >= 0")
+    all = user_stats.where(:skipped => false)
     correct = all.where(:correct => true)
     all.size > 0 ? correct.size/all.size.to_f : 0
   end
 
   # returns the ratio of correct answers. Skipped ones are not counted.
   def correct_ratio
-    all = stats.where("answer_id >= 0").size.to_f
+    all = stats.where(:skipped => false).size.to_f
     all > 0 ? correct_count.to_f/all : 0
   end
 
@@ -54,11 +54,11 @@ class Question < ActiveRecord::Base
   end
 
   def correct_count
-    stats.where("answer_id >= 0").where(:correct => true).size
+    stats.where(:correct => true, :skipped => false).size
   end
 
   def skip_count
-    stats.where(:answer_id => -1).size
+    stats.where(:skipped => true).size
   end
 
   def get_parent_category
