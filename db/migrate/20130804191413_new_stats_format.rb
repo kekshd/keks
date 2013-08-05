@@ -1,16 +1,24 @@
 class NewStatsFormat < ActiveRecord::Migration
   def self.up
-    add_column :stats, :selected_answers, :string
-    add_column :stats, :skipped, :boolean, :default => false
+    # can’t use add_column, because for some reason the columns are not
+    # directly available
+    execute(%|ALTER TABLE stats ADD COLUMN "skipped" boolean DEFAULT 'f'|)
+    execute(%|ALTER TABLE stats ADD COLUMN "selected_answers" varchar(255)|)
 
-    Stat.unscoped.all.each do |s|
-      if s.answer_id == -1
-        s.selected_answers = []
-        s.skipped = true
-      else
-        s.selected_answers = [s.answer_id]
+    # don’t print the update statement for each stat
+    ActiveRecord::Base.logger.quietly do
+      Stat.unscoped.all.each do |s|
+        skipped, selansw = nil, nil
+        if s.answer_id == -1
+          selansw = "--- []\n"
+          skipped = 't'
+        else
+          skipped = 'f'
+          selansw = "---\n- #{s.answer_id}\n"
+        end
+
+        execute "UPDATE stats SET skipped = '#{skipped}', selected_answers = '#{selansw}' WHERE id = #{s.id} LIMIT 1"
       end
-      s.save
     end
 
     remove_column :stats, :answer_id
@@ -26,7 +34,7 @@ class NewStatsFormat < ActiveRecord::Migration
       else
         s.answer_id = s.selected_answers[0]
       end
-      s.save
+      s.save(:validate => false)
     end
 
     remove_column :stats, :selected_answers

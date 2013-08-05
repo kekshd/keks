@@ -69,8 +69,8 @@ ActiveRecord::Schema.define(:version => 20130804191413) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.boolean  "correct"
-    t.string   "selected_answers"
     t.boolean  "skipped",          :default => false
+    t.string   "selected_answers"
   end
 
   create_table "users", :force => true do |t|
