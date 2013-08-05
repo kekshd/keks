@@ -60,6 +60,10 @@ module ApplicationHelper
     end
   end
 
+  # retrieves cnt questions out of the given set. The set may contain
+  # incomplete questions, which are never returned though. May return
+  # less questions than requested. If the user is logged in, it will
+  # prefer questions not yet answered or answered incorrectly often.
   def get_question_sample(qs, cnt)
     samp = nil
     if signed_in?
@@ -67,7 +71,13 @@ module ApplicationHelper
       # correctly.
       samp = roulette(qs, current_user, cnt)
     else
-      # uniform distribution
+      # uniform distribution. Select more questions than required and
+      # only check them for completeness afterwards.
+      # The completeness check is rather expensive. Trade-off being  a
+      # few questions short in few cases in favor of being faster in the
+      # average case.
+      samp = qs.sample(cnt*5)
+      samp.reject! { |s| !s.complete? }
       samp = qs.sample(cnt)
     end
     #~ dbgsamp = samp.map { |s| s.id }.join('  ')
@@ -109,19 +119,21 @@ module ApplicationHelper
       [cw == 0 ? 1 : w/(c+w).to_f, 0.1].max
     end
 
-
     selected = []
     n.times do
       break if probs.empty?
       r, inc = rand * probs.sum, 0
+      failed = false
       questions.each_index do |i|
         if r < (inc += probs[i])
-          selected << questions[i]
+          failed = !questions[i].complete?
+          selected << questions[i] unless failed
           # make selection not pick sample twice
           questions.delete_at i
           probs.delete_at i
           break
         end
+        redo if failed
       end
     end
     return selected
