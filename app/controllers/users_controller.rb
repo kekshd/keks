@@ -39,12 +39,14 @@ class UsersController < ApplicationController
     key = (params[:enrollment_key] || '').gsub(/[^a-z0-9]/i, "")
     if !key
       flash[:error] = "Kein Einschreibeschlüssel angegeben."
+      chart
       render 'edit'
     elsif @user.enrollment_keys && @user.enrollment_keys.split.include?(key)
       flash[:warning] = "In diese Veranstaltung bist Du schon eingeschrieben."
       redirect_to edit_user_path(@user)
     elsif !EnrollmentKeys.names.include?(key)
       flash[:error] = "Dieser Einschreibeschlüssel ist unbekannt. Die Groß-/Kleinschreibung zählt."
+      chart
       render 'edit'
     else
       @user.enrollment_keys ||= ""
@@ -55,6 +57,7 @@ class UsersController < ApplicationController
         redirect_to edit_user_path(@user)
       else
         flash[:error] = "Konnte Dich nicht in #{key} einschreiben. Bitte kontaktiere eine in der Hilfe aufgelistete Person."
+        chart
         render 'edit'
       end
     end
