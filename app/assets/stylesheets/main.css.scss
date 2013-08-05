@@ -340,11 +340,11 @@ select {
   }
 }
 
-.alert-error {
+.alert-error, .wrong {
   color: $error;
 }
 
-.alert-success {
+.alert-success, .correct {
   color: $success;
 }
 
