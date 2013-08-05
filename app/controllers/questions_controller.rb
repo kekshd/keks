@@ -23,7 +23,11 @@ class QuestionsController < ApplicationController
   end
 
   def index
-    @questions = Question.all
+    @questions = Question.includes(:parent, :answers).all
+
+    @all_count = Stat.unscoped.group(:question_id).count
+    @skip_count = Stat.unscoped.where(skipped: true).group(:question_id).count
+    @correct_count = Stat.unscoped.where(correct: true).group(:question_id).count
   end
 
   def new

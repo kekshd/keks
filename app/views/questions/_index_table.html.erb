@@ -3,13 +3,9 @@
 <table id="index" class="tablesorter">
   <thead>
     <tr>
-      <th>Ident</th>
-      <th>Elternname</th>
-      <th>Härte</th>
-      <th>&nbsp;✔&nbsp;</th>
-      <th>&nbsp;↷&nbsp;</th>
-      <th>Studiengang</th>
+      <th>Ident<br/>Typ<br/>Studiengang<br/>Elternname</th>
       <th>Text</th>
+      <th>%-richtig<br/>%-übersprungen</th>
       <th>Antworten</th>
       <th>Aktionen</th>
     </tr>
@@ -17,22 +13,41 @@
   <tbody>
     <% @questions.each do |q| %>
       <tr>
-        <%=content_tag :td, link_to(q.ident, question_path(q), :class => q.complete? ? "" : "strike") %>
-        <%=content_tag :td, link_to_parent(q) %>
-        <%=content_tag :td, q.difficulty(:name) %>
-        <%=content_tag :td, n(q.correct_ratio) %>
-        <%=content_tag :td, n(q.skip_ratio) %>
-        <%=content_tag :td, q.study_path(:name) %>
-        <%=content_tag :td, q.text[0..50] %>
+        <td>
+          <div style="width: 400px">
+            <%=link_to(q.ident, question_path(q), :class => q.complete? ? "" : "strike")%><br/>
+            <%=q.difficulty(:name) %><br/>
+            <%=q.study_path(:name) %><br/>
+            <%=link_to_parent(q)%>
+          </div>
+        </td>
+        <td>
+          <div style="width: 350px; max-height: 120px; overflow: hidden;">
+            <%= q.text %>
+          </div>
+        </td>
+        <td>
+          ✓&nbsp;<%=
+            @all_count[q.id] \
+              ? n((@correct_count[q.id] || 0) / (@all_count[q.id].to_f)) \
+              : "nie beantwortet"
+            %><br/>
+          ↷&nbsp;<%=
+            @all_count[q.id] \
+              ? n((@skip_count[q.id] || 0) / (@all_count[q.id].to_f)) \
+              : "nie beantwortet"
+            %><br/>
+        </td>
         <td>
           <% q.answers.each do |a| %>
             <%= content_tag :span, a.ident, title: a.text, class: a.correct? ? "correct" : "wrong" %>
+            <br/>
           <% end %>
         </td>
         <td>
-          <%= link_to "Anzeigen", question_path(q) %>
-          <%= link_to "Bearbeiten", edit_question_path(q) %>
-          <%= link_to "Neue Antwort", new_question_answer_path(q) %>
+          <%= link_to "Anzeigen", question_path(q) %><br/>
+          <%= link_to "Bearbeiten", edit_question_path(q) %><br/>
+          <%= link_to "Neue Antwort", new_question_answer_path(q) %><br/>
         </td>
       </tr>
     <% end %>
