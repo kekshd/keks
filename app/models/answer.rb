@@ -17,7 +17,7 @@ class Answer < ActiveRecord::Base
 
   def check_ratio
     return -1 if question.matrix_validate?
-    all = question.stats.pluck(:selected_answers)
+    all = question.stats.pluck(:selected_answers).flatten
     me = all - [id]
     return 1-me.size.to_f/all.size.to_f
   end
