@@ -1,5 +1,34 @@
+<%
+  limit ||= nil
+
+  cats = {}
+  questions.each_with_index do |q, ind|
+    roots = q.get_root_categories
+    roots.each do |r|
+      cats[r.title] ||= []
+      cats[r.title] << q
+    end
+
+    if limit && params[:nolimit] != "1" && ind >= limit-1
+      %>
+        <b>Hinweis:</b>
+        Zeige nur <%=limit%> von <%=questions.size%> Fragen, damit die Seite schnell bleibt.
+        <%=link_to "Alles anzeigen (legt Seite lahm, sparsam nutzen)", "?nolimit=1"%>
+      <%
+      break
+    end
+  end
+%>
+
+
 <ul>
-  <% questions.each do |q| %>
-    <li><%=link_to "#{q.ident}", question_review_path(q) %></li>
+  <% cats.each do |cat, quests| %>
+    <li><b><%=cat%></b>
+      <ul>
+      <% quests.each do |q| %>
+        <li><%=link_to "#{q.ident}", question_review_path(q) %></li>
+      <% end %>
+      </ul>
+    </li>
   <% end %>
 </ul>

@@ -9,7 +9,7 @@ class ReviewsController < ApplicationController
     @reviews_need_update = @reviews.select { |r| r.question_updated_since? }
     reviewed_question_ids = @reviews.map { |r| r.question_id }
 
-    @questions = Question.includes(:reviews).all
+    @questions = Question.includes(:reviews, :parent).all
     @questions_need_review = @questions.select do |q|
       q.reviews.size < REVIEW_MIN_REQUIRED_REVIEWS \
         and !reviewed_question_ids.include?(q.id)

@@ -35,7 +35,7 @@
     <div>
       <h3>Fragen, die ein Review brauchen</h3>
       <p>Nachfolgende Fragen haben bisher zu wenig Reviews erhalten. Du hast diese Fragen noch nie reviewt.</p>
-      <%= render "generic_question_list", questions: @questions_need_review %>
+      <%= render "generic_question_list", questions: @questions_need_review, limit: 50 %>
     </div>
   <% end %>
 
