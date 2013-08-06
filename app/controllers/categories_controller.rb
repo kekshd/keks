@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
   before_filter :require_admin
 
   def index
-    @categories = Category.all
+    @categories = Category.includes(:questions => :answers).all
   end
 
   def new

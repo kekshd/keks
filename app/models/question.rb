@@ -139,7 +139,7 @@ class Question < ActiveRecord::Base
       d << parent.dot
 
       # siblings of the parent
-      parent.questions.each do |q|
+      parent.questions.includes(:answers, :parent).each do |q|
         d << q.dot(q == self)
         d << "#{parent.dot_id} -> #{q.dot_id};"
       end if parent.respond_to?(:questions)
