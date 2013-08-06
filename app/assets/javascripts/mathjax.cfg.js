@@ -2,6 +2,9 @@ $(document).ready(function() {
   MathJax.Hub.Config({
     showProcessingMessages: false,
     messageStyle: "none",
+
+    showMathMenu: false,
+
     TeX: {
       Macros: {
         emph: '' // no idea how this works, but it makes \emph in math possible
