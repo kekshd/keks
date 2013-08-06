@@ -15,4 +15,5 @@
 //= require jquery-tablesorter
 //= require js-routes
 //= require highcharts
+//= require simple-slider.min
 //= require_tree .

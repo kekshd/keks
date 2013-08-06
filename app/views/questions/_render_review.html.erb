@@ -1,0 +1,25 @@
+<%=render_tex(@question.text)%><br/><br/>
+
+<% if question.hints.any? %>
+   <strong>Hinweise:</strong>
+  <ol>
+  <% question.hints.each do |h| %>
+    <li><%=render_tex(h.text)%></li>
+  <% end %>
+  </ol><br/>
+<% end %>
+
+<% if question.matrix_validate? %>
+  <strong>Lösung:</strong><br/>
+  <%=render_tex question.answers.first.text %>
+<% else %>
+  <strong>Antwortmöglichkeiten:</strong>
+  <div class="answer-chooser noHide">
+    <%  question.answers.each do |a| %>
+      <div>
+        <span><%=render "/answers/render_correctness", answer: a%></span>
+        <div><%=render_tex a.text%></div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130804191413) do
+ActiveRecord::Schema.define(:version => 20130805153011) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20130804191413) do
     t.string   "type"
     t.integer  "question_id"
   end
+
+  add_index "answers", ["question_id"], :name => "index_answers_on_question_id"
 
   create_table "answers_categories", :force => true do |t|
     t.integer "answer_id"
@@ -58,6 +60,18 @@ ActiveRecord::Schema.define(:version => 20130804191413) do
     t.boolean  "released"
   end
 
+  add_index "questions", ["parent_id"], :name => "index_questions_on_parent_id"
+
+  create_table "reviews", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "question_id"
+    t.text     "comment"
+    t.boolean  "okay"
+    t.string   "votes"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "starred", :id => false, :force => true do |t|
     t.integer "user_id"
     t.integer "question_id"
@@ -77,14 +91,15 @@ ActiveRecord::Schema.define(:version => 20130804191413) do
     t.string   "nick"
     t.string   "mail"
     t.string   "password_digest"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.string   "remember_token"
-    t.boolean  "admin"
+    t.boolean  "admin",                  :default => false
     t.integer  "study_path"
     t.text     "enrollment_keys"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.boolean  "reviewer",               :default => false
   end
 
   add_index "users", ["remember_token"], :name => "index_users_on_remember_token"

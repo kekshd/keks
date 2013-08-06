@@ -1,0 +1,5 @@
+<ul>
+  <% questions.each do |q| %>
+    <li><%=link_to "#{q.ident}", question_review_path(q) %></li>
+  <% end %>
+</ul>

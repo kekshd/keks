@@ -13,7 +13,8 @@ class Question < ActiveRecord::Base
   enumerate :study_path
   validates_inclusion_of :study_path, in: StudyPath
 
-  has_many :answers, :dependent => :destroy
+  has_many :reviews, dependent: :destroy, order: 'updated_at DESC'
+  has_many :answers, dependent: :destroy
   has_many :hints, :order => 'sort_hint ASC', :dependent => :destroy
   has_and_belongs_to_many :starred_by, :class_name => :User, :join_table => :starred
   before_destroy do |q|

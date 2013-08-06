@@ -5,7 +5,7 @@
     <tr>
       <th>Ident<br/>Typ<br/>Studiengang<br/>Elternname</th>
       <th>Text</th>
-      <th>%-richtig<br/>%-übersprungen</th>
+      <th>%-richtig<br/>%-übersprungen<br/>%-ok? (Review)</th>
       <th>Antworten</th>
       <th>Aktionen</th>
     </tr>
@@ -37,6 +37,7 @@
               ? n((@skip_count[q.id] || 0) / (@all_count[q.id].to_f)) \
               : "nie beantwortet"
             %><br/>
+          ☯&nbsp; FIXME
         </td>
         <td>
           <% q.answers.each do |a| %>

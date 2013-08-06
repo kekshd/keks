@@ -1,0 +1,42 @@
+<% provide(:title, "Nutzerübersicht") %>
+
+<% if current_user.admin? %>
+<div>
+  <%= render "admin/action_menu"  %><br/><br/>
+
+  Hallo <b>Admin</b>, ich glaube folgende Fragen bedürfen Deiner Aufmerksamkeit:
+
+  FIXME
+</div>
+<% end %>
+
+
+<% if current_user.reviewer? %>
+  <div>
+    <%= render "menu"  %><br/><br/>
+
+    Lieber Reviewer, nachfolgend findest Du eine Auflistung von Fragen, die am wahrscheinlichsten Deiner Aufmerksamkeit bedürfen. Kommt im Anschluss nichts, gibt’s wohl nichts zu tun. Im Menü oben kannst Du auch nach anderen Sachen filtern, diese sind dann aber nicht mehr auf Dich zugeschnitten.
+  </div>
+
+  <% if @reviews_need_update.any? %>
+    <div>
+      <h3>Seit Deinem letztem Review aktualisiert</h3>
+      <p>Du hast diese Fragen bereits einmal reviewed. Die Frage wurde jedoch aktualisiert seitdem Du das getan hast. Bitte prüfe ob Deine Anmerkungen noch stimmen und ändere ggf. Deine Einstellungen.</p>
+      <ul>
+        <% @reviews_need_update.each do |r| %>
+          <% q = r.question %>
+          <li><%=link_to "#{q.ident} (Frage vor #{time_ago_in_words q.updated_at} geändert)", question_review_path(q) %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @questions_need_review %>
+    <div>
+      <h3>Fragen, die ein Review brauchen</h3>
+      <p>Nachfolgende Fragen haben bisher zu wenig Reviews erhalten. Du hast diese Fragen noch nie reviewt.</p>
+      <%= render "generic_question_list", questions: @questions_need_review %>
+    </div>
+  <% end %>
+
+<% end # is reviewer? %>

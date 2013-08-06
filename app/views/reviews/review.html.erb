@@ -1,0 +1,42 @@
+<% provide(:title, "Frage reviewen") %>
+
+<div>
+  <%= render "menu"  %>
+</div>
+
+<div>
+  <h2>Frage <%=@question.ident%></h2>
+  <div class="topright">
+    <%=link_to "Frage „live“ ansehen", "#{main_hitme_path}#hide-options#question=#{@question.id}" %>
+    <% if current_user.admin? %>
+      |
+      <%= link_to("Bearbeiten", edit_question_path(@question)) %>
+    <% end %>
+  </div>
+
+  <%= render "questions/render_review", question: @question %>
+</div>
+
+<div>
+  <h2>Reviews</h2>
+  <% if @question.reviews.none? %>
+    bisher noch keine.
+  <% else %>
+    <% question_edit_msg_shown = false %>
+    <% @question.reviews.each do |r| %>
+      <% if !question_edit_msg_shown && @question.updated_at > r.updated_at %>
+        <%= render "last_update" %>
+        <% question_edit_msg_shown = true %>
+      <% end %>
+
+      <%= render "show", review: r, dimmed: question_edit_msg_shown %>
+    <% end %>
+
+    <%= render "last_update" if !question_edit_msg_shown %>
+  <% end %>
+</div>
+
+
+<% if current_user.reviewer? %>
+  <%= render "form" %>
+<% end %>

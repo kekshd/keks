@@ -54,7 +54,19 @@ module SessionsHelper
     current_user && current_user.admin?
   end
 
+  def reviewer?
+    current_user && current_user.reviewer?
+  end
+
   def require_admin
     redirect_to(root_url) unless admin?
+  end
+
+  def require_reviewer
+    redirect_to(root_url) unless reviewer?
+  end
+
+  def require_admin_or_reviewer
+    redirect_to(root_url) unless admin? or reviewer?
   end
 end

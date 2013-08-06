@@ -27,10 +27,21 @@ Keks::Application.routes.draw do
 
   get "admin/overview"
   scope "/admin" do
+    match "users", to: "users#index", as: "users", via: :get
+    match "toggle_reviewer/:id", to: "users#toggle_reviewer", as: "user_toggle_reviewer", via: :put
+    match "toggle_admin/:id", to: "users#toggle_admin", as: "user_toggle_admin", via: :put
+
+    match "reviews", to: "reviews#overview", as: "reviews", via: :get
+    match "reviews/not_okay_questions", to: "reviews#not_okay", as: "not_okay_questions", via: :get
+    match "reviews/no_reviews", to: "reviews#no_reviews", as: "no_reviews_questions", via: :get
+
     resources :questions do
       resources :answers
       resources :hints
+      match "review", to: "reviews#review", as: "review", via: :get
+      match "review", to: "reviews#save", as: "review_save", via: :post # new reviews
     end
+
 
     resources :categories
     match "categories/:id/release", to: "categories#release", :as => "release_category", via: :get

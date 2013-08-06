@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :starred, :class_name => :Question, :join_table => :starred
 
+  has_many :reviews, :dependent => :destroy
   has_many :stats
   #~ has_many :questions, :through => :stats
   has_many :seen_questions, :through => :stats, :source => :question
@@ -49,7 +50,7 @@ class User < ActiveRecord::Base
   end
 
   def correct_count
-    recent_stats.wherewhere(:skipped => false, :correct => true).size
+    recent_stats.where(:skipped => false, :correct => true).size
   end
 
   def skip_count

@@ -1,0 +1,49 @@
+<div>
+  <h2>Mein Review</h2>
+  <p>Bitte fasse Dich kurz. Wenn Du Dein Review aktualisierst, landet es an erster Stelle. Entferne daher Anmerkungen, die nicht mehr zutreffen.</p>
+
+  <div class="topright">
+  <%=
+    (@review.question_updated_since?) \
+      ? "Die Frage wurde seit Deiner letzten Aktualisierung geändert"
+      : ""
+  %>
+  </div>
+
+  <%= form_for([@question, @review], method: :post, url: question_review_save_path(@question)) do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+
+    <%= f.label :okay %>
+    <%= f.check_box :okay %>
+    <span>Setze hier nur genau dann ein Häkchen, wenn Du denkst die Frage kann so freigegeben werden.</span>
+
+    <%= f.label :difficulty %>
+    <div class="slider-box">
+      <i>einfach</i>
+      <%= f.number_field :difficulty, {"data-slider" => true} %>
+      <i>schwer</i>
+    </div>
+
+    <%= f.label :awesomeness %>
+    <div class="slider-box">
+      <i>meeeh</i>
+      <%= f.text_field :awesomeness, {"data-slider" => true} %>
+      <i>geil</i>
+    </div>
+
+    <%= f.label :gfoad %>
+    <div class="slider-box">
+      <i>nur etwas</i>
+      <%= f.text_field :gfoad, {"data-slider" => true} %>
+      <i>SOFORT!1</i>
+    </div>
+
+    <%= f.label :comment %>
+    <%= f.text_area :comment, "data-preview" => "#preview"  %>
+    <span>Optional<%=render "latex/help"%></span>
+    <div id="preview"><%= render_tex(@review.comment) %></div>
+
+    <%= f.submit :class => 'button primary big' %>
+
+  <% end %>
+</div>

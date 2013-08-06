@@ -3,8 +3,55 @@
 class UsersController < ApplicationController
   include StatsHelper
 
-  before_filter :signed_in_user, only: [:edit, :update, :destroy, :enroll, :starred, :history]
+  before_filter :require_admin, only: [:index, :toggle_reviewer, :toggle_admin]
+  before_filter :signed_in_user, only: [:edit, :update, :enroll, :starred, :history, :destroy]
   before_filter :correct_user,  only: [:edit, :update, :enroll, :starred, :history]
+
+  def index
+    @users = User.where(admin: false, reviewer: false)
+    @stat_counts = Stat.group(:user_id).count
+
+    @admins = User.where('admin=? OR reviewer=?', true, true)
+  end
+
+  def toggle_reviewer
+    user = User.find(params[:id])
+    unless user
+      flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
+      return redirect_to users_path
+    end
+
+    # skip before_save callbacks to keep the user signed in (avoid re-
+    # generating remember_token)
+    if user.update_column(:reviewer, !user.reviewer)
+      flash[:success] = "#{user.nick} ist #{user.reviewer ? "jetzt Reviewer" : "kein Reviewer mehr"}."
+    else
+      flash[:error] = "Konnte den Reviewer-Status für #{user.nick} nicht umschalten."
+    end
+    redirect_to users_path
+  end
+
+  def toggle_admin
+    user = User.find(params[:id])
+    unless user
+      flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
+      return redirect_to users_path
+    end
+
+    if SUPERADMIN.include?(user.nick)
+      flash[:error] = "Netter Versuch."
+      return redirect_to users_path
+    end
+
+    # skip before_save callbacks to keep the user signed in (avoid re-
+    # generating remember_token)
+    if user.update_column(:admin, !user.admin)
+      flash[:success] = "#{user.nick} ist #{user.admin ? "jetzt Admin" : "kein Admin mehr"}."
+    else
+      flash[:error] = "Konnte den Admin-Status für #{user.nick} nicht umschalten."
+    end
+    redirect_to users_path
+  end
 
   def starred
   end
