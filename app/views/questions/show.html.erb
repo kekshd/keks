@@ -17,6 +17,7 @@
   </table>
 
   <h3>Antworten</h3>
+  <% counts = get_answer_stat_counts(@question) %>
   <table id="answertable" class="tablesorter">
     <thead><tr><th>Ident</th><th>Text</th><th>Korrekt?</th><th title="wie häufig wird diese Antwort angekreuzt" style="cursor: help">✓-%</th><th>Subfragen</th><th>Subkategorie</th><th>Aktionen</th></tr></thead>
     <tbody>
@@ -25,7 +26,7 @@
         <%= content_tag :td, a.ident %>
         <%= content_tag :td, a.text[0..50] %>
         <%= content_tag :td, a.correct %>
-        <%= content_tag :td, (a.check_ratio*100).round %>
+        <%= content_tag :td, perc(counts[a.id], counts[:all], "nie beantwortet") %>
         <td>
           <% a.questions.each do |q| %><%= link_to q.ident, q %><% end %>
         </td>

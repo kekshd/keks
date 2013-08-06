@@ -1,5 +1,3 @@
-<% def n(n); number_to_percentage(n*100, :precision => 0); end %>
-
 <table id="index" class="tablesorter">
   <thead>
     <tr>
@@ -11,6 +9,9 @@
     </tr>
   </thead>
   <tbody>
+    <%
+      counts = get_question_stat_counts(@questions)
+    %>
     <% @questions.each do |q| %>
       <tr>
         <td>
@@ -27,16 +28,8 @@
           </div>
         </td>
         <td>
-          ✓&nbsp;<%=
-            @all_count[q.id] \
-              ? n((@correct_count[q.id] || 0) / (@all_count[q.id].to_f)) \
-              : "nie beantwortet"
-            %><br/>
-          ↷&nbsp;<%=
-            @all_count[q.id] \
-              ? n((@skip_count[q.id] || 0) / (@all_count[q.id].to_f)) \
-              : "nie beantwortet"
-            %><br/>
+          ✓&nbsp;<%=perc(counts[:correct][q.id], counts[:all][q.id], "nie beantwortet") %><br/>
+          ↷&nbsp;<%=perc(counts[:skip][q.id], counts[:all][q.id], "nie beantwortet")%><br/>
           ☯&nbsp; FIXME
         </td>
         <td>

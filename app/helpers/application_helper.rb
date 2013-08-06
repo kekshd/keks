@@ -1,6 +1,13 @@
 # encoding: utf-8
 
 module ApplicationHelper
+  def perc(perc, all, err_message)
+    return err_message if all.nil? || all == 0
+    perc ||= 0
+    all ||= 0
+    number_to_percentage(perc/all.to_f*100, :precision => 0)
+  end
+
   def url_for(options = nil)
     if Hash === options && Rails.env.production?
       options[:protocol] = 'https:'

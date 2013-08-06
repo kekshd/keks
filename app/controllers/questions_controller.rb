@@ -24,10 +24,6 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.includes(:parent, :answers).all
-
-    @all_count = Stat.unscoped.group(:question_id).count
-    @skip_count = Stat.unscoped.where(skipped: true).group(:question_id).count
-    @correct_count = Stat.unscoped.where(correct: true).group(:question_id).count
   end
 
   def new
@@ -49,7 +45,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @question = Question.find(params[:id])
+    @question = Question.includes(:answers => [:questions, :categories]).find(params[:id])
   end
 
   def perma
