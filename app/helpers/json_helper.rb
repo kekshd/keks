@@ -20,7 +20,7 @@ module JsonHelper
     end
 
     answers = []
-    q.answers.each { |a| answers << json_for_answer(a, max_depth) }
+    q.answers.includes(:questions, :categories).each { |a| answers << json_for_answer(a, max_depth) }
 
     {
       'starred' => signed_in? ? current_user.starred.include?(q) : false,
