@@ -8,14 +8,16 @@
 
   <table id="index" class="tablesorter">
     <thead>
-      <tr><th>Ident</th><th>Title</th><th>Wurzel?</th><th>Antworten, die auf sie zeigen</th><th>Verknüpfte Fragen</th><th>Aktionen</th></tr>
+      <tr><th>Ident<br/>Title<br/>Wurzel?</th><th>Antworten, die auf sie zeigen</th><th>Verknüpfte Fragen</th><th>Aktionen</th></tr>
     </thead>
     <tbody>
       <% @categories.each do |c| %>
         <tr>
-          <%=content_tag :td, link_to(c.ident, c, :class => c.released? ? "" : "strike") %>
-          <%=content_tag :td, c.title %>
-          <%=content_tag :td, c.is_root? %>
+          <td>
+            <%= link_to(c.ident, c, :class => c.released? ? "" : "strike") %><br/>
+            <%= c.title %><br/>
+            √<%= c.is_root? %><br/>
+          </td>
           <td>
             <% c.answers.each do |a| %>
               <%=link_to a.ident, [a.question, a] %>
@@ -27,8 +29,8 @@
             <% end %>
           </td>
           <td>
-            <%= link_to "Anzeigen", category_path(c) %>
-            <%= link_to "Bearbeiten", edit_category_path(c) %>
+            <%= link_to "Anzeigen", category_path(c) %><br/>
+            <%= link_to "Bearbeiten", edit_category_path(c) %><br/>
             <%= link_to "Neue Frage", new_question_path(:parent => "Category_#{c.id}") %>
           </td>
         </tr>
