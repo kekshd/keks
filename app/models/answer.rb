@@ -23,7 +23,7 @@ class Answer < ActiveRecord::Base
   end
 
   def get_parent_category
-    return self.question.find_parent_category
+    return self.question.get_parent_category
   end
 
   def get_all_subquestions
@@ -32,6 +32,13 @@ class Answer < ActiveRecord::Base
 
   def get_all_subquestion_ids
     get_all_subquestions.map { |q| q.id }
+  end
+
+  def trace_to_root(first = false)
+    s = ""
+    s << " ← A:#{ident}" unless first
+    s << question.trace_to_root
+    s
   end
 
 

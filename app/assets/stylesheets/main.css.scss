@@ -457,3 +457,17 @@ hr {
   font-size: 50px;
   text-align: center;
 }
+
+.traceToRootLine {
+  color: #777;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.traceToRootSplitter {
+  border-left: 1px solid #ccc;
+  margin-left: 5px;
+  padding-left: 5px;
+  display: inline-block;
+  vertical-align: top;
+}

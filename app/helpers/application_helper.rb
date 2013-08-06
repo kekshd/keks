@@ -8,6 +8,15 @@ module ApplicationHelper
     number_to_percentage(perc/all.to_f*100, :precision => 0)
   end
 
+  def trace_to_root_formatter(str)
+    str = h str
+    str.gsub!("\0open\0", %|<span class="traceToRootSplitter">|)
+    str.gsub!("\0newline\0", %|<br/>|)
+    str.gsub!("\0close\0", %|</span>|)
+    str = %|<span class="traceToRootLine">#{str}</span>|
+    str.html_safe
+  end
+
   def url_for(options = nil)
     if Hash === options && Rails.env.production?
       options[:protocol] = 'https:'

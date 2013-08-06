@@ -66,6 +66,17 @@ class Question < ActiveRecord::Base
     parent.is_a?(Category) ? parent : parent.get_parent_category
   end
 
+  def trace_to_root(first = false)
+    s = ""
+    s << " ← Q:#{ident}" unless first
+    s << parent.trace_to_root
+    s
+  end
+
+  def get_root_categories
+    get_parent_category.get_root_categories
+  end
+
   def complete?
     is_complete_helper[0]
   end

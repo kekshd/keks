@@ -5,6 +5,7 @@
   <%=render "action_menu"%>
 
   <h2>Kategorie <%=@category.ident%></h2>
+  <%=trace_to_root_formatter @category.trace_to_root(true)%>
 
   <table>
     <tr><th>Titel</th><td><%=render_tex @category.title%></td></tr>

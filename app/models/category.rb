@@ -15,6 +15,12 @@ class Category < ActiveRecord::Base
     Category.all.keep_if { |c| c.is_root? && c.released? }
   end
 
+  def get_root_categories
+    return [self] if self.is_root?
+    parent_cats = answers.includes(:question).map { |a| a.get_parent_category }.uniq
+    parent_cats.map { |c| c.get_root_categories }.flatten.uniq
+  end
+
   def title_split
     s = title.split(":", 2)
     return s.size == 2 ? s : ["", title]
@@ -22,6 +28,19 @@ class Category < ActiveRecord::Base
 
   def link_text
     "Category #{ident}"
+  end
+
+  def trace_to_root(first = false)
+    s = ""
+    s << " ← C:#{title}" unless first
+    return s if is_root?
+    s << "\0open\0"
+    answers.each do |a|
+      s << a.trace_to_root
+      s << "\0newline\0"
+    end
+    s << "\0close\0"
+    s
   end
 
   def dot(active = false)
