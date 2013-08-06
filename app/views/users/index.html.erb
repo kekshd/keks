@@ -4,8 +4,6 @@
   <%= render "admin/action_menu" %>
 
   <h2>Herrscher</h2>
-  <p><b>Hinweis:</b> Den Admin- oder Reviewer-Status eines Nutzers umzuschalten zwingt sie zum erneuten Login. Beherrsche daher Deinen Spieltrieb.</p>
-
   <table class="tablesorter" id="power-index">
     <thead><tr><th>Name</th><th>Macht</th><th># Reviews</th><th>Aktion</th></tr></thead>
     <tbody><% @admins.each do |u| %>
