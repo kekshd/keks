@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130805153011) do
+ActiveRecord::Schema.define(:version => 20130806141529) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
@@ -51,13 +51,14 @@ ActiveRecord::Schema.define(:version => 20130805153011) do
   create_table "questions", :force => true do |t|
     t.integer  "parent_id"
     t.string   "parent_type"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.text     "text"
     t.string   "ident"
     t.integer  "difficulty"
     t.integer  "study_path"
     t.boolean  "released"
+    t.datetime "content_changed_at"
   end
 
   add_index "questions", ["parent_id"], :name => "index_questions_on_parent_id"

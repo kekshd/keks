@@ -1,0 +1,16 @@
+<div>
+  <%=render "reviews/menu" %>
+  <h2>Meine Reviews</h2>
+  <p>Neuere Reviews stehen oben. Grün hinterlegte Reviews sind aktuell, bei rot hinterlegten ist Dein Review älter als die letzte Änderung an der Frage. Es werden nur die neuesten <%=REVIEW_MAX_OWN_REVIEWS%> Reviews angezeigt.</p>
+</div>
+
+<% @reviews.each do |r| %>
+  <% q = r.question %>
+  <div class="<%=r.question_updated_since? ? "wrong" : "correct" %>">
+    <%=render "reviews/show", review: r %>
+    <%=link_to q.ident, question_review_path(q)%>
+    <%=trace_to_root_formatter q.trace_to_root(true)%>
+
+     <div style="overflow:hidden;max-height:40px"><%=render_tex q.text%> </div>
+  </div>
+<% end %>

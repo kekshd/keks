@@ -28,6 +28,16 @@ class Question < ActiveRecord::Base
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true
 
+  before_create do
+    self.content_changed_at = Time.now
+  end
+
+  before_save do
+    up = parent_type_changed? || parent_id_changed? || text_changed?
+    up ||= study_path_changed? || difficulty_changed?
+    self.content_changed_at = Time.now if up
+  end
+
   def subquestions
     answers.map { |a| a.questions }.flatten.uniq
   end
@@ -193,11 +203,23 @@ class Question < ActiveRecord::Base
 
   private
   def is_complete_helper
+    @is_complete_cache ||= {}
+    @is_complete_cache[id] ||= is_complete_helper_real
+    @is_complete_cache[id]
+  end
+
+  def is_complete_helper_real
     return false, "nicht freigegeben" if !released?
     return false, "keine Antworten" if answers.size == 0
     return false, "keine richtige Antwort" if answers.none? { |a| a.correct? }
+    return false, "Reviewer sagt „nicht okay“" if reviews.any? { |a| !a.okay? }
+    return false, "nicht genug Reviews" if reviews.size < REVIEW_MIN_REQUIRED_REVIEWS
     return false, "Eltern-Frage nicht freigegeben" if parent_type == "Answer" && !parent.question.released?
     return false, "Eltern-Kategorie nicht freigegeben" if parent_type == "Category" && !parent.released?
+
+    # skip checks if this question is valid for all study paths
+    return true, "" if study_path == 1
+    # ensure the study path doesn’t change in between to avoid unreachable questions
     psp = parent.question.study_path if parent.is_a?(Answer)
     if psp && psp != study_path && study_path != 1 && psp != 1
       return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat."

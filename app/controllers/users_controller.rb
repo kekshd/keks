@@ -3,6 +3,7 @@
 class UsersController < ApplicationController
   include StatsHelper
 
+  before_filter :require_admin_or_reviewer, only: :reviews
   before_filter :require_admin, only: [:index, :toggle_reviewer, :toggle_admin]
   before_filter :signed_in_user, only: [:edit, :update, :enroll, :starred, :history, :destroy]
   before_filter :correct_user,  only: [:edit, :update, :enroll, :starred, :history]
@@ -12,6 +13,11 @@ class UsersController < ApplicationController
     @stat_counts = Stat.group(:user_id).count
 
     @admins = User.where('admin=? OR reviewer=?', true, true)
+  end
+
+  def reviews
+    @user = User.find(params[:id])
+    @reviews = @user.reviews.includes(:question).limit(REVIEW_MAX_OWN_REVIEWS)
   end
 
   def toggle_reviewer

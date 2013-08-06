@@ -9,6 +9,11 @@ class Hint < ActiveRecord::Base
   validates :question_id, presence: true
   validates :sort_hint, numericality: true, allow_blank: true
 
+  before_save do
+    up = text_changed?
+    self.question.update_attribute('content_changed_at', Time.now) if up
+  end
+
   def dot
     %(#{dot_id} [label="#{dot_text}", shape=none];)
   end

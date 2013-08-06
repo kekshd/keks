@@ -21,7 +21,25 @@ class ReviewsController < ApplicationController
   end
 
   def no_reviews
-    @questions = Question.includes(:reviews).reject! { |q| q.reviews.any? }
+    @questions = Question.includes(:reviews, :parent).all
+    @questions.reject! { |q| q.reviews.any? }
+  end
+
+  def enough_good_reviews
+    @questions = Question.where(released: false).includes(:reviews, :parent).all
+    @questions.keep_if do |q|
+      q.reviews.count >= REVIEW_MIN_REQUIRED_REVIEWS && \
+        q.reviews.all? { |r| r.okay? }
+    end
+  end
+
+  def good_but_needs_more_reviews
+    @questions = Question.includes(:reviews, :parent).all
+    @questions.reject! do |q|
+      q.reviews.none? || \
+        q.reviews.count >= REVIEW_MIN_REQUIRED_REVIEWS || \
+        q.reviews.any? { |r| !r.okay? }
+    end
   end
 
   def review

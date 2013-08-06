@@ -33,6 +33,6 @@ class Review < ActiveRecord::Base
 
   def question_updated_since?
     return false if self.new_record?
-    updated_at < question.updated_at
+    updated_at < question.content_changed_at
   end
 end

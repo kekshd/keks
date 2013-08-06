@@ -15,6 +15,11 @@ class Answer < ActiveRecord::Base
 
   has_and_belongs_to_many :categories
 
+  before_save do
+    up = text_changed? || correct_changed?
+    self.question.update_attribute('content_changed_at', Time.now) if up
+  end
+
   def check_ratio
     return -1 if question.matrix_validate?
     all = question.stats.pluck(:selected_answers).flatten

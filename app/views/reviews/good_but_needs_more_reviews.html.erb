@@ -1,0 +1,8 @@
+<div>
+  <%= render "menu"  %><br/><br/>
+
+  <h3>0 < |ok| < <%=REVIEW_MIN_REQUIRED_REVIEWS%> und ⌐ok = 0</h3>
+  <p>Oder liebevoll: Fragen mit wenig Arbeit. Hier werden alle Fragen gelistet, die jemand als okay/richtig befunden hat. Trotzdem sollte nochmal jemand drüber schauen. Insgesamt benötigt eine Frage <%=REVIEW_MIN_REQUIRED_REVIEWS%> „okay“ Reviews.</p>
+
+  <%= render "generic_question_list", questions: @questions %>
+</div>

@@ -7,6 +7,7 @@
 <div>
   <h2>Frage <%=@question.ident%></h2>
   <%=trace_to_root_formatter @question.trace_to_root(true)%>
+  <span style="color: #777;display: block;margin-top:-10px;margin-bottom: 20px">Fragentyp: <%= @question.difficulty(:name) %> | Studiengang: <%= x=@question.study_path(:name); x.blank? ? "alle" : x %></span>
 
   <div class="topright">
     <%=link_to "Frage „live“ ansehen", "#{main_hitme_path}#hide-options#question=#{@question.id}" %>
@@ -26,7 +27,7 @@
   <% else %>
     <% question_edit_msg_shown = false %>
     <% @question.reviews.each do |r| %>
-      <% if !question_edit_msg_shown && @question.updated_at > r.updated_at %>
+      <% if !question_edit_msg_shown && r.question_updated_since? %>
         <%= render "last_update" %>
         <% question_edit_msg_shown = true %>
       <% end %>

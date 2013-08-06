@@ -1,9 +1,12 @@
-<% if dimmed %>
+<%
+dimmed = question_updated_since? unless defined?(dimmed)
+if dimmed
+%>
 <div style="opacity: 0.7">
 <% end %>
 
 <div style="width: 25%; float:left">
-  <%= render "okay_state", okay: review.okay %>
+  <%= render "reviews/okay_state", okay: review.okay %>
 
   <table style="margin-top: 0; float: left">
     <tr><th>Difficulty:</th><td><meter value="<%=review.difficulty%>"></meter></td></tr>

@@ -11,6 +11,7 @@
   <tbody>
     <%
       counts = get_question_stat_counts(@questions)
+      revs = Review.group(:question_id, :okay).count
     %>
     <% @questions.each do |q| %>
       <tr>
@@ -30,7 +31,7 @@
         <td>
           ✓&nbsp;<%=perc(counts[:correct][q.id], counts[:all][q.id], "nie beantwortet") %><br/>
           ↷&nbsp;<%=perc(counts[:skip][q.id], counts[:all][q.id], "nie beantwortet")%><br/>
-          ☯&nbsp; FIXME
+          ☯&nbsp;<%=perc(revs[[q.id, true]], (revs[[q.id, true]] || 0) + (revs[[q.id, false]] || 0), "keine Reviews")%><br/>
         </td>
         <td>
           <% q.answers.each do |a| %>

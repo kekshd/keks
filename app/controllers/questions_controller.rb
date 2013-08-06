@@ -23,7 +23,7 @@ class QuestionsController < ApplicationController
   end
 
   def index
-    @questions = Question.includes(:parent, :answers).all
+    @questions = Question.includes(:parent, :answers, :reviews).all
   end
 
   def new

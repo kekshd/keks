@@ -2,11 +2,9 @@
 
 <% if current_user.admin? %>
 <div>
-  <%= render "admin/action_menu"  %><br/><br/>
+  <%= render "menu"  %><br/><br/>
 
-  Hallo <b>Admin</b>, ich glaube folgende Fragen bedürfen Deiner Aufmerksamkeit:
-
-  FIXME
+  Lieber Admin, am ehesten interessieren Dich die Auflistungen <%= link_to "Fragen mit „nicht okay“", not_okay_questions_path %> (kaputte Fragen) und <%= link_to "#{REVIEW_MIN_REQUIRED_REVIEWS}+ okay, 0 nicht-okay", enough_good_reviews_questions_path %> (freischaltbare Fragen).
 </div>
 <% end %>
 
@@ -15,7 +13,7 @@
   <div>
     <%= render "menu"  %><br/><br/>
 
-    Lieber Reviewer, nachfolgend findest Du eine Auflistung von Fragen, die am wahrscheinlichsten Deiner Aufmerksamkeit bedürfen. Kommt im Anschluss nichts, gibt’s wohl nichts zu tun. Im Menü oben kannst Du auch nach anderen Sachen filtern, diese sind dann aber nicht mehr auf Dich zugeschnitten.
+    Lieber Reviewer, nachfolgend findest Du eine Auflistung von Fragen, die am wahrscheinlichsten Deiner Aufmerksamkeit bedürfen. Kommt im Anschluss nichts, gibt’s wohl nichts zu tun. Im Menü oben kannst Du auch nach anderen Sachen filtern.
   </div>
 
   <% if @reviews_need_update.any? %>
