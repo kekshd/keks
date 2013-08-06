@@ -11,7 +11,7 @@
 
   <div class="topright">
     <%=link_to "Frage „live“ ansehen", "#{main_hitme_path}#hide-options#question=#{@question.id}" %>
-    <% if current_user.admin? %>
+    <% if admin? %>
       |
       <%= link_to("Bearbeiten", edit_question_path(@question)) %>
     <% end %>
@@ -40,6 +40,6 @@
 </div>
 
 
-<% if current_user.reviewer? %>
+<% if reviewer? %>
   <%= render "form" %>
 <% end %>

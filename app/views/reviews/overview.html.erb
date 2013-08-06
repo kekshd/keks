@@ -1,6 +1,6 @@
 <% provide(:title, "Nutzerübersicht") %>
 
-<% if current_user.admin? %>
+<% if admin? %>
 <div>
   <%= render "menu"  %><br/><br/>
 
@@ -9,7 +9,7 @@
 <% end %>
 
 
-<% if current_user.reviewer? %>
+<% if reviewer? %>
   <div>
     <%= render "menu"  %><br/><br/>
 
