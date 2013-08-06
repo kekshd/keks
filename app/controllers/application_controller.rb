@@ -7,4 +7,9 @@ class ApplicationController < ActionController::Base
   include LatexHelper
   include DotHelper
   include JsonHelper
+
+ before_filter :init
+  def init
+    @start_time = Time.now.usec
+  end
 end
