@@ -10,11 +10,11 @@ class NewStatsFormat < ActiveRecord::Migration
       Stat.unscoped.all.each do |s|
         skipped, selansw = nil, nil
         if s.answer_id == -1
-          selansw = "--- []\n"
+          selansw = ""
           skipped = 't'
         else
           skipped = 'f'
-          selansw = "---\n- #{s.answer_id}\n"
+          selansw = "#{s.answer_id}"
         end
 
         execute "UPDATE stats SET skipped = '#{skipped}', selected_answers = '#{selansw}' WHERE id = #{s.id} LIMIT 1"
