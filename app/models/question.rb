@@ -120,7 +120,7 @@ class Question < ActiveRecord::Base
 
     txt = 'F: ' + id
     bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''
-    %(#{dot_id} [label="#{txt}"#{bg}];)
+    %(#{dot_id} [label="#{txt}"#{bg}, shape=box];)
   end
 
   def dot_id
@@ -142,17 +142,34 @@ class Question < ActiveRecord::Base
     d
   end
 
-  def dot_region
+  def dot_region(may_omit = false)
     d = ''
 
     if parent
       d << parent.dot
 
-      # siblings of the parent
-      parent.questions.includes(:answers, :parent).each do |q|
-        d << q.dot(q == self)
-        d << "#{parent.dot_id} -> #{q.dot_id};"
-      end if parent.respond_to?(:questions)
+      # link to ourselves
+      d << dot(true)
+      d << "#{parent.dot_id} -> #{dot_id};"
+
+      # link parent to our siblings
+      if parent.respond_to?(:questions)
+        limit = 6
+        parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1).each do |q|
+          next if q == self
+          d << q.dot(false)
+          d << "#{parent.dot_id} -> #{q.dot_id};"
+        end
+        left = parent.questions.size - limit - 1
+        if left > 0
+          # this is not always correct, as above may include the current
+          # question. Thus, only left-1 questions would be left.
+          d << %(#{dot_id}_hidden_siblings [label="+#{left} weitere Fragen", shape=none];)
+          d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;) if left > 0
+        end
+      end
+
+
 
       parent.categories.each do |c|
         d << c.dot

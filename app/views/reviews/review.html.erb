@@ -43,3 +43,11 @@
 <% if reviewer? %>
   <%= render "form" %>
 <% end %>
+
+
+<div>
+  <h2>Graph</h2>
+  <p>Zur leichteren Orientierung wo diese Frage anzusiedeln ist findest Du nachfolgend einen Baum-Graphen, der einen Auschnitt zeigt. „Höhere“ Sachen sind links „tiefere“ rechts. D.h. wenn man den ganzen Graph darstellen würde, wären ganz links die auf der Startseite auswählbaren Kategorien.</p>
+
+  <%=render_dot(@question.dot_region(true))%>
+</div>

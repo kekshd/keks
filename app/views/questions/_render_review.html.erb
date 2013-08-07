@@ -14,12 +14,23 @@
   <%=render_tex question.answers.first.text %>
 <% else %>
   <strong>Antwortmöglichkeiten:</strong>
-  <div class="answer-chooser noHide">
+  <table class="evenodd spaced">
+    <tr><th></th><th>Text</th><th>Verweise / Subfragen</th></tr>
     <%  question.answers.each do |a| %>
-      <div>
-        <span><%=render "/answers/render_correctness", answer: a%></span>
-        <div><%=render_tex a.text%></div>
-      </div>
+      <tr>
+        <td><%=render "/answers/render_correctness", answer: a%></td>
+        <td><%=render_tex a.text%></td>
+        <td>
+          <% a.questions.each do |q| %><%= link_to q.ident, q %><% end %>
+          <% a.categories.each do |c| %>
+            {K<%=link_to c.ident, c %>:
+            <% c.questions.each do |q| %>
+              <%= link_to q.ident, q %>
+            <% end %>
+            }
+          <% end %>
+        </td>
+      </tr>
     <% end %>
-  </div>
+  </table>
 <% end %>

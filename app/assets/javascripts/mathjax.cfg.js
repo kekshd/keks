@@ -13,7 +13,7 @@ $(document).ready(function() {
 
     tex2jax: {
       inlineMath: [['$','$'], ['\\(','\\)']],
-      skipTags: ["script","noscript","style","textarea","pre","code","td","img"],
+      skipTags: ["script","noscript","style","textarea","pre","code","img"],
       processClass: "tex",
     },
 

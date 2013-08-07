@@ -149,6 +149,8 @@ a {
 }
 
 td {
+  vertical-align: top;
+
   a + a {
     margin-left: 10px;
   }
@@ -350,6 +352,16 @@ select {
 
 table {
   margin-top: 20px;
+
+  &.spaced {
+    th, td {
+      padding: 2px 10px;
+    }
+  }
+
+  &.evenodd tr:nth-child(even) {
+    background: #f7f7f7;
+  }
 }
 
 th {
