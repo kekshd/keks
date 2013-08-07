@@ -21,11 +21,13 @@
         <td><%=render "/answers/render_correctness", answer: a%></td>
         <td><%=render_tex a.text%></td>
         <td>
-          <% a.questions.each do |q| %><%= link_to q.ident, q %><% end %>
+          <% a.questions.each do |q| %>
+            <%= link_to q.ident, question_review_path(q) %>
+          <% end %>
           <% a.categories.each do |c| %>
-            {K<%=link_to c.ident, c %>:
+            {<%= c %>:
             <% c.questions.each do |q| %>
-              <%= link_to q.ident, q %>
+              <%= link_to q.ident, question_review_path(q) %>
             <% end %>
             }
           <% end %>
