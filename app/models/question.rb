@@ -213,7 +213,8 @@ class Question < ActiveRecord::Base
     return false, "keine Antworten" if answers.size == 0
     return false, "keine richtige Antwort" if answers.none? { |a| a.correct? }
     return false, "Reviewer sagt „nicht okay“" if reviews.any? { |a| !a.okay? }
-    return false, "nicht genug Reviews" if reviews.size < REVIEW_MIN_REQUIRED_REVIEWS
+    # allow questions to be released regardless of # of reviews
+    #return false, "nicht genug Reviews" if reviews.size < REVIEW_MIN_REQUIRED_REVIEWS
     return false, "Eltern-Frage nicht freigegeben" if parent_type == "Answer" && !parent.question.released?
     return false, "Eltern-Kategorie nicht freigegeben" if parent_type == "Category" && !parent.released?
 
