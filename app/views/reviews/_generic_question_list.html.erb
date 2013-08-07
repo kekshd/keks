@@ -23,12 +23,12 @@
 
 <ul>
   <% cats.each do |cat, quests| %>
-    <li><b><%=cat%></b>
-      <ul>
+    <li><h4 style="margin: 10px 0"><%=cat%></h4>
+      <div class="toggle"><ul>
       <% quests.each do |q| %>
         <li><%=link_to "#{q.ident}", question_review_path(q) %></li>
       <% end %>
-      </ul>
+      </ul></div>
     </li>
   <% end %>
 </ul>
