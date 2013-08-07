@@ -31,14 +31,23 @@
 
 <div>
   <h2>Ein Baum sie zu knechten</h2>
-  <p>Du kannst eine vollständige Übersicht aller Kategorien, Fragen, Antworten, Hinweise und deren Verknüpfungen herunterladen. Die Erstellung erfolgt jedes Mal live und dauert daher etwas. Das Ausgabeformat ist SVGZ, das etwa mit Inkscape geöffnet werden kann.</p>
+  <p>Du kannst eine vollständige Übersicht aller Kategorien, Fragen, Antworten, Hinweise und deren Verknüpfungen herunterladen. Die Erstellung erfolgt jedes Mal live und dauert daher etwas.</p>
 
-  <p>Auf den meisten Linuxsystemen sollte folgender Befehl den Baum herunterladen und mit Evince anzeigen, sofern Inkscape installiert ist:</p>
-<pre>pushd $TMP \
-  && rm -f tree.svgz \
-  && wget -q <%=tree_url%> \
-  && inkscape tree.svgz --export-pdf=tree.pdf \
-  && evince tree.pdf \
-  && rm tree.svgz; \
-  popd
+  <h3>als .DOT / Preview mit xdot</h3>
+  <p><%=link_to "Download als .DOT", tree_url + ".dot" %> (mit Inkscape öffnen)</p>
+  <p>Installiere Dir zuerst <tt>xdot</tt> (etwa <tt>apt-get install xdot</tt>). Danach kannst Du Dir mit folgendem Befehl den Graphen anzeigen lassen und flüssig darin scrollen.<br/><b>Beachte:</b> Der Baum ist riesig, daher siehst Du am Anfang meist gar nichts. Klicke daher zuerst ein paar Mal auf den Zoom-In Button.</p>
+  <pre>wget -q -O - <%=tree_url%>.dot | xdot</pre>
+
+  <h3 class="toggle-closed">als .SVGZ / Preview mit evince</h3>
+  <div class="toggle" style="display: none">
+    <p><%=link_to "Download als .SVGZ", tree_url + ".svgz" %> (mit Inkscape öffnen)</p>
+    <p>Auf den meisten Linuxsystemen sollte folgender Befehl den Baum herunterladen und mit Evince anzeigen, sofern Inkscape installiert ist:</p>
+  <pre>pushd $TMP \
+    && rm -f tree.svgz \
+    && wget -q <%=tree_url%>.svgz \
+    && inkscape tree.svgz --export-pdf=tree.pdf \
+    && evince tree.pdf \
+    && rm tree.svgz; \
+    popd
+  </div>
 </pre>

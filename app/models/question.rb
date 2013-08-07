@@ -120,7 +120,7 @@ class Question < ActiveRecord::Base
 
     txt = 'F: ' + id
     bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''
-    %(#{dot_id} [label="#{txt}"#{bg}, shape=box];)
+    %(#{dot_id} [label="#{txt}"#{bg}, shape=box];\n)
   end
 
   def dot_id
@@ -138,7 +138,7 @@ class Question < ActiveRecord::Base
     d = ""
     d << %(HINT#{dot_id} [label="#{hintTexts.join("\\n")}", shape=none];)
     d << "#{dot_id} -> HINT#{dot_id};"
-    d << "{ rank=same; #{dot_id} HINT#{dot_id} };"
+    d << "{ rank=same; #{dot_id} HINT#{dot_id} };\n"
     d
   end
 
@@ -150,7 +150,7 @@ class Question < ActiveRecord::Base
 
       # link to ourselves
       d << dot(true)
-      d << "#{parent.dot_id} -> #{dot_id};"
+      d << "#{parent.dot_id} -> #{dot_id};\n"
 
       # link parent to our siblings
       if parent.respond_to?(:questions)
@@ -158,14 +158,14 @@ class Question < ActiveRecord::Base
         parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1).each do |q|
           next if q == self
           d << q.dot(false)
-          d << "#{parent.dot_id} -> #{q.dot_id};"
+          d << "#{parent.dot_id} -> #{q.dot_id};\n"
         end
         left = parent.questions.size - limit - 1
         if left > 0
           # this is not always correct, as above may include the current
           # question. Thus, only left-1 questions would be left.
           d << %(#{dot_id}_hidden_siblings [label="+#{left} weitere Fragen", shape=none];)
-          d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;) if left > 0
+          d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;\n)
         end
       end
 
@@ -173,25 +173,25 @@ class Question < ActiveRecord::Base
 
       parent.categories.each do |c|
         d << c.dot
-        d << "#{parent.dot_id} -> #{c.dot_id};"
+        d << "#{parent.dot_id} -> #{c.dot_id};\n"
       end if parent.respond_to?(:categories)
 
       # parent of parent
       if(parent.is_a?(Answer))
         d << parent.question.dot
-        d << "#{parent.question.dot_id} -> #{parent.dot_id};"
+        d << "#{parent.question.dot_id} -> #{parent.dot_id};\n"
 
         parent.question.subquestions.each do |qq|
           next if qq == self
           d << qq.dot
-          d << "#{parent.question.dot_id} -> #{qq.dot_id};"
+          d << "#{parent.question.dot_id} -> #{qq.dot_id};\n"
         end
       end
 
       if(parent.is_a?(Category))
         parent.answers.each do |aa|
           d << aa.dot
-          d << "#{aa.dot_id} -> #{parent.dot_id};"
+          d << "#{aa.dot_id} -> #{parent.dot_id};\n"
         end
       end
     else
@@ -200,16 +200,16 @@ class Question < ActiveRecord::Base
 
     answers.each do |a|
       d << a.dot
-      d << "#{dot_id} -> #{a.dot_id};"
+      d << "#{dot_id} -> #{a.dot_id};\n"
 
       a.questions.each do |q|
         d << q.dot
-        d << "#{a.dot_id} -> #{q.dot_id};"
+        d << "#{a.dot_id} -> #{q.dot_id};\n"
       end
 
       a.categories.each do |c|
         d << c.dot
-        d << "#{a.dot_id} -> #{c.dot_id};"
+        d << "#{a.dot_id} -> #{c.dot_id};\n"
       end
     end
 

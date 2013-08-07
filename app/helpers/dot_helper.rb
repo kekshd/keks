@@ -36,7 +36,7 @@ module DotHelper
   end
 
   def get_dot_svgz(dot)
-    dot = %(digraph graphname { #{dot} })
+    dot = %(digraph graphname { rankdir=LR; #{dot} })
 
     svgz = nil
     begin

@@ -57,7 +57,7 @@ class Answer < ActiveRecord::Base
 
   def dot
     txt = 'A: ' + ident.gsub('"', '')
-    %(#{dot_id} [label="#{txt}", shape=hexagon, color=#{correct? ? 'green' : 'red'}];)
+    %(#{dot_id} [label="#{txt}", shape=hexagon, color=#{correct? ? 'green' : 'red'}];\n)
   end
 
   def dot_id

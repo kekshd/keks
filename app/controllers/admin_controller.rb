@@ -12,7 +12,12 @@ class AdminController < ApplicationController
       dot << tree_category(c)
     end
 
-    send_data get_dot_svgz(dot), filename: "keks-tree-#{Date.today}.svgz"
+    fn = "keks-tree-#{Date.today}"
+
+    respond_to do |format|
+      format.dot { send_data %(digraph graphname { rankdir=LR; #{dot} }), filename: "#{fn}.dot"}
+      format.any { send_data get_dot_svgz(dot), filename: "#{fn}.svgz" }
+    end
   end
 
   def export
@@ -36,17 +41,17 @@ class AdminController < ApplicationController
 
     quest.answers.each do |a|
       dot << a.dot
-      dot << "#{quest.dot_id} -> #{a.dot_id};"
+      dot << "#{quest.dot_id} -> #{a.dot_id};\n"
 
       a.categories.each do |cc|
         dot << tree_category(cc)
-        dot << "#{a.dot_id} -> #{cc.dot_id};"
+        dot << "#{a.dot_id} -> #{cc.dot_id};\n"
       end
 
 
       a.questions.each do |qq|
         dot << tree_question(qq)
-        dot << "#{a.dot_id} -> #{qq.dot_id};"
+        dot << "#{a.dot_id} -> #{qq.dot_id};\n"
       end
     end
 

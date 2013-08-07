@@ -19,7 +19,7 @@ class Hint < ActiveRecord::Base
   end
 
   def dot_text
-    'H: ' + text.gsub('"', '')[0..15]
+    'H: ' + text.gsub(/["\\]/, '')[0..15]
   end
 
   def dot_id
