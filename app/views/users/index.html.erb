@@ -24,12 +24,12 @@
   <h2>Günstlinge</h2>
 
   <table class="tablesorter" id="user-index">
-    <thead><tr><th>Name</th><th># Fragen</th><th>Studiengang</th><th>Aktion</th></tr></thead>
+    <thead><tr><th>Name</th><!--<th># Fragen</th><th>Studiengang</th>--><th>Aktion</th></tr></thead>
     <tbody><% @users.each do |u| %>
       <tr>
         <td><%=u.nick%></td>
-        <td><%=@stat_counts[u.id] || 0%></td>
-        <td><%=StudyPath[u.study_path]%></td>
+        <!--<td><%=@stat_counts[u.id] || 0%></td>
+        <td><%=StudyPath[u.study_path]%></td>-->
         <td>
           <%=link_to "zum Reviewer machen", user_toggle_reviewer_path(u.id), method: :put %>
           <%=link_to "zum Admin machen", user_toggle_admin_path(u.id), method: :put %>
