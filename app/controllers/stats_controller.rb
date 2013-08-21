@@ -61,18 +61,18 @@ class StatsController < ApplicationController
     qstats = {}
     time = Time.now
 
-    @last_stats.each do |stat|
-      next unless stat.question
-      qid = stat.question_id
-      qstats[qid] ||= { right: [0]*13, wrong: [0]*13, skipped: [0]*13}
-      insert_stat_in_hash(stat, qstats[qid], time)
-    end
+    #~　@last_stats.each do |stat|
+      #~　next unless stat.question
+      #~　qid = stat.question_id
+      #~　qstats[qid] ||= { right: [0]*13, wrong: [0]*13, skipped: [0]*13}
+      #~　insert_stat_in_hash(stat, qstats[qid], time)
+    #~　end
 
-    @h = render_graph
-    qstats.each do |qid, data|
-      percent_correct, percent_skipped = raw_to_percentage(data)
-      @h.series(:name=> Question.find(qid).ident, :data => percent_correct)
-    end
+    #~　@h = render_graph
+    #~　qstats.each do |qid, data|
+      #~　percent_correct, percent_skipped = raw_to_percentage(data)
+      #~　@h.series(:name=> Question.find(qid).ident, :data => percent_correct)
+    #~　end
 
     @questions = @users.map { |u| u.seen_questions }.flatten.uniq
   end
