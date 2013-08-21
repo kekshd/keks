@@ -76,4 +76,26 @@ class StatsController < ApplicationController
 
     @questions = @users.map { |u| u.seen_questions }.flatten.uniq
   end
+
+  def category_report
+    groups = {}
+
+    Category.all.each do |c|
+      next unless c.is_root?
+      root = c.title.split(":")[0]
+      groups[root] ||= []
+      groups[root] += c.questions.map { |q| q.id }
+    end
+
+    @keys = {}
+    groups.each do |key, questions|
+      next if questions.empty?
+
+      all = Stat.unscoped.where(:question_id => questions).where("created_at > ?", 91.days.ago).count
+      unregistered = Stat.unscoped.where(:user_id => -1, :question_id => questions).where("created_at > ?", 91.days.ago).count
+
+
+      @keys[key] = {all: all, registered: all - unregistered, unregistered: unregistered}
+    end
+  end
 end

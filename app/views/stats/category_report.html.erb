@@ -1,0 +1,22 @@
+<div>
+  <h2>Statistik nach Kategorie</h2>
+  Es werden nur Antworten innerhalb der letzten 90 Tage berücksichtigt.
+</div>
+
+<div>
+  <style scoped>
+    th:first-child, td:first-child { text-align: left }
+    td, th { text-align: right }
+  </style>
+  <table>
+    <tr><th>Kategorie</th><th>Beide</th><th>Mit Account</th><th>Ohne Account</th></tr>
+    <% @keys.each do |cat, d| %>
+      <tr>
+        <td><%=cat%></td>
+        <td><%=d[:all]%></td>
+        <td><%=d[:registered]%></td>
+        <td><%=d[:unregistered]%></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
