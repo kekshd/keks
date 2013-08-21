@@ -21,7 +21,7 @@ class Review < ActiveRecord::Base
     end
   end
 
-  serialized_attr_accessor :difficulty, :awesomeness, :gfoad
+  serialized_attr_accessor :difficulty, :learneffect, :fun
   validates :difficulty, :inclusion => 0..10
 
 

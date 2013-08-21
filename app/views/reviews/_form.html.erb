@@ -17,25 +17,25 @@
     <%= f.check_box :okay %>
     <span>Setze hier nur genau dann ein Häkchen, wenn Du denkst die Frage kann so freigegeben werden.</span>
 
-    <%= f.label :difficulty %>
+    <%= f.label :difficulty, "Schwierigkeit" %>
     <div class="slider-box">
       <i>einfach</i>
       <%= f.number_field :difficulty, {"data-slider" => true} %>
       <i>schwer</i>
     </div>
 
-    <%= f.label :awesomeness %>
+    <%= f.label :learneffect, "Lerneffekt" %>
     <div class="slider-box">
-      <i>meeeh</i>
-      <%= f.text_field :awesomeness, {"data-slider" => true} %>
-      <i>geil</i>
+      <i>niedrig</i>
+      <%= f.text_field :learneffect, {"data-slider" => true} %>
+      <i>hoch</i>
     </div>
 
-    <%= f.label :gfoad %>
+    <%= f.label :fun, "Spaß" %>
     <div class="slider-box">
-      <i>nur etwas</i>
-      <%= f.text_field :gfoad, {"data-slider" => true} %>
-      <i>SOFORT!1</i>
+      <i>frustrierend</i>
+      <%= f.text_field :fun, {"data-slider" => true} %>
+      <i>interessant</i>
     </div>
 
     <%= f.label :comment %>
