@@ -24,7 +24,7 @@
   <% cats.keys.sort { |c1, c2| c1.ident <=> c2.ident }.each do |cat| %>
     <% quests = cats[cat] %>
     <li><h4 style="margin: 10px 0"><%=cat.title%></h4>
-      <div class="toggle"><ul>
+      <div class="toggle" style="display: none"><ul>
       <% quests.each do |q| %>
         <li><%=link_to "#{q.ident}", question_review_path(q) %></li>
       <% end %>
