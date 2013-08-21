@@ -27,7 +27,7 @@ Keks::Application.routes.draw do
 
   get "admin/overview"
   scope "/admin" do
-    match "users", to: "users#index", as: "users", via: :get
+    match "users", to: "users#index", as: "user_index", via: :get
     match "users/:id/reviews", to: "users#reviews", as: "user_reviews", via: :get
     match "toggle_reviewer/:id", to: "users#toggle_reviewer", as: "user_toggle_reviewer", via: :put
     match "toggle_admin/:id", to: "users#toggle_admin", as: "user_toggle_admin", via: :put

@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     user = User.find(params[:id])
     unless user
       flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
-      return redirect_to users_path
+      return redirect_to user_index_path
     end
 
     # skip before_save callbacks to keep the user signed in (avoid re-
@@ -34,19 +34,19 @@ class UsersController < ApplicationController
     else
       flash[:error] = "Konnte den Reviewer-Status für #{user.nick} nicht umschalten."
     end
-    redirect_to users_path
+    redirect_to user_index_path
   end
 
   def toggle_admin
     user = User.find(params[:id])
     unless user
       flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
-      return redirect_to users_path
+      return redirect_to user_index_path
     end
 
     if SUPERADMIN.include?(user.nick)
       flash[:error] = "Netter Versuch."
-      return redirect_to users_path
+      return redirect_to user_index_path
     end
 
     # skip before_save callbacks to keep the user signed in (avoid re-
@@ -56,7 +56,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = "Konnte den Admin-Status für #{user.nick} nicht umschalten."
     end
-    redirect_to users_path
+    redirect_to user_index_path
   end
 
   def starred
