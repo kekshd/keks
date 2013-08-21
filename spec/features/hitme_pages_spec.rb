@@ -19,8 +19,7 @@ describe "Hitme" do
   describe "question answering", :js => true do
     it "has working category select" do
       visit main_hitme_path
-      should have_xpath("//ul[@id='categories']/li//a[1]")
-      find(:xpath, "//ul[@id='categories']/li//a[1]").click
+      should have_xpath("//ul[@id='categories']/li//a[1]", visible: false)
       find(:xpath, "//a[@id='start-button']").click
       should have_selector('h3', text: 'Frage')
     end

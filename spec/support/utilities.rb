@@ -17,7 +17,6 @@ def category_select
   wait_for_ajax(page)
   visit main_hitme_path
   fill_in "Anzahl", with: 5
-  first("#categories a").click
   first("#start-button").click
   sleep 0.5
   should have_selector('h3', text: 'Frage')
