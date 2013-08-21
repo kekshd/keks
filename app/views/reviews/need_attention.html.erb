@@ -1,4 +1,4 @@
-<% provide(:title, "Nutzerübersicht") %>
+<% provide(:title, "Fragen, die Deine Aufmerksamkeit benötigen") %>
 
 <% if admin? %>
 <div>
@@ -36,5 +36,4 @@
       <%= render "generic_question_list", questions: @questions_need_review, limit: 50 %>
     </div>
   <% end %>
-
 <% end # is reviewer? %>

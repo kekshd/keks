@@ -4,7 +4,11 @@ class ReviewsController < ApplicationController
 
   before_filter :get_question, only: [:review, :save]
 
-  def overview
+  def messages
+    @message = TextStorage.find_or_create_by_ident("review_admin_hints")
+  end
+
+  def need_attention
     @reviews = Review.where(user_id: current_user)
     @reviews_need_update = @reviews.select { |r| r.question_updated_since? }
     reviewed_question_ids = @reviews.map { |r| r.question_id }

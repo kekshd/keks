@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130806141529) do
+ActiveRecord::Schema.define(:version => 20130821180401) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
@@ -86,6 +86,13 @@ ActiveRecord::Schema.define(:version => 20130806141529) do
     t.boolean  "correct"
     t.boolean  "skipped",          :default => false
     t.string   "selected_answers"
+  end
+
+  create_table "text_storage", :force => true do |t|
+    t.string   "ident"
+    t.text     "value"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|

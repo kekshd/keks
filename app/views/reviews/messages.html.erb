@@ -1,0 +1,28 @@
+<% provide(:title, "Mitteilungen") %>
+
+<div>
+  <%= render "menu"  %>
+
+</div>
+
+<div>
+  <h2>Wichtige Mitteilungen aus dem Controlling</h2>
+
+  <%= render_tex(@message.value) %>
+</div>
+
+<% if admin? %>
+  <div>
+  <%= form_for(@message) do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+    <%= f.hidden_field :ident %>
+
+    Nimm Rücksicht auf andere, fasse Dich kurz!<br class="clear"/>
+    <%= f.text_area :value, "data-preview" => "#preview"  %>
+    <span><%=render "latex/help"%></span>
+    <div id="preview"><%= render_tex(@message.value) %></div>
+
+    <%= f.submit "Mitteilung speichern", class: "button primary big" %>
+  <% end %>
+  </div>
+<% end %>
