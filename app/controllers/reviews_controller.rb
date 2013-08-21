@@ -16,6 +16,10 @@ class ReviewsController < ApplicationController
     end
   end
 
+  def all
+    @questions = Question.all
+  end
+
   def not_okay
     @questions = Review.where(okay: false).map { |r| r.question }.uniq
   end

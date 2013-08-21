@@ -1,6 +1,7 @@
 <ul class="button-group">
   <li><%= link_to "Übersicht", reviews_path, class: 'button primary' %></li>
   <li><%= link_to "Meine Reviews", user_reviews_path(current_user), class: 'button' %></li>
+  <li><%= link_to "Alle Fragen", all_questions_path, class: 'button' %></li>
   <li><%= link_to "Fragen mit „nicht okay“", not_okay_questions_path, class: 'button' %></li>
   <li><%= link_to "Fragen ohne Reviews", no_reviews_questions_path, class: 'button' %></li>
   <li><%= link_to "0 < |ok| < #{REVIEW_MIN_REQUIRED_REVIEWS} und ⌐ok = 0", good_but_needs_more_reviews_questions_path, class: 'button', style: 'overflow:hidden;height:13px;width:150px' %></li>
