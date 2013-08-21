@@ -44,7 +44,7 @@
     <% groups.each do |g| %>
       <li>
         <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
-        <div class="toggle"><ul>
+        <div class="toggle" style="display: none"><ul>
           <% g[1].sort { |a, b| a.ident <=> b.ident }.each do |r| %>
             <li>
               <div>
