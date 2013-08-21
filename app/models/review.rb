@@ -45,6 +45,7 @@ class Review < ActiveRecord::Base
 
 
   def Review.filter(name)
+    name = name.to_sym
     return @@filters[name].dup if @@filters[name]
     raise "There is no “#{name}” filter."
   end

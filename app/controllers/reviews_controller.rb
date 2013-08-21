@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ReviewsController < ApplicationController
   before_filter :require_admin_or_reviewer
   before_filter :require_reviewer, only: :save
@@ -9,8 +11,9 @@ class ReviewsController < ApplicationController
   end
 
   def filter
-    f = Review.filter(params[:filter].to_sym)
+    f = Review.filter(params[:filter])
     @title, @text, @questions = f[:title], f[:text], f[:questions].call(current_user)
+    @filter = params[:filter].to_sym
   end
 
   def review
@@ -23,13 +26,39 @@ class ReviewsController < ApplicationController
 
     if @review.update_attributes(params[:review])
       flash[:success] = "Review aktualisiert"
-      redirect_to question_review_path(@question)
+      redirect_to question_review_path(@question, filter: params[:filter], next: params[:next])
     else
       flash[:error] = "Review konnte nicht gespeichert werden"
       render 'review'
     end
   end
 
+  def find_next
+    pf = params[:filter]
+
+    f = Review.filter(pf)
+    qqs = f[:questions].call(current_user)
+    qqs_ids = qqs.map { |q| q.id.to_s }
+
+    next_list = (params[:next] || "").split(",")
+
+    if qqs.none?
+      flash[:notice] = "Keine Reviews mehr nötig bzgl. Filter „#{pf}“"
+      return redirect_to reviews_path
+    end
+
+    while next_list.any?
+      x = next_list.shift
+      next unless qqs_ids.include?(x)
+      return redirect_to question_review_path(x, filter: pf, next: next_list.join(','))
+    end
+
+    flash[:notice] = "Keine Einträge (mehr) in der Review Reihenfolge. Wähle zufälligen Eintrag aus „#{pf}“"
+    return redirect_to question_review_path(qqs.sample(1), filter: pf)
+  end
+
+
+  private
 
   def get_review
     @review = Review.find_or_initialize_by_user_id_and_question_id(current_user.id, @question.id)

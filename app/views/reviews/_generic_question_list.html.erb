@@ -23,10 +23,12 @@
 <ul>
   <% cats.keys.sort { |c1, c2| c1.ident <=> c2.ident }.each do |cat| %>
     <% quests = cats[cat] %>
+    <% in_queue = quests.map { |q| q.id.to_s } %>
     <li><h4 style="margin: 10px 0"><%=cat.title%></h4>
       <div class="toggle" style="display: none"><ul>
       <% quests.each do |q| %>
-        <li><%=link_to "#{q.ident}", question_review_path(q) %></li>
+        <% in_queue.shift %>
+        <li><%=link_to "#{q.ident}", question_review_path(q, filter: filter, next: in_queue.join(',')) %></li>
       <% end %>
       </ul></div>
     </li>

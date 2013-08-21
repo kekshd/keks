@@ -40,6 +40,8 @@ Keks::Application.routes.draw do
     match "reviews/need_attention", to: "reviews#need_attention", as: "need_attention_questions", via: :get
 
     match "reviews/filter/:filter", to: "reviews#filter", as: "review_filter",via: :get
+    match "reviews/find_next/:filter/", to: "reviews#find_next", as: "review_find_next",via: :get
+    match "reviews/find_next/:filter/:next", to: "reviews#find_next", as: "review_find_next",via: :get
 
     resources :questions do
       resources :answers

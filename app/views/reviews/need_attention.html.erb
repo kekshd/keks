@@ -18,12 +18,14 @@
 
   <% qqs = @updated[:questions] %>
   <% if qqs.any? %>
+    <% in_queue = qqs.map { |q| q.id.to_s } %>
     <div>
       <h3><%=@updated[:title]%></h3>
       <p><%=@updated[:text]%></p>
       <ul>
         <% qqs.each do |q| %>
-          <li><%=link_to "#{q.ident} (Frage vor #{time_ago_in_words q.updated_at} geändert)", question_review_path(q) %></li>
+          <% in_queue.shift %>
+          <li><%=link_to "#{q.ident} (Frage vor #{time_ago_in_words q.updated_at} geändert)", question_review_path(q, filter: "updated", next: in_queue.join(',')) %></li>
         <% end %>
       </ul>
     </div>
@@ -34,7 +36,7 @@
     <div>
       <h3>Fragen, die ein Review brauchen</h3>
       <p>Nachfolgende Fragen haben bisher zu wenig Reviews erhalten. Du hast diese Fragen noch nie reviewt.</p>
-      <%= render "generic_question_list", questions: qqs, limit: 50 %>
+      <%= render "generic_question_list", questions: qqs, limit: 50, filter: "need_more_reviews" %>
     </div>
   <% end %>
 <% end # is reviewer? %>
