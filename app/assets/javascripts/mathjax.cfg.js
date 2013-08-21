@@ -1,4 +1,8 @@
-$(document).ready(function() {
+function configureMathJax() {
+  if(typeof MathJax === 'undefined') {
+    return setTimeout('configureMathJax()', 50);
+  }
+
   MathJax.Hub.Config({
     showProcessingMessages: false,
     messageStyle: "none",
@@ -22,4 +26,8 @@ $(document).ready(function() {
   });
 
   MathJax.Hub.Configured();
+}
+
+$(document).ready(function() {
+  configureMathJax();
 });
