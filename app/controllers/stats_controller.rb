@@ -45,6 +45,7 @@ class StatsController < ApplicationController
       logger.warn " MSG: #{e.message}"
       logger.warn " QUESTION: #{PP.pp(quest, "")}"
       logger.warn " PARAMS:   #{PP.pp(params, "")}"
+      logger.warn " STACKTRACE:   #{PP.pp(e.backtrace, "")}"
       render :json => false
     end
   end

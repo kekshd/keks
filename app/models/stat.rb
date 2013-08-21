@@ -10,7 +10,7 @@ class Stat < ActiveRecord::Base
     end
 
     def dump(text)
-      raise "selected_answers must be an array" unless text.is_a?(array)
+      raise "selected_answers must be an array" unless text.is_a?(Array)
       text.map { |t| t.to_i }.join(" ")
     end
   end
