@@ -52,6 +52,18 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
   end
 
+  def toggle_release
+    @question = Question.find(params[:question_id])
+    if @question.toggle(:released) && @question.save
+      flash[:success] = "Frage aktualisiert (Released: #{@question.released})"
+      redirect_to :back
+    else
+      flash[:error] = "Konnte den Release-Status der Frage nicht umschalten."
+      render 'edit'
+    end
+  end
+
+
   def update
     @question = Question.find(params[:id])
 

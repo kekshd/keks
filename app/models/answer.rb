@@ -46,6 +46,10 @@ class Answer < ActiveRecord::Base
     s
   end
 
+  def released?
+    question.released?
+  end
+
 
   def link_text
     "Antwort #{link_text_short}"

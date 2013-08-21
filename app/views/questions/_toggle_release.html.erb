@@ -1,0 +1,19 @@
+<%=
+
+parentok = @question.parent.released?
+rlsd = @question.released?
+
+if rlsd
+  confirm = "Die Frage wird SOFORT gesperrt. Fortfahren?"
+else
+  confirm = parentok \
+    ? "Die Frage wird SOFORT freigeschalten. Fortfahren?" \
+    : "Die Frage wird freigeschalten. Die Eltern Kategorie muss manuell freigeschalten werden. Fortfahren?"
+end
+
+link_to(
+  rlsd ? "Sperren" : "Freischalten", \
+  question_toggle_release_path(@question), \
+  confirm: confirm,
+  method: :put )
+%>
