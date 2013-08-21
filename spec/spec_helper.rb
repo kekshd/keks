@@ -19,7 +19,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  #~ config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -64,9 +64,6 @@ RSpec.configure do |config|
 
     #~ Capybara.current_driver = :selenium
     #~ Capybara.javascript_driver = :selenium
-    #~ Capybara.run_server = true
-    #~ Capybara.server_port = 7000
-    #~ Capybara.app_host = "http://localhost:#{Capybara.server_port}"
   end
 end
 

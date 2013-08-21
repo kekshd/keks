@@ -33,7 +33,7 @@ describe "Authentication" do
       let(:user) { FactoryGirl.create(:user) }
       before do
         fill_in "Nick",     with: user.nick
-        fill_in "Password", with: user.password
+        fill_in "Passwort", with: user.password
         click_button "Einloggen"
       end
 
@@ -61,7 +61,7 @@ describe "Authentication" do
         before do
           visit edit_user_path(user)
           fill_in "Nick",     with: user.nick
-          fill_in "Password", with: user.password
+          fill_in "Passwort", with: user.password
           click_button "Einloggen"
         end
 
@@ -76,7 +76,7 @@ describe "Authentication" do
               delete signout_path
               visit signin_path
               fill_in "Nick",     with: user.nick
-              fill_in "Password", with: user.password
+              fill_in "Passwort", with: user.password
               click_button "Einloggen"
             end
 

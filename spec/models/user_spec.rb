@@ -25,5 +25,6 @@ describe User do
 
   it "has a password digest" do
     FactoryGirl.create(:user).password_digest.should_not be nil
+    FactoryGirl.create(:user).password_digest.should_not be_empty
   end
 end

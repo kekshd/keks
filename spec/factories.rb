@@ -32,6 +32,7 @@ FactoryGirl.define do
     end
     difficulty { Difficulty.ids.sample(1).first }
     study_path StudyPath.ids.first
+    released true
 
     trait :parent_category do
       association :parent, factory: :category
@@ -84,6 +85,7 @@ FactoryGirl.define do
     sequence :ident do |n|
       "catIdent#{n}"
     end
+    released true
 
     factory :category_with_questions do
       after(:create) do |cat, evaluator|

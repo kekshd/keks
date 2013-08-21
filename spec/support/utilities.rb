@@ -1,13 +1,16 @@
+# encoding: utf-8
+
 include ApplicationHelper
 
 def sign_in(user)
   visit signin_path
   fill_in "Nick",     with: user.nick
-  fill_in "Password", with: user.password
+  fill_in "Passwort", with: user.password
   click_button "Einloggen"
   # Sign in when not using Capybara as well.
   cookies[:remember_token] = user.remember_token
-  should have_content "eingeloggt als"
+  page.should_not have_content "Nutzername unbekannt oder Passwort ungültig"
+  page.should have_content "eingeloggt als"
 end
 
 def category_select
@@ -15,6 +18,6 @@ def category_select
   visit main_hitme_path
   fill_in "Anzahl", with: 5
   first("#categories a").click
-  should have_selector('h3', text: 'Frage')
+  page.should have_selector('h3', text: 'Frage')
   sleep 0.4
 end
