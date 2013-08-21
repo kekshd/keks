@@ -9,8 +9,6 @@
 <br class="clear"/><br/>
 
 Verschiedenste Fragen-Filter:
-<%= link_to "Alle Fragen", all_questions_path %>
-| <%= link_to "Fragen mit „nicht okay“", not_okay_questions_path %>
-| <%= link_to "Fragen ohne Reviews", no_reviews_questions_path %>
-| <%= link_to "0 < |ok| < #{REVIEW_MIN_REQUIRED_REVIEWS} und ⌐ok = 0", good_but_needs_more_reviews_questions_path %>
-| <%= link_to "#{REVIEW_MIN_REQUIRED_REVIEWS}+ okay, 0 nicht-okay", enough_good_reviews_questions_path %>
+<% Review.get_filters.each do |f| %>
+<%= link_to Review.filter(f)[:link_title], review_filter_path(f) %> |
+<% end %>

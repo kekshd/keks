@@ -4,7 +4,7 @@
 <div>
   <%= render "menu"  %><br/><br/>
 
-  Lieber Admin, am ehesten interessieren Dich die Auflistungen <%= link_to "Fragen mit „nicht okay“", not_okay_questions_path %> (kaputte Fragen) und <%= link_to "#{REVIEW_MIN_REQUIRED_REVIEWS}+ okay, 0 nicht-okay", enough_good_reviews_questions_path %> (freischaltbare Fragen).
+  Lieber Admin, am ehesten interessieren Dich die Auflistungen <%= link_to "Fragen mit „nicht okay“", review_filter_path(:not_okay) %> (kaputte Fragen) und <%= link_to "#{REVIEW_MIN_REQUIRED_REVIEWS}+ okay, 0 nicht-okay", review_filter_path(:enough_good_reviews) %> (freischaltbare Fragen).
 </div>
 <% end %>
 
@@ -16,24 +16,25 @@
     Lieber Reviewer, nachfolgend findest Du eine Auflistung von Fragen, die am wahrscheinlichsten Deiner Aufmerksamkeit bedürfen. Kommt im Anschluss nichts, gibt’s wohl nichts zu tun. Im Menü oben kannst Du auch nach anderen Sachen filtern.
   </div>
 
-  <% if @reviews_need_update.any? %>
+  <% qqs = @updated[:questions] %>
+  <% if qqs.any? %>
     <div>
-      <h3>Seit Deinem letztem Review aktualisiert</h3>
-      <p>Du hast diese Fragen bereits einmal reviewed. Die Frage wurde jedoch aktualisiert seitdem Du das getan hast. Bitte prüfe ob Deine Anmerkungen noch stimmen und ändere ggf. Deine Einstellungen.</p>
+      <h3><%=@updated[:title]%></h3>
+      <p><%=@updated[:text]%></p>
       <ul>
-        <% @reviews_need_update.each do |r| %>
-          <% q = r.question %>
+        <% qqs.each do |q| %>
           <li><%=link_to "#{q.ident} (Frage vor #{time_ago_in_words q.updated_at} geändert)", question_review_path(q) %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <% if @questions_need_review %>
+  <% qqs = @need_more_reviews[:questions] %>
+  <% if qqs %>
     <div>
       <h3>Fragen, die ein Review brauchen</h3>
       <p>Nachfolgende Fragen haben bisher zu wenig Reviews erhalten. Du hast diese Fragen noch nie reviewt.</p>
-      <%= render "generic_question_list", questions: @questions_need_review, limit: 50 %>
+      <%= render "generic_question_list", questions: qqs, limit: 50 %>
     </div>
   <% end %>
 <% end # is reviewer? %>
