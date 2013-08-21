@@ -5,8 +5,8 @@
   questions.each_with_index do |q, ind|
     roots = q.get_root_categories
     roots.each do |r|
-      cats[r.title] ||= []
-      cats[r.title] << q
+      cats[r] ||= []
+      cats[r] << q
     end
 
     if limit && params[:nolimit] != "1" && ind >= limit-1
@@ -20,10 +20,10 @@
   end
 %>
 
-
 <ul>
-  <% cats.each do |cat, quests| %>
-    <li><h4 style="margin: 10px 0"><%=cat%></h4>
+  <% cats.keys.sort { |c1, c2| c1.ident <=> c2.ident }.each do |cat| %>
+    <% quests = cats[cat] %>
+    <li><h4 style="margin: 10px 0"><%=cat.title%></h4>
       <div class="toggle"><ul>
       <% quests.each do |q| %>
         <li><%=link_to "#{q.ident}", question_review_path(q) %></li>
