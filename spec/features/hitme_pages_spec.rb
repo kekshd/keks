@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe "Hitme" do
-  let!(:categories) { FactoryGirl.create(:category_with_questions)}
+  let!(:categories) { FactoryGirl.create(:category_with_questions) }
 
   subject { page }
 
@@ -21,28 +21,29 @@ describe "Hitme" do
       visit main_hitme_path
       should have_xpath("//ul[@id='categories']/li//a[1]")
       find(:xpath, "//ul[@id='categories']/li//a[1]").click
+      find(:xpath, "//a[@id='start-button']").click
       should have_selector('h3', text: 'Frage')
     end
 
     it "has working category select" do
       visit main_hitme_path
-      find("#categories a:first").click
+      find("#start-button").click
       should have_selector('h3', text: 'Frage')
       should have_selector('.answer-chooser')
-      should have_selector('.alert-error')
-      should have_selector('.alert-success')
+      should have_selector('.alert-error', visible: false)
+      should have_selector('.alert-success', visible: false)
     end
 
     it "can be finished" do
       category_select
-      5.times { all("[id^='block'] a.button").last.click }
+      5.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
       should have_selector('h3', text: 'Fertig!')
     end
 
     it "updates stats" do
       expect do
         category_select
-        3.times { all("a.button").last.click }
+        3.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
         sleep 0.5
       end.to change { Stat.all.size }.by(3)
     end
@@ -68,7 +69,7 @@ describe "Hitme" do
       category_select
       should have_content "Frage merken"
       expect {
-        find(".star a").click
+        first(".star a").click
         should have_content "Frage gemerkt"
       }.to change { Question.all.map { |q| q.starred_by.size }.inject(:+) }.by(1)
 
@@ -76,7 +77,7 @@ describe "Hitme" do
       should have_selector('h3', text: 'Frage')
       should have_content "Frage gemerkt"
       expect {
-        find(".star a").click
+        first(".star a").click
         should have_content "Frage merken"
       }.to change { Question.all.map { |q| q.starred_by.size }.inject(:+) }.by(-1)
     end

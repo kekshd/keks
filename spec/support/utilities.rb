@@ -18,6 +18,7 @@ def category_select
   visit main_hitme_path
   fill_in "Anzahl", with: 5
   first("#categories a").click
-  page.should have_selector('h3', text: 'Frage')
-  sleep 0.4
+  first("#start-button").click
+  sleep 0.5
+  should have_selector('h3', text: 'Frage')
 end

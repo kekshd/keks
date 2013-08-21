@@ -86,6 +86,7 @@ FactoryGirl.define do
       "catIdent#{n}"
     end
     released true
+    is_root true
 
     factory :category_with_questions do
       after(:create) do |cat, evaluator|

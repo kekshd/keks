@@ -19,7 +19,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  #~ config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -35,18 +35,14 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  config.order = "random"
+  #~　config.order = "random"
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with :truncation
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   config.before(:each) do
-    if example.metadata[:js]
-      DatabaseCleaner.strategy = :truncation
-    else
-      DatabaseCleaner.strategy = :transaction
-    end
     DatabaseCleaner.start
   end
 
@@ -56,6 +52,7 @@ RSpec.configure do |config|
 
 
   config.before do
+    Capybara.current_driver = :webkit
     Capybara.javascript_driver = :webkit
 
     # comment this in to see live action testing in firefox. IRB testing
@@ -65,9 +62,11 @@ RSpec.configure do |config|
     #~ Capybara.current_driver = :selenium
     #~ Capybara.javascript_driver = :selenium
   end
+
+  config.include RSpec::Rails::RequestExampleGroup, type: :feature
 end
 
 def wait_for_ajax(page)
   # firefox driver needs this
-  page.driver.options[:resynchronize] = true if page.driver.respond_to?(:options)
+  #~　page.driver.options[:resynchronize] = true if page.driver.respond_to?(:options)
 end

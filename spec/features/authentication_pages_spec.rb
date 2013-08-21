@@ -15,12 +15,14 @@ describe "Authentication" do
   end
 
   describe "signin" do
+    self.use_transactional_fixtures = false
+
     before { visit signin_path }
 
     describe "with invalid information" do
       before { click_button "Einloggen" }
 
-      it { should have_selector('title', text: 'Einloggen') }
+      it { should have_title('KeKs – Einloggen') }
       it { should have_selector('.alert-error', text: 'ungültig') }
 
       describe "after visiting another page" do
@@ -30,14 +32,14 @@ describe "Authentication" do
     end
 
     describe "with valid information" do
-      let(:user) { FactoryGirl.create(:user) }
+      let!(:user) { FactoryGirl.create(:user) }
       before do
         fill_in "Nick",     with: user.nick
         fill_in "Passwort", with: user.password
         click_button "Einloggen"
       end
 
-      it { should have_selector('title', text: 'Fragen beantworten') }
+      it { should have_title('Fragen beantworten') }
 
       it { should have_link('Profil',    href: edit_user_path(user)) }
       it { should have_link('Gemerkte',  href: starred_path(user)) }
@@ -68,7 +70,7 @@ describe "Authentication" do
         describe "after signing in" do
 
           it "should render the desired protected page" do
-            page.should have_selector('title', text: 'Dein Profil')
+            page.should have_title('Dein Profil')
           end
 
           describe "when signing in again" do
@@ -81,7 +83,7 @@ describe "Authentication" do
             end
 
             it "should render the default (profile) page" do
-              page.should have_selector('title', text: 'Fragen beantworten')
+              page.should have_title('KeKs – Fragen beantworten')
             end
           end
         end
@@ -91,7 +93,7 @@ describe "Authentication" do
 
         describe "visiting the edit page" do
           before { visit edit_user_path(user) }
-          it { should have_selector('title', text: 'Einloggen') }
+          it { should have_title("Einloggen") }
         end
 
         describe "submitting to the update action" do
@@ -110,7 +112,7 @@ describe "Authentication" do
 
       describe "visiting Users#edit page" do
         before { visit edit_user_path(wrong_user) }
-        it { should have_selector('title', text: '') }
+        it { should_not have_title('Dein Profil') }
       end
 
       describe "submitting a PUT request to the Users#update action" do
