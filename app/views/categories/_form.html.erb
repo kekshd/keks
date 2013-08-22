@@ -16,14 +16,71 @@
   <span>Optional<%=render "latex/help"%></span>
   <div id="preview"><%= render_tex(@category.text) %></div>
 
-
-  <%= f.label :answers, "Eltern-Elem." %>
-  <%= f.collection_select 'answer_ids', Answer.all, :id, :link_text_short, { :selected => @category.answer_ids }, {:multiple => true, :name => 'category[answer_ids][]'} %>
-  <span>Welche Antworten sollen auf auf diese Kategorie verweisen?<br/>Wenn keine Antwort ausgewählt wurde, dann handelt es sich um eine Wurzelkategorie.<br/>Mehrere mit STRG+Klick auswählen</span>
-
-
   <%= f.label :is_root %>
-  <%= f.check_box :is_root %>
+  <%= f.check_box :is_root, onclick: "$('#parent-selector-wrapper')[this.checked ? 'hide' : 'show']();" %>
+
+  <div id="parent-selector-wrapper" class="clear">
+    <%= f.label :answers, "Eltern-Elem." %>
+
+    <%
+      root_cats =  Category.where(is_root: true).includes(:questions => [:answers => :question])
+      all_answers = Answer.pluck(:id)
+      selected_answers = @category.answer_ids
+    %>
+
+    <select id="category_answer_ids" multiple="multiple" name="category[answer_ids][]" style="width: 80%; height: 400px">
+      <% root_cats.each do |rc| %>
+        <optgroup label="<%=rc.title%>">
+          <%=
+            answ = rc.questions.map { |q| q.answers }.flatten
+            all_answers -= answ.map { |a| a.id }
+            # i.e. create text ⇒ id hash
+            opts = Hash[ *answ.collect { |a| [ a.link_text_short, a.id ] }.flatten ]
+            options_for_select(opts, selected_answers)
+          %>
+        </optgroup>
+      <% end %>
+
+      <% if all_answers.any? %>
+        <optgroup label="Antworten, die zu keiner Wurzel-Kategorie gehören (Antworten von Subfragen)">
+          <%=
+            all_answers = Answer.where(id: all_answers).includes(:question)
+            opts = Hash[ *all_answers.collect { |a| [ a.link_text_short, a.id ] }.flatten ]
+            options_for_select(opts, selected_answers)
+          %>
+        </optgroup>
+      <% end %>
+    </select>
+
+
+     <style scoped>
+      @import url("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/flick/jquery-ui.min.css");
+      .ui-widget{
+        font-size:12px;
+        line-height: 15px;
+      }
+      .uix-search {
+        height: 20px;
+      }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <%= javascript_include_tag "jquery.uix.multiselect.min" %>
+
+    <script>
+      $('#category_answer_ids').multiselect({ height: '400px'});
+      $(document).ready(function() {
+        $(".group-element-collapsable").click(function() {
+          $(this).find(".collapse-handle").click();
+        }).trigger("click");
+      });
+
+      if(<%=@category.is_root?%>) { // need to wait for multiselect init
+        $('#parent-selector-wrapper').hide();
+      }
+    </script>
+    <br class="clear"/>
+    <span>Welche Antworten sollen auf auf diese Kategorie verweisen?</span>
+  </div> <!-- # parent-selector-wrapper -->
 
   <%= f.label :released %>
   <%= f.check_box :released %>

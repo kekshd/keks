@@ -7,5 +7,6 @@
  *= require hitme
  *= require main
  *= require simple-slider
+ *= require jquery.uix.multiselect
  *= require table-sorter
  */

@@ -12,7 +12,7 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :answers
 
   def Category.root_categories
-    Category.all.keep_if { |c| c.is_root? && c.released? }
+    Category.where(is_root: true, released: true)
   end
 
   def get_root_categories
