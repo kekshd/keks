@@ -28,7 +28,7 @@
       <div class="toggle" style="display: none"><ul>
       <% quests.each do |q| %>
         <% in_queue.shift %>
-        <li><%=link_to "#{q.ident}", question_review_path(q, filter: filter, next: in_queue.join(',')) %></li>
+        <li><%=link_to q.ident, question_review_path(q, filter: filter, next: in_queue.join(',')) %></li>
       <% end %>
       </ul></div>
     </li>

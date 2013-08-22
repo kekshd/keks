@@ -145,7 +145,8 @@ class Review < ActiveRecord::Base
       text: "Du hast diese Fragen bereits einmal reviewed. Die Frage wurde jedoch aktualisiert seitdem Du das getan hast. Bitte prüfe ob Deine Anmerkungen noch stimmen und ändere ggf. Deine Einstellungen.",
       questions: lambda { |current_user|
         reviews = Review.where(user_id: current_user)
-        return reviews.select { |r| r.question_updated_since? }
+        reviews = reviews.select { |r| r.question_updated_since? }
+        return reviews.map { |r| r.question }.uniq
       }
     }
   }

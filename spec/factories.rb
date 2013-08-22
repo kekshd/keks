@@ -26,12 +26,13 @@ FactoryGirl.define do
 
   factory :hint do
     sort_hint { rand(100) }
-    text { Faker::Lorem.sentences }
+    text { Faker::Lorem.sentence(10) }
     question
   end
 
   factory :question do
-    text { Faker::Lorem.sentences }
+    content_changed_at Time.now
+    text { Faker::Lorem.sentence(30) }
     sequence :ident do |n|
       "questIdent#{n}"
     end
@@ -85,8 +86,8 @@ FactoryGirl.define do
   end
 
   factory :category do
-    text { Faker::Lorem.sentences }
-    title { Faker::Lorem.words }
+    text { Faker::Lorem.sentence }
+    title { Faker::Lorem.words.join " " }
     sequence :ident do |n|
       "catIdent#{n}"
     end
@@ -105,5 +106,12 @@ FactoryGirl.define do
     user
     answer
     correct { |s| s.answer.correct? }
+  end
+
+  factory :review do
+    association :question, :factory => [:question_parent_category]
+    user
+    created_at Time.now
+    updated_at Time.now
   end
 end
