@@ -17,3 +17,6 @@
 /public/latex
 /public/dot
 vendor/ruby
+
+
+config/initializers/git_revision.rb
