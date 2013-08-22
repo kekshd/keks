@@ -1,0 +1,27 @@
+<% provide(:title, "Möglicherweise fehlende Verknüpfungen") %>
+
+<div>
+  <%= render "admin/action_menu" %>
+  <h2>Möglicherweise fehlende Verknüpfungen</h2>
+
+  <p>Was macht diese Seite? Beispiel: Kategorie Kind wurde ursprünglich mit allen Antworten unter Kategorie Elter verknüpft. Nun haben sich einige Fragen in Elter geändert und daher verweisen nicht mehr alle Antworten aus Eltern nach Kind. Diese Seite listet alle Elter/Kind-Kombinationen auf, deren Verknüpfungen bei 70%+ liegen. Die wahrscheinlichste „Lösung“ ist die Kind-Kategorie zu bearbeiten und alle neu hinzugekommenen Antworten ebenfalls auf die Kind-Kategorie zeigen zu lassen.</p>
+
+  <p>Beachte aber das Subfragen nicht berücksichtigt werden. D.h. wenn alle Subfragen auf eine Kategorie verweisen sollen, wird das hier nicht angezeigt.</p>
+</div>
+
+<div>
+  <% if @suspicious.any? %>
+  <table>
+    <tr><th>Kind-Kategorie</th><th>Elter-Kategorie</th><th>Verknüpfungsgrad</th></tr>
+
+    <% @suspicious.each do |s| %>
+      <tr>
+        <td><%=link_to s[:child].title, edit_category_path(s[:child])%></td>
+        <td><%=link_to s[:parent].title, s[:parent]%></td>
+        <td><%=[99, (s[:ratio]*100).to_i].min%>%</td>
+    <% end %>
+  </table>
+  <% else %>
+    Nichts gefunden.
+  <% end %>
+</div>

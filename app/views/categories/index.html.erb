@@ -4,7 +4,8 @@
   <%= render "admin/action_menu" %>
   <h2>Kategorienliste</h2>
 
-  <%=link_to "Neue Kategorie anlegen", new_category_path %>
+  <%=link_to "Neue Kategorie anlegen", new_category_path %> |
+  <%=link_to "Kategorien mit möglicherweise fehlenden Verknüpfungen anzeigen", suspicious_associations_path %>
 
   <table id="index" class="tablesorter">
     <thead>
