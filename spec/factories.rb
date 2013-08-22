@@ -8,10 +8,15 @@ FactoryGirl.define do
     password_confirmation { |u| u.password }
     remember_token { SecureRandom.urlsafe_base64 }
     admin false
+    reviewer false
     study_path 1
 
     factory :admin do
       admin true
+    end
+
+    factory :reviewer do
+      reviewer true
     end
 
     factory :physiker do

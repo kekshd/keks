@@ -57,6 +57,15 @@ class ReviewsController < ApplicationController
     return redirect_to question_review_path(qqs.sample(1), filter: pf)
   end
 
+  def need_attention
+    @updated = Review.filter(:updated)
+    @updated[:questions] = @updated[:questions].call(current_user)
+
+    @need_more_reviews = Review.filter(:need_more_reviews)
+    @need_more_reviews[:questions] = @need_more_reviews[:questions].call(current_user)
+  end
+
+
 
   private
 
@@ -71,14 +80,5 @@ class ReviewsController < ApplicationController
       flash[:error] = "Fragen-ID fehlt oder es existiert keine Frage mit dieser ID."
       redirect_to reviews_path
     end
-  end
-
-
-  def need_attention
-    @updated = Review.filter(:updated)
-    @updated[:questions] = @updated[:questions].call(current_user)
-
-    @need_more_reviews = Review.filter(:need_more_reviews)
-    @need_more_reviews[:questions] = @need_more_reviews[:questions].call(current_user)
   end
 end

@@ -11,6 +11,11 @@ def sign_in(user)
   cookies[:remember_token] = user.remember_token
   page.should_not have_content "Nutzername unbekannt oder Passwort ungültig"
   page.should have_content "eingeloggt als"
+  if user.admin?
+    page.should have_content "Admin"
+  else
+    page.should_not have_content "Admin"
+  end
 end
 
 def category_select
