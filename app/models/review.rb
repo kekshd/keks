@@ -9,6 +9,10 @@ class Review < ActiveRecord::Base
 
   serialize :votes
 
+  before_save do
+    Rails.cache.write(:reviews_last_update, Time.now)
+  end
+
   def self.serialized_attr_accessor(*args)
     args.each do |method_name|
       eval "

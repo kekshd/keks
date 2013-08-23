@@ -10,6 +10,8 @@ class Hint < ActiveRecord::Base
   validates :sort_hint, numericality: true, allow_blank: true
 
   before_save do
+    Rails.cache.write("hints_last_update", Time.now)
+
     up = text_changed?
     self.question.update_attribute('content_changed_at', Time.now) if up
   end

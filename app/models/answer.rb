@@ -16,6 +16,8 @@ class Answer < ActiveRecord::Base
   has_and_belongs_to_many :categories
 
   before_save do
+    Rails.cache.write(:answers_last_update, Time.now)
+
     up = text_changed? || correct_changed?
     self.question.update_attribute('content_changed_at', Time.now) if up
   end

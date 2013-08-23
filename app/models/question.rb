@@ -33,6 +33,7 @@ class Question < ActiveRecord::Base
   end
 
   before_save do
+    Rails.cache.write(:questions_last_update, Time.now)
     up = parent_type_changed? || parent_id_changed? || text_changed?
     up ||= study_path_changed? || difficulty_changed?
     self.content_changed_at = Time.now if up
@@ -220,9 +221,17 @@ class Question < ActiveRecord::Base
 
   private
   def is_complete_helper
-    @is_complete_cache ||= {}
-    @is_complete_cache[id] ||= is_complete_helper_real
-    @is_complete_cache[id]
+    key = ["question_complete_helper"]
+    key << Rails.cache.fetch(:categories_last_update) { Time.now }
+    key << Rails.cache.fetch(:questions_last_update) { Time.now }
+    key << Rails.cache.fetch(:answers_last_update) { Time.now }
+    key << Rails.cache.fetch(:reviews_last_update) { Time.now }
+    key << id
+    key = key.join("__")
+
+    Rails.cache.fetch(key) {
+      is_complete_helper_real
+    }
   end
 
   def is_complete_helper_real
