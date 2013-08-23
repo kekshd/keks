@@ -13,9 +13,9 @@ class Question < ActiveRecord::Base
   enumerate :study_path
   validates_inclusion_of :study_path, in: StudyPath
 
-  has_many :reviews, dependent: :destroy, order: 'updated_at DESC'
-  has_many :answers, dependent: :destroy
-  has_many :hints, :order => 'sort_hint ASC', :dependent => :destroy
+  has_many :reviews, dependent: :destroy, order: 'updated_at DESC', inverse_of: :question
+  has_many :answers, dependent: :destroy, inverse_of: :question
+  has_many :hints, order: 'sort_hint ASC', dependent: :destroy, inverse_of: :question
   has_and_belongs_to_many :starred_by, :class_name => :User, :join_table => :starred
   before_destroy do |q|
     sql =  ["DELETE FROM starred WHERE question_id = ?", q.id]
@@ -23,7 +23,7 @@ class Question < ActiveRecord::Base
   end
 
   # simply remove, no deconstruction and the like
-  has_many :stats, :dependent => :delete_all
+  has_many :stats, dependent: :delete_all, inverse_of: :question
 
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true

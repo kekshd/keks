@@ -17,8 +17,8 @@ class Stat < ActiveRecord::Base
 
   serialize :selected_answers, StringSplitter.new
 
-  belongs_to :question
-  belongs_to :user
+  belongs_to :question, inverse_of: :stats
+  belongs_to :user, inverse_of: :stats
   #~ belongs_to :answer
 
   def anonymous?

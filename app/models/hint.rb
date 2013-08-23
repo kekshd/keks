@@ -3,7 +3,7 @@
 class Hint < ActiveRecord::Base
   attr_accessible :sort_hint, :question_id, :text
 
-  belongs_to :question
+  belongs_to :question, touch: true, inverse_of: :hints
 
   validates :text, presence: true
   validates :question_id, presence: true

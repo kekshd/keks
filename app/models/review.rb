@@ -4,7 +4,7 @@
 class Review < ActiveRecord::Base
   attr_accessible :comment, :okay, :votes
 
-  belongs_to :question
+  belongs_to :question, inverse_of: :reviews
   belongs_to :user
 
   serialize :votes
