@@ -13,7 +13,14 @@
 <div>
   <h2>Frage <%=@question.ident%></h2>
   <%=trace_to_root_formatter @question.trace_to_root(true)%>
-  <span style="color: #777;display: block;margin-top:-10px;margin-bottom: 20px">Fragentyp: <%= @question.difficulty(:name) %> | Studiengang: <%= x=@question.study_path(:name); x.blank? ? "alle" : x %></span>
+  <span style="color: #777;display: block;margin-top:-10px;margin-bottom: 20px">
+    Fragentyp: <%= @question.difficulty(:name) %> |
+    Studiengang: <%= x=@question.study_path(:name); x.blank? ? "alle" : x %> |
+    Freigegeben: <%=bool_to_symbol(@question.released?)%> |
+    <span title="<%=@question.incomplete_reason || "alles ok"%>" style="cursor: help">
+      für Studis sichtbar: <%=bool_to_symbol(@question.complete?)%>
+    </span>
+  </span>
 
   <div class="topright">
     <%=link_to "Frage „live“ ansehen", "#{main_hitme_path}#hide-options#question=#{@question.id}" %>

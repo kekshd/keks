@@ -1,6 +1,10 @@
 # encoding: utf-8
 
 module ApplicationHelper
+  def bool_to_symbol(bool)
+    bool ? "✔" : "✘"
+  end
+
   def perc(perc, all, err_message)
     return err_message if all.nil? || all == 0
     perc ||= 0
