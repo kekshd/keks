@@ -18,7 +18,7 @@
     <tr><th></th><th>Text</th><th>Verweise / Subfragen</th></tr>
     <%  question.answers.each do |a| %>
       <tr>
-        <td><%=render "/answers/render_correctness", answer: a%></td>
+        <td><%=render_correctness(a)%></td>
         <td><%=render_tex a.text%></td>
         <td>
           <% a.questions.each do |q| %>

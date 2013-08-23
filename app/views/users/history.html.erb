@@ -48,7 +48,7 @@
         <strong>Antwortmöglichkeiten:</strong>
         <div class="answer-chooser noHide">
           <% q.answers.each do |a| %>
-            <div><div><%=render_tex a.text%></div><span><%=render "/answers/render_correctness", answer: a%></span><span><%=s.selected_answers.include?(a.id) ? "(Das hattest Du angekreuzt)" : "" %></span></div>
+            <div><div><%=render_tex a.text%></div><span><%=render_correctness(a)%></span><span><%=s.selected_answers.include?(a.id) ? "(Das hattest Du angekreuzt)" : "" %></span></div>
           <% end %>
         </div>
       <% end %>

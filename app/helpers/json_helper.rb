@@ -6,7 +6,7 @@ module JsonHelper
     {
       correct: a.correct,
       subquestion: get_subquestion_for_answer(a, max_depth),
-      correctness: render_to_string(partial: '/answers/render_correctness', locals: {answer: a}),
+      correctness: render_correctness(a),
       id: a.id,
       html: render_to_string(partial: '/answers/render', locals: {answer: a})
     }
