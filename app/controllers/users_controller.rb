@@ -63,7 +63,7 @@ class UsersController < ApplicationController
   end
 
   def history
-    @stats = @user.stats.find(:all, :order => "created_at DESC", :limit => 50)
+    @stats = @user.stats.includes(:question => [:answers]).find(:all, :order => "created_at DESC", :limit => 50)
   end
 
   def new
