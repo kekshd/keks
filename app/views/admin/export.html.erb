@@ -1,12 +1,13 @@
-<div>Diese Seite ist für das Review von Fragen gedacht. Fragen die noch nicht fertig sind oder noch nicht freigegeben wurden sind mit einem „UNFERTIG“ versehen. <b>Diese Seite ist öffentlich</b>, behandle den Link daher mit Bedacht.</div>
+<div>Diese Seite ist für das Review von Fragen gedacht. Fragen die noch nicht fertig sind oder noch nicht freigegeben wurden sind mit einem „UNFERTIG“ versehen. Die Seite ist für Admins und Reviewer (wenn sie den Link kennen) einsehbar.</div>
 
-<% Category.all.each do |c| %>
+<% Category.includes(:questions).all.each do |c| %>
   <% next unless c.is_root? %>
   <div>
     <h2><%= c.title %></h2>
+    <div class="toggle" style="display: none">
     <% c.questions.each do |q| %>
-      <% #next unless q.complete? %>
       <%= render "export_question", question: q, max_depth: 10 %>
     <% end %>
+    </div>
   </div>
 <% end %>

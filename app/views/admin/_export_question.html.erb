@@ -1,3 +1,4 @@
+<% cache("admin/export_question/#{question.id}/#{question.content_changed_at}") do %>
 <%
   all_sub_q = []
   feedback_text = "Liebes KeKs Team,\n\nbzgl. Frage #{question.ident} möchte ich euch sagen:\n\n\n\nViele Grüße\n\nFrage als Admin ansehen:\n#{question_url(question)}"
@@ -10,6 +11,7 @@
   –– <%= link_to "Feedback zu dieser Frage", feedback_path(text: feedback_text) %>
 </h3>
 
+<% @question = question %>
 <%= render "questions/render_review", question: question %>
 
 <hr/>
@@ -23,4 +25,6 @@
       <%= render 'export_question', question: q, max_depth: (max_depth-1) %>
     </div>
   <% end %>
+<% end %>
+
 <% end %>

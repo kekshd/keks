@@ -2,6 +2,7 @@
 
 class AdminController < ApplicationController
   before_filter :require_admin, :except => [:tree, :export]
+  before_filter :require_admin_or_reviewer
 
   def overview
   end

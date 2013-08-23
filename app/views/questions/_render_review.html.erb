@@ -1,3 +1,4 @@
+<% cache("question/render_review/#{@question.id}/#{@question.content_changed_at}") do %>
 <%=render_tex(@question.text)%><br/><br/>
 
 <% if question.hints.any? %>
@@ -35,4 +36,6 @@
       </tr>
     <% end %>
   </table>
+<% end %>
+
 <% end %>
