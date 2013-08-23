@@ -5,7 +5,7 @@ module AnswersHelper
     c = answer.correct?
     txt = c ? "✔ richtig" : "✘ falsch"
     cls = c ? 'success' : 'error'
-   %|<em class="alert-#{cls}">#{txt}</em>|
+   %|<em class="alert-#{cls}">#{txt}</em>|.html_safe
   end
 
 end
