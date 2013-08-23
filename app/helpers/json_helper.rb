@@ -8,7 +8,7 @@ module JsonHelper
       subquestion: get_subquestion_for_answer(a, max_depth),
       correctness: render_correctness(a),
       id: a.id,
-      html: render_to_string(partial: '/answers/render', locals: {answer: a})
+      html: render_tex(a.text)
     }
   end
 

@@ -1,6 +1,9 @@
 # encoding: utf-8
 
 module LatexHelper
+  # be able to use tag helpers when called from controller
+  include ActionView::Helpers::TagHelper
+
   # legacy handler that removes now superfluous §-syntax
   def render_tex(mixed)
     return '' if mixed.blank?
@@ -22,7 +25,7 @@ module LatexHelper
       imgs.shift
     end
 
-    content_tag(:div, raw(mixed), class: 'tex')
+    content_tag(:div, mixed.html_safe, class: 'tex')
   end
 
   def latex_logo_large

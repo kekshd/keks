@@ -1,8 +1,9 @@
 <% provide(:title, "Fragen beantworten") %>
-
+<% cache("main/v1") do ############################################## %>
 <%= render "noscript_warning" %>
 
 <div>
+
   <h2>Optionen</h2>
   <div class="toggle clear smallform" id="options">
     <script>if(hasHash("hide-options")) $("#options").hide(); </script>
@@ -31,9 +32,13 @@
     <% end %>
   </div>
 
+
   <h2>Kategorien</h2>
   Aus welchen Kategorien möchtest Du Fragen erhalten?<br/><br/>
 
+  <% end ############################################################ %>
+
+  <% cache("chooser/#{Category.maximum(:updated_at)}") do %>
   <ul class="inline-chooser" id="categories">
     <%
       groups = Category.root_categories.group_by do |c|
@@ -59,6 +64,7 @@
       </li>
     <% end %>
   </ul>
+  <% end %>
 
   <h3>Alles Fertig?</h3>
   <a class="button huge" onclick="H.hitme()" id="start-button">Los geht’s! <!--Whatever--></a>
