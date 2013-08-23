@@ -10,5 +10,6 @@
 
 Verschiedenste Fragen-Filter:
 <% Review.get_filters.each do |f| %>
-<%= link_to Review.filter(f)[:link_title], review_filter_path(f) %> |
+  <% next if Review.filter(f)[:hide_in_menu] %>
+  <%= link_to Review.filter(f)[:link_title], review_filter_path(f) %> |
 <% end %>

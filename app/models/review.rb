@@ -125,6 +125,7 @@ class Review < ActiveRecord::Base
       title: "Fragen, die ein Review brauchen",
       link_title: "reviewbare Fragen",
       text: "Nachfolgende Fragen haben bisher zu wenig Reviews erhalten. Du hast diese Fragen noch nie reviewt.",
+      hide_in_menu: true,
       questions: lambda { |current_user|
         reviews = Review.where(user_id: current_user)
         reviewed_question_ids = reviews.map { |r| r.question_id }
