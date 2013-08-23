@@ -222,10 +222,7 @@ class Question < ActiveRecord::Base
   private
   def is_complete_helper
     key = ["question_complete_helper"]
-    key << Rails.cache.fetch(:categories_last_update) { Time.now }
-    key << Rails.cache.fetch(:questions_last_update) { Time.now }
-    key << Rails.cache.fetch(:answers_last_update) { Time.now }
-    key << Rails.cache.fetch(:reviews_last_update) { Time.now }
+    key << last_admin_or_reviewer_change
     key << id
     key = key.join("__")
 
