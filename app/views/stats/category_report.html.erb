@@ -1,6 +1,17 @@
 <div>
   <h2>Statistik nach Kategorie</h2>
-  Es werden nur Antworten innerhalb der letzten 90 Tage berücksichtigt.
+  <ul class="button-group">
+    <li><%=link_to "3 Monate",    stat_category_report_path(range: 91 ), class: :button %></li>
+    <li><%=link_to "150 Tage",    stat_category_report_path(range: 150), class: :button %></li>
+    <li><%=link_to "halbes Jahr", stat_category_report_path(range: 182), class: :button %></li>
+    <li><%=link_to "Jahr",        stat_category_report_path(range: 365), class: :button %></li>
+    <li><%=link_to "Alles",        stat_category_report_path(range: 999999999999999), class: :button %></li>
+  </ul>
+
+  <br/>
+  Es werden nur Antworten innerhalb der letzten <%=@range%> Tage berücksichtigt.
+
+
 </div>
 
 <div>
