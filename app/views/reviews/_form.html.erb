@@ -44,11 +44,5 @@
     <div id="preview"><%= render_tex(@review.comment) %></div>
 
     <%= f.submit :class => 'button primary big' %>
-
-    <br class="clear"/>
-    <% filter = Review.filter(params[:filter]) rescue nil %>
-    <% if filter %>
-      <%=link_to "Nächste Frage (in „#{filter[:link_title]}“)", review_find_next_path(filter: params[:filter], next: params[:next] || "") %>
-    <% end %>
   <% end %>
 </div>
