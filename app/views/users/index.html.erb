@@ -10,7 +10,10 @@
       <tr>
         <td><%=u.nick%></td>
         <td><%=u.admin? ? "Admin" :""%> <%=u.reviewer? ? "Reviewer" :""%></td>
-        <td><%=u.reviews.count%></td>
+        <td>
+          <%=u.reviews.count%>
+          (<%=link_to "anzeigen", user_reviews_path(u)%>)
+        </td>
         <td>
           <%=link_to "Reviewer-Status umschalten", user_toggle_reviewer_path(u.id), method: :put %>
           <%=link_to "Admin-Status umschalten", user_toggle_admin_path(u.id), method: :put %>

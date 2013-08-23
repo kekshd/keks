@@ -1,6 +1,6 @@
 <div>
   <%=render "reviews/menu" %>
-  <h2>Meine Reviews</h2>
+  <h2><%= current_user == @user ? "Meine Reviews" : "#{@user.nick}s Reviews" %></h2>
   <p>Neuere Reviews stehen oben. Grün hinterlegte Reviews sind aktuell, bei rot hinterlegten ist Dein Review älter als die letzte Änderung an der Frage. Es werden nur die neuesten <%=REVIEW_MAX_OWN_REVIEWS%> Reviews angezeigt.</p>
 </div>
 

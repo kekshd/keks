@@ -18,7 +18,11 @@ if dimmed
 <div style="float:left; width: 70%">
   <em>
   <strong><%=review.user.nick %></strong>
+  <% if admin? %>
+    (<%= link_to "Reviews anzeigen", user_reviews_path(review.user) %>)
+  <% end %>
   (vor <%= time_ago_in_words(review.updated_at) %>)
+
   </em>
   <br/>
 
