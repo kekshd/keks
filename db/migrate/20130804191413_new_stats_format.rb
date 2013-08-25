@@ -7,6 +7,9 @@ class NewStatsFormat < ActiveRecord::Migration
 
     # don’t print the update statement for each stat
     ActiveRecord::Base.logger.quietly do
+      # XXX: if you get undefined constat here, temporarily comment out
+      # the “config.threadsafe” in config/application.rb. Appears to be a
+      # rails bug (see https://rails.lighthouseapp.com/projects/8994/tickets/2506-models-are-not-loaded-in-migrations-when-configthreadsafe-is-set )
       Stat.unscoped.all.each do |s|
         skipped, selansw = nil, nil
         if s.answer_id == -1
@@ -17,7 +20,7 @@ class NewStatsFormat < ActiveRecord::Migration
           selansw = "#{s.answer_id}"
         end
 
-        execute "UPDATE stats SET skipped = '#{skipped}', selected_answers = '#{selansw}' WHERE id = #{s.id} LIMIT 1"
+        execute "UPDATE stats SET skipped = '#{skipped}', selected_answers = '#{selansw}' WHERE id = '#{s.id}'"
       end
     end
 
