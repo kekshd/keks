@@ -21,8 +21,20 @@ module JsonHelper
 
     answers = []
 
-    ans_qry = q.answers
-    ans_qry = ans_qry.includes(:questions, :categories) if max_depth > 0
+
+    if max_depth > 0
+      key = ["json_for_question"]
+      key << last_admin_or_reviewer_change
+      key << q.id
+      key = key.join("__")
+
+      ans_qry = Rails.cache.fetch(key) {
+        # the map forces rails to resolve
+        q.answers.includes(:questions, :categories).map { |x| x }
+      }
+    else
+      ans_qry = q.answers
+    end
 
     ans_qry.each do |a|
       answers << json_for_answer(a, max_depth)
