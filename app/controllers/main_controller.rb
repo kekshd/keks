@@ -62,7 +62,14 @@ class MainController < ApplicationController
 
     qs = get_question_sample(qs, cnt)
 
-    json = qs.map { |q| json_for_question(q, 5) }
+    json = qs.map.with_index do |q, idx|
+      # maximum depth of 5 questions. However, avoid going to deep for
+      # later questions. For example, the last question never will
+      # present a subquestion, regardless if it has one. Therefore, no
+      # need to query for them.
+      c = cnt - idx - 1
+      json_for_question(q, c < 5 ? c : 5)
+    end
 
     render json: json
   end
