@@ -39,6 +39,14 @@ class User < ActiveRecord::Base
 
   attr_accessor :updating_password
 
+  # returns true if the given question or question id has been starred
+  # by the user. It avoids joining the question table for speedups, so
+  # in theory this could return true for non-existing questions.
+  def has_starred?(question)
+    qid = question.is_a?(Integer) ? question : question.id
+    User.count_by_sql("SELECT 1 FROM starred WHERE user_id = #{id} AND question_id = #{qid}").present?
+  end
+
   def correct_ratio
     all = recent_stats.where(:skipped => false).size.to_f
     all > 0 ? correct_count.to_f/all : 0.0

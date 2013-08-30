@@ -41,7 +41,7 @@ module JsonHelper
     end
 
     {
-      starred:   signed_in? ? current_user.starred.include?(q) : false,
+      starred:   signed_in? ? current_user.has_starred?(q) : false,
       hints:     hints,
       answers:   answers,
       matrix:    q.matrix_validate?,

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130821180401) do
+ActiveRecord::Schema.define(:version => 20130830203012) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(:version => 20130821180401) do
     t.datetime "content_changed_at"
   end
 
+  add_index "questions", ["id"], :name => "index_questions_on_id"
   add_index "questions", ["parent_id"], :name => "index_questions_on_parent_id"
 
   create_table "reviews", :force => true do |t|
@@ -73,10 +74,14 @@ ActiveRecord::Schema.define(:version => 20130821180401) do
     t.datetime "updated_at",  :null => false
   end
 
+  add_index "reviews", ["question_id"], :name => "index_reviews_on_question_id"
+
   create_table "starred", :id => false, :force => true do |t|
     t.integer "user_id"
     t.integer "question_id"
   end
+
+  add_index "starred", ["user_id", "question_id"], :name => "index_starred_on_user_id_and_question_id"
 
   create_table "stats", :force => true do |t|
     t.integer  "user_id"
@@ -87,6 +92,8 @@ ActiveRecord::Schema.define(:version => 20130821180401) do
     t.boolean  "skipped",          :default => false
     t.string   "selected_answers"
   end
+
+  add_index "stats", ["user_id"], :name => "index_stats_on_user_id"
 
   create_table "text_storage", :force => true do |t|
     t.string   "ident"
