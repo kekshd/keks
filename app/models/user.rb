@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
   # in theory this could return true for non-existing questions.
   def has_starred?(question)
     qid = question.is_a?(Integer) ? question : question.id
-    User.count_by_sql("SELECT 1 FROM starred WHERE user_id = #{id} AND question_id = #{qid}").present?
+    User.count_by_sql("SELECT 1 FROM starred WHERE user_id = #{id} AND question_id = #{qid}") > 0
   end
 
   def correct_ratio
