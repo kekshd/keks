@@ -27,6 +27,8 @@ gem 'bcrypt-ruby',          '3.0.1'
 group :development, :test do
   gem 'rspec-rails',        '2.13.0'
   gem 'spork',              '0.9.2'
+  gem 'time_bandits'
+  gem 'bullet'
 end
 
 group :test do
