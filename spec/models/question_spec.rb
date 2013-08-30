@@ -21,7 +21,7 @@ describe Question do
 
   it "is incomplete without answers" do
     q = FactoryGirl.create(:question_no_answers)
-    q.incomplete_reason.should_not eq ""
     q.complete?.should be_false
+    q.incomplete_reason.should_not eq ""
   end
 end
