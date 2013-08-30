@@ -29,6 +29,7 @@ group :development, :test do
   gem 'spork',              '0.9.2'
   gem 'time_bandits'
   gem 'bullet'
+  gem 'wirble'
 end
 
 group :test do
