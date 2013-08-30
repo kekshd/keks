@@ -21,6 +21,8 @@ module SessionsHelper
   end
 
   def current_user
+    # avoid query for non-signed in users
+    return nil if cookies[:remember_token].nil?
     @current_user ||= User.find_by_remember_token(cookies[:remember_token])
   end
 
