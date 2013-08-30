@@ -50,17 +50,18 @@ class MainController < ApplicationController
     diff = difficulties_from_param
     sp = study_path_ids_from_param
 
-    qs = Question.where(
+    question_ids = Question.where(
       :parent_type => "Category",
       :parent_id => cats,
       :difficulty => diff,
       :released => true,
       :study_path => sp)
+      .pluck(:id)
 
     ## comment in to only show matrix-questions
     #qs.reject!{ |q| !q.matrix_validate? }
 
-    qs = get_question_sample(qs, cnt)
+    qs = get_question_sample(question_ids, cnt)
 
     json = qs.map.with_index do |q, idx|
       # maximum depth of 5 questions. However, avoid going to deep for

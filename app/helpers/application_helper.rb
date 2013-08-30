@@ -84,21 +84,26 @@ module ApplicationHelper
   # incomplete questions, which are never returned though. May return
   # less questions than requested. If the user is logged in, it will
   # prefer questions not yet answered or answered incorrectly often.
-  def get_question_sample(qs, cnt)
+  def get_question_sample(question_ids, cnt)
     samp = nil
     if signed_in?
       # select questions depending on how often they were answered
       # correctly.
-      samp = roulette(qs, current_user, cnt)
+      samp = roulette(question_ids, current_user, cnt)
     else
       # uniform distribution. Select more questions than required and
       # only check them for completeness afterwards.
       # The completeness check is rather expensive. Trade-off being  a
       # few questions short in few cases in favor of being faster in the
       # average case.
-      samp = qs.sample(cnt*5)
+      samp = question_ids.sample(cnt*5)
+      # resolve IDs into questions. Eager load most things required for
+      # complete-check and presentation. The complete check is cached
+      # after first run. Measurements show there is no downside to
+      # including :reviews and :parent, even if they are not required.
+      samp = Question.where(id: samp).includes(:answers, :reviews, :parent, :hints)
       samp.reject! { |s| !s.complete? }
-      samp = qs.sample(cnt)
+      samp = samp.sample(cnt)
     end
     #~ dbgsamp = samp.map { |s| s.id }.join('  ')
     #~ dbgqs = qs.map { |s| s.id }.join('  ')
@@ -123,7 +128,7 @@ module ApplicationHelper
   # roulette wheel selection for questions, depending on correct answer
   # ratio by user. Implementation by Jakub Hampl.
   # http://stackoverflow.com/a/5243844/1684530
-  def roulette(questions, user, n)
+  def roulette(question_ids, user, n)
     # calculate ratio for each question how often it was answered in-
     # correctly by the user. Effectively, all the code does is:
     #   probs = questions.map { |q| [1 - q.correct_ratio_user(user), 0.1].max }
@@ -132,9 +137,9 @@ module ApplicationHelper
     correct = tmp.where(:correct => true).group(:question_id).size
     wrong = tmp.where(:correct => false).group(:question_id).size
 
-    probs = questions.map do |q|
-      c = correct[q.id] || 0
-      w = wrong[q.id] || 0
+    probs = question_ids.map do |qid|
+      c = correct[qid] || 0
+      w = wrong[qid] || 0
       cw = c+w
       [cw == 0 ? 1 : w/(c+w).to_f, 0.1].max
     end
@@ -144,12 +149,14 @@ module ApplicationHelper
       break if probs.empty?
       r, inc = rand * probs.sum, 0
       failed = false
-      questions.each_index do |i|
+      question_ids.each_index do |i|
         if r < (inc += probs[i])
-          failed = !questions[i].complete?
-          selected << questions[i] unless failed
+          qid = question_ids[i]
+          question = Question.includes(:answers, :reviews, :parent, :hints).find(qid)
+          failed = !question.complete?
+          selected << question unless failed
           # make selection not pick sample twice
-          questions.delete_at i
+          question_ids.delete_at i
           probs.delete_at i
           break
         end
