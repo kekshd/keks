@@ -41,6 +41,8 @@ class MainController < ApplicationController
   end
 
   def questions
+    time = Time.now
+
     cats = params[:categories].split("_").map { |c| c.to_i }
     return render :json => {error: "No categories given"} if cats.empty?
 
@@ -64,7 +66,14 @@ class MainController < ApplicationController
     ## comment in to only show matrix-questions
     #qs.reject!{ |q| !q.matrix_validate? }
 
+    logger.info "### get question ids: #{(Time.now - time)*1000}ms"
+    time = Time.now
+
+
     qs = get_question_sample(question_ids, cnt)
+
+    logger.info "### find sample: #{(Time.now - time)*1000}ms"
+    time = Time.now
 
     json = qs.map.with_index do |q, idx|
       # maximum depth of 5 questions. However, avoid going to deep for
@@ -76,6 +85,9 @@ class MainController < ApplicationController
     end
 
     render json: json
+
+    logger.info "### resolve: #{(Time.now - time)*1000}ms"
+    time = Time.now
   end
 
   def random_xkcd
