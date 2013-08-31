@@ -68,7 +68,7 @@ module ApplicationHelper
     diff.reject! { |d| !Difficulty.ids.include?(d) }
     return diff if diff.any?
 
-    logger.warn "No difficulties given, selecting first"
+    #~　logger.warn "No difficulties given, selecting first"
     return [Difficulty.ids.first]
   end
 
@@ -87,10 +87,12 @@ module ApplicationHelper
   def get_question_sample(question_ids, cnt)
     samp = nil
     if signed_in?
+      logger.debug "### roulette selection"
       # select questions depending on how often they were answered
       # correctly.
       samp = roulette(question_ids, current_user, cnt)
     else
+      logger.debug "### uniform selection"
       # uniform distribution. Select more questions than required and
       # only check them for completeness afterwards.
       # The completeness check is rather expensive. Trade-off being  a
