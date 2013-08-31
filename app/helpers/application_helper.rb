@@ -96,14 +96,21 @@ module ApplicationHelper
       # The completeness check is rather expensive. Trade-off being  a
       # few questions short in few cases in favor of being faster in the
       # average case.
-      samp = question_ids.sample(cnt*5)
+      big_sample = question_ids.sample(cnt*5)
+
       # resolve IDs into questions. Eager load most things required for
       # complete-check and presentation. The complete check is cached
       # after first run. Measurements show there is no downside to
       # including :reviews and :parent, even if they are not required.
-      samp = Question.where(id: samp).includes(:answers, :reviews, :parent, :hints)
-      samp.reject! { |s| !s.complete? }
-      samp = samp.sample(cnt)
+      big_sample = Question.where(id: big_sample)
+                    .includes(:answers, :reviews, :parent, :hints)
+
+      samp = []
+      big_sample.each do |s|
+        samp << s if s.complete?
+        # avoid completeness check if we have enough questions already
+        break if samp.size == cnt
+      end
     end
     #~ dbgsamp = samp.map { |s| s.id }.join('  ')
     #~ dbgqs = qs.map { |s| s.id }.join('  ')
