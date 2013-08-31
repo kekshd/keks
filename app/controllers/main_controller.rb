@@ -50,13 +50,16 @@ class MainController < ApplicationController
     diff = difficulties_from_param
     sp = study_path_ids_from_param
 
-    question_ids = Question.where(
+    qry = Question.where(
       :parent_type => "Category",
       :parent_id => cats,
       :difficulty => diff,
       :released => true,
       :study_path => sp)
-      .pluck(:id)
+      .to_sql
+      .sub('"questions".*', '"questions"."id"')
+
+    question_ids = ActiveRecord::Base.connection.select_values(qry)
 
     ## comment in to only show matrix-questions
     #qs.reject!{ |q| !q.matrix_validate? }
