@@ -43,7 +43,12 @@ class MainController < ApplicationController
   def questions
     time = Time.now
 
-    cats = params[:categories].split("_").map { |c| c.to_i }
+    cats = if params[:categories]
+      params[:categories].split("_").map { |c| c.to_i }
+    else
+      Category.root_categories.pluck(:id)
+    end
+
     return render :json => {error: "No categories given"} if cats.empty?
 
     cnt = params[:count].to_i
