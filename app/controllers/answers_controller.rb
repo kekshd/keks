@@ -52,7 +52,7 @@ class AnswersController < ApplicationController
     @question = Question.find(params[:question_id])
     unless @question
       flash[:warning] = "Frage mit dieser ID nicht gefunden."
-      redirec_to questions_path
+      redirect_to questions_path
     end
   end
 
