@@ -114,7 +114,7 @@
   <% end %>
 
   <% @question.answers.each do |a| %>
-    <%= render "answers/render", answer: a %>
+    <div><%= render_tex a.text %></div>
   <% end %>
 </div>
 
