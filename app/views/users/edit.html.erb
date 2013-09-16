@@ -5,7 +5,7 @@
   <h2>Vorlesungsschlüssel hinzufügen</h2>
   <p>Den Vorlesungsschlüssel für die Lineare Algebra 2 erhälst Du in der ersten Vorlesung oder bei Deiner Tutorin bzw. Deinem Tutor. Gib den Schlüssel hier ein, wenn Du möchtest, dass Deine statistischen Daten anonymisiert in die Veranstaltungsstatistik einfließen. Diese Statistik liefert Informationen, die die Veranstaltungsleitung nutzen kann, um Problembereiche aufzudecken, die dann ggf. nochmal behandelt werden können.</p>
 
-  <% unless @user.enrollment_keys.blank? %>
+  <% if @user.enrollment_keys? %>
     <p>
       <b>Vorhandene Schlüssel:</b> <%= @user.enrollment_keys %>
     </p>

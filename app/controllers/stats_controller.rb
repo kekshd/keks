@@ -40,7 +40,7 @@ class StatsController < ApplicationController
       s.selected_answers = answers
 
       render :json => s.save(:validate => false)
-    rescue Exception => e
+    rescue => e
       logger.warn "Could not save stats: debug output:"
       logger.warn " MSG: #{e.message}"
       logger.warn " QUESTION: #{PP.pp(quest, "")}"
