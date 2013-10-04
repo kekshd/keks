@@ -86,7 +86,20 @@ class MainController < ApplicationController
       # present a subquestion, regardless if it has one. Therefore, no
       # need to query for them.
       c = cnt - idx - 1
-      json_for_question(q, c < 5 ? c : 5)
+      tmp = json_for_question(q, c < 5 ? c : 5)
+
+      # assert the generated data looks reasonable, otherwise skip it
+      unless tmp.is_a?(Hash)
+        msg = "JSON for Question #{q.id} returned an array when it should be a Hash\n\n#{PP.pp(q, "")}"
+        if Rails.env.development?
+          raise msg
+        else
+          logger.error msg
+          next
+        end
+      end
+
+      tmp
     end
 
     render json: json
