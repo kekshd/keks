@@ -54,7 +54,7 @@ module JsonHelper
 
 
     if max_depth > 0
-      key = ["json_for_question"]
+      key = ["question_deep_answers_resolve"]
       key << last_admin_or_reviewer_change
       key << q.id
       key = key.join("__")
