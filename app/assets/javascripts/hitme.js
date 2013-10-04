@@ -1,9 +1,17 @@
+function throwWithAlert(msg, extra) {
+  var strace = Error().stack;
+  alert("Es ist ein Fehler aufgetreten. Das ist vermutlich unsere Schuld.\n\nWenn Du magst, kannst Du uns helfen den Fehler zu beheben. Kopiere dazu die nachfolgenden Details und maile sie an keks@uni-hd.de oder nutze das Feedback Formular. Danke!\n\n" + msg + "\n\n" + strace + "\n\nExtra-Info: " + extra);
+  throw(msg);
+}
+
 // returns a unique ID to be used to identify an element within the
 // webpage. Depends on the current state of the page, i.e. if we already
 // are in ask-skipped-questions-again mode.
 function getUniqId(q, a) {
   var qid = (typeof q === 'object' ? q.id : q);
-  if(qid === undefined || qid === null) throw('invalid question id');
+  if(qid === undefined || qid === null) {
+    throwWithAlert('invalid question id', "question=" + q + "  qid=" + qid);
+  }
   var id = "blockQuest" + qid;
 
   if(!window.currentHitme.nagAboutSkippedQuestions) id += 'repeat';
@@ -108,9 +116,9 @@ function getQuestionById(id) {
 }
 
 function storeStats(quest_id, selected_answers, skipped, correct) {
-  if(typeof selected_answers !== 'object') throw('selected_answers must be an array');
-  if(skipped === undefined) throw('skipped not given');
-  if(correct === undefined) throw('correct not given');
+  if(typeof selected_answers !== 'object') throwWithAlert('selected_answers must be an array');
+  if(skipped === undefined) throwWithAlert('skipped not given');
+  if(correct === undefined) throwWithAlert('correct not given');
   $.post(Routes.new_stat_path(quest_id), {
     selected_answers: selected_answers,
     skipped: skipped,
@@ -393,7 +401,7 @@ H.Hitme.prototype = {
 
 
     } else {
-      throw('Unsupported action. This is a coding error.');
+      throwWithAlert('Unsupported action. This is a coding error.');
     }
 
     window.currentHitme.showNext();
