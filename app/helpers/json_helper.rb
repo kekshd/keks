@@ -33,7 +33,15 @@ module JsonHelper
     qkey = qkey.join("__")
 
     cache = Rails.cache.read(qkey)
-    return cache if cache
+    if cache
+      if cache.is_a? Hash
+        return cache
+      else
+        logger.error "Question-JSON was an array when it should have been a Hash. Invalidating #{q.id} // #{qkey}"
+        logger.error PP.pp(cache, "")
+        Rails.cache.delete(qkey)
+      end
+    end
 
 
     hints = []
