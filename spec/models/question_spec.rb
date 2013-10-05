@@ -3,6 +3,10 @@
 require 'spec_helper'
 
 describe Question do
+  before :each do
+    Rails.cache.clear
+  end
+
   it "can be saved" do
     FactoryGirl.build(:question).should be_valid
   end
