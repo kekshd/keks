@@ -1,3 +1,5 @@
+require "./app/models/user.rb"
+
 class AddReviewerToUsers < ActiveRecord::Migration
   def up
     add_column :users, :reviewer, :boolean, :default => false

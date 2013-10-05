@@ -1,3 +1,5 @@
+require "./app/models/stat.rb"
+
 class NewStatsFormat < ActiveRecord::Migration
   def self.up
     # can’t use add_column, because for some reason the columns are not

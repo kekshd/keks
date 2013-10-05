@@ -1,3 +1,5 @@
+require "./app/models/question.rb"
+
 class AddContentChangedAtToQuestions < ActiveRecord::Migration
   def change
     add_column :questions, :content_changed_at, :datetime
