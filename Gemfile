@@ -18,7 +18,7 @@ end
 gem 'jquery-rails',         '2.2.1'
 gem 'jquery-tablesorter',   '1.4.1'
 gem 'js-routes',            '0.8.7'
-gem 'lazy_high_charts',     '1.3.3'
+gem 'lazy_high_charts',     '1.4.0'
 
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby',          '3.0.1'
