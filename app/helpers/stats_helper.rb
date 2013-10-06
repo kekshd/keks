@@ -46,4 +46,31 @@ module StatsHelper
       f.yAxis({title: {text: "Anteil in Prozent"}, min: 0, max: 100})
     end
   end
+
+
+  def render_date_to_count_graph(name, date_to_count_hash, range)
+    raise "date_to_count_hash must be a Hash" unless date_to_count_hash.is_a?(Hash)
+
+    unless date_to_count_hash.size == 0 || date_to_count_hash.keys.first.is_a?(String)
+      raise "date_to_count_hash key’s must be strings like this: “2013-11-23”"
+    end
+
+    range.days.ago.to_date.upto(Date.today).each { |x| date_to_count_hash[x.to_s] ||= 0 }
+
+    @h = LazyHighCharts::HighChart.new('graph') do |f|
+      f.options[:legend][:align] = 'right'
+      f.options[:legend][:verticalAlign] = 'top'
+      f.options[:chart][:defaultSeriesType] = "line"
+      f.options[:chart][:width] = 700
+      f.options[:chart][:height] = 280
+      f.options[:tooltip][:enabled] = false
+      f.options[:plotOptions][:series] = {pointInterval: 1.days, pointStart:  @range.days.ago}
+      f.options[:plotOptions][:line] = {animation: false}
+      f.xAxis(type: :datetime, dateTimeLabelFormats: { day: '%e. %b' })
+      f.yAxis({title: {text: "Anzahl"}, min: 0, max: date_to_count_hash.values.max })
+    end
+
+    @h.series(name: name, data: date_to_count_hash.values)
+    @h
+  end
 end

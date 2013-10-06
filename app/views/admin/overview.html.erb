@@ -4,6 +4,7 @@
   <%= render "action_menu" %>
   <h2>Statistiken</h2>
 
+  <%= link_to "Nutzungsstatistik", stat_activity_report_path %><br/>
   <%= link_to "Statistik nach Wurzel-Kategorien", stat_category_report_path %><br/>
   <% EnrollmentKeys.all.each do |id, name| %>
     <%= link_to name, stat_report_path(name) %>

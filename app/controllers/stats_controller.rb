@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class StatsController < ApplicationController
-  before_filter :require_admin, only: :report
+  before_filter :require_admin, except: :new
 
   def new
     begin
@@ -99,5 +99,18 @@ class StatsController < ApplicationController
 
       @keys[key] = {all: all, registered: all - unregistered, unregistered: unregistered}
     end
+  end
+
+  def activity_report
+    @range = [(params[:range] || "91" ).to_i, 1].max
+
+    stats = Stat.unscoped.where("created_at > ?", @range.days.ago)
+    quests = stats.group('date(created_at)').count
+    users_inner = stats.group('user_id, date(created_at)').select("date(created_at) AS date").to_sql
+    users_outer = "SELECT date, COUNT(*) FROM (#{users_inner}) GROUP BY date"
+    users = Hash[ActiveRecord::Base.connection.select_rows(users_outer)]
+
+    @g_quests = render_date_to_count_graph('beantwortete Fragen', quests,  @range)
+    @g_users  = render_date_to_count_graph('aktive Nutzer',       users,   @range)
   end
 end

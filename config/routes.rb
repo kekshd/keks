@@ -56,6 +56,7 @@ Keks::Application.routes.draw do
     match "categories/:id/release", to: "categories#release", :as => "release_category", via: :get
     match "suspicious_assocations", to: "categories#suspicious_associations", :as => "suspicious_associations", via: :get
     match "category_report", to: "stats#category_report", :as => "stat_category_report", via: :get
+    match "activity_report", to: "stats#activity_report", :as => "stat_activity_report", via: :get
     match "report/:enrollment_key", to: "stats#report", :as => "stat_report", via: :get
 
     match "tree", to: "admin#tree", :as => "tree", via: :get
