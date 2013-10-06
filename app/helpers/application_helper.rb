@@ -97,8 +97,9 @@ module ApplicationHelper
       # only check them for completeness afterwards.
       # The completeness check is rather expensive. Trade-off being  a
       # few questions short in few cases in favor of being faster in the
-      # average case.
-      big_sample = question_ids.sample(cnt*5)
+      # average case. For the default settings (questions=5, increase-
+      # factor=1.6) three additional questions are loaded as backup.
+      big_sample = question_ids.sample(cnt*1.6)
 
       # resolve IDs into questions. Eager load most things required for
       # complete-check and presentation. The complete check is cached
@@ -112,6 +113,14 @@ module ApplicationHelper
         samp << s if s.complete?
         # avoid completeness check if we have enough questions already
         break if samp.size == cnt
+      end
+
+      # warn if it’s possible that user desire could have been fulfilled
+      # If there are a lot of incomplete questions this may not be true,
+      # so only increase the sample value above if your question corpus
+      # is large enough.
+      if samp.size < cnt && question_ids.size > cnt
+        logger.warn "Got less questions than requested. Try increasing amount of questions checked."
       end
     end
     #~ dbgsamp = samp.map { |s| s.id }.join('  ')
