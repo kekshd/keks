@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/breunigs/keks.png?branch=master)](https://travis-ci.org/breunigs/keks)
+
 KeKs is a common Rails application and may be installed like any other Rails app. The project is currently available in German only. The following describes one way to set it up on Debian stable.
 
 ### general details
