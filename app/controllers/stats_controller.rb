@@ -94,7 +94,7 @@ class StatsController < ApplicationController
       next if questions.empty?
 
       all = Stat.unscoped.where(:question_id => questions).where("created_at > ?", @range.days.ago).count
-      unregistered = Stat.unscoped.where(:user_id => -1, :question_id => questions).where("created_at > ?", 91.days.ago).count
+      unregistered = Stat.unscoped.where(:user_id => -1, :question_id => questions).where("created_at > ?", @range.days.ago).count
 
 
       @keys[key] = {all: all, registered: all - unregistered, unregistered: unregistered}
