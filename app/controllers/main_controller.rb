@@ -91,11 +91,11 @@ class MainController < ApplicationController
       # assert the generated data looks reasonable, otherwise skip it
       unless tmp.is_a?(Hash)
         msg = "JSON for Question #{q.id} returned an array when it should be a Hash\n\n#{PP.pp(q, "")}"
-        if Rails.env.development?
-          raise msg
-        else
+        if Rails.env.production?
           logger.error msg
           next
+        else
+          raise msg
         end
       end
 
