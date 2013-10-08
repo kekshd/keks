@@ -47,7 +47,7 @@ Keks::Application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( die-ie-die.css print.css )
+  config.assets.precompile += %w( die-ie-die.css print.css jquery.uix.multiselect.min.js )
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
@@ -72,6 +72,6 @@ Keks::Application.configure do
   # cache assets for one year. Since they are fingerprinted,
   # expiration doesn’t matter
   config.static_cache_control = "public, max-age=#{60*60*24*365}"
-  
+
   config.threadsafe!
 end
