@@ -188,6 +188,6 @@ module ApplicationHelper
   end
 
   def etag(text = "")
-    "#{GIT_REVISION}_#{current_user.try :id}_#{text}"
+    "#{GIT_REVISION}_#{current_user.try :id}_#{last_admin_or_reviewer_change}_#{text}"
   end
 end
