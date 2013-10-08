@@ -187,7 +187,12 @@ module ApplicationHelper
     sq
   end
 
-  def etag(text = "")
-    "#{GIT_REVISION}_#{current_user.try :id}_#{last_admin_or_reviewer_change}_#{text}"
+  def etag(text = nil)
+    tag = []
+    tag << GIT_REVISION if defined?(GIT_REVISION)
+    tag << current_user.id if current_user
+    tag << last_admin_or_reviewer_change
+    tag << text if text?
+    tag.join("_")
   end
 end
