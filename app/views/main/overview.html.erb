@@ -6,6 +6,7 @@
     <li>
       <%= link_to "Gleich loslegen", main_hitme_path(:anchor => "hide-options"), :class => "button big" %>
       Für ganz Eilige. Nur Fragengebiet wählen und los geht’s. Kein Login notwendig.
+      <link rel="prefetch prerender" href="<%=main_hitme_path(:anchor => "hide-options")%>">
     </li>
 
     <% if signed_in? %>
@@ -22,7 +23,7 @@
         Wenn Du Dir einen Account erstellst, merkt sich das System welche Fragen du wie beantwortet hast und wählt die zukünftigen Fragen entsprechend aus. Außerdem kannst du dir alle bereits beantworteten Fragen und deine persönliche Statistik ansehen sowie ausgewählte Fragen speichern. 
       </p>
     </li>
+    <link rel="prefetch prerender" href="<%=signin_path%>">
     <% end %>
-
   </ul>
 </div>
