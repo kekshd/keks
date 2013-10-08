@@ -192,7 +192,7 @@ module ApplicationHelper
     tag << GIT_REVISION if defined?(GIT_REVISION)
     tag << current_user.id if current_user
     tag << last_admin_or_reviewer_change
-    tag << text unless text.nil?
+    tag << text unless text.blank?
     tag.join("_")
   end
 end
