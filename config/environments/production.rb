@@ -66,12 +66,11 @@ Keks::Application.configure do
 
   config.action_mailer.default_url_options = { :host => "www.mathi.uni-heidelberg.de", :protocol => "https:" }
 
-
-
-
   # make production more like development
-  #~ config.cache_classes = false
   config.whiny_nils = true
   config.consider_all_requests_local       = true
-  #~ config.action_controller.perform_caching = false
+
+  # cache assets for one week. Since they are fingerprinted,
+  # expiration doesn’t matter
+  config.static_cache_control = "public, max-age=#{60*60*24*7}"
 end
