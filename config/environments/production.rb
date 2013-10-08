@@ -69,9 +69,9 @@ Keks::Application.configure do
   config.whiny_nils = true
   config.consider_all_requests_local       = true
 
-  # cache assets for one week. Since they are fingerprinted,
+  # cache assets for one year. Since they are fingerprinted,
   # expiration doesn’t matter
-  config.static_cache_control = "public, max-age=#{60*60*24*31}"
+  config.static_cache_control = "public, max-age=#{60*60*24*365}"
   
   config.threadsafe!
 end
