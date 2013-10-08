@@ -6,13 +6,16 @@ class MainController < ApplicationController
   end
 
   def hitme
+    fresh_when(etag: etag)
   end
 
   def help
+    fresh_when(etag: etag)
   end
 
   def feedback
     @text = params[:text]
+    fresh_when(etag: etag(@text))
   end
 
   def feedback_send
@@ -41,6 +44,9 @@ class MainController < ApplicationController
   end
 
   def questions
+    # never cache this resource to ensure users get random questions
+    expires_now
+
     time = Time.now
 
     cats = if params[:categories]

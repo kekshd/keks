@@ -60,6 +60,7 @@ class UsersController < ApplicationController
   end
 
   def starred
+    fresh_when(etag: etag(@user.starred.pluck(:id).join("_")))
   end
 
   def history

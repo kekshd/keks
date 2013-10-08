@@ -186,4 +186,8 @@ module ApplicationHelper
     end
     sq
   end
+
+  def etag(text = "")
+    "#{GIT_REVISION}_#{current_user.try :id}_#{text}"
+  end
 end
