@@ -66,7 +66,5 @@ module Keks
     config.assets.version = '1.0'
 
     config.cache_store = :memory_store, { size: 128*1024*1024 }
-
-    config.threadsafe!
   end
 end

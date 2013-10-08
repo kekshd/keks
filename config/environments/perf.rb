@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 Keks::Application.configure do
+  config.threadsafe!
   config.whiny_nils = true
   config.cache_classes = true
   config.consider_all_requests_local       = true

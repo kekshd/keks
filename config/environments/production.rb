@@ -72,4 +72,6 @@ Keks::Application.configure do
   # cache assets for one week. Since they are fingerprinted,
   # expiration doesn’t matter
   config.static_cache_control = "public, max-age=#{60*60*24*31}"
+  
+  config.threadsafe!
 end
