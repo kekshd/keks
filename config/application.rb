@@ -65,7 +65,7 @@ module Keks
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    config.cache_store = :memory_store, { size: 64*1024*1024 }
+    config.cache_store = :memory_store, { size: 128*1024*1024 }
 
     config.threadsafe!
   end
