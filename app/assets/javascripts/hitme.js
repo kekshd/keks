@@ -583,3 +583,10 @@ H.hitme = function() {
   h.setupCategoryQuestionMode();
   return h;
 }
+
+
+$(document).ready(function(){
+  if(isMobileBrowser) {
+    $("#quantity").attr("min", "1").attr("value", "2");
+  }
+});
