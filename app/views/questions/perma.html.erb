@@ -1,3 +1,5 @@
+<% provide(:title, "Frage #{@question.id}") %>
+
 <div>
   <%= render "questions/render_full", q: @question, show_question_id: true %>
   <br/><br/>
