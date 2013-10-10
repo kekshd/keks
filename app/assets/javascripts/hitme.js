@@ -273,6 +273,12 @@ window.CONST = {
     marginBottom: 'show', paddingTop: 'show', paddingBottom: 'show'},
   stayAtBottom: { duration: 'slow',
     step: function(now, fx) {
+      var absTop = $(this).offset().top;
+      var relTop = absTop - $(window).scrollTop();
+      // do not scroll past the top of the element.
+      // 50 pixels leave some space for the border
+      if(relTop < 50) return;
+
       $('html, body').scrollTop(99999999);
     }
   }
@@ -458,7 +464,15 @@ H.Hitme.prototype = {
     $(code).appendTo('body');
     $('.answer-submit:last').one('click', 'a', this._handleQuestionSubmit);
     // render math first, then expand
-    var render = function() { $("#"+getUniqId(q.id)).animate(CONST.showAnimation, CONST.stayAtBottom); }
+    var render = function() {
+      if(window.animationDisabled) {
+        var elm = $("#"+getUniqId(q.id));
+        elm.show();
+        $("html, body").scrollTop(elm.offset().top);
+      } else {
+        $("#"+getUniqId(q.id)).animate(CONST.showAnimation, CONST.stayAtBottom);
+      }
+    }
     MathJax.Hub.Queue(["Typeset",MathJax.Hub, render]);
 
     // add preview for matrix questions
