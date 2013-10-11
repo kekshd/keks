@@ -39,7 +39,9 @@ end
 group :development, :test do
   gem 'factory_girl_rails', '4.2.0'
   gem 'rspec-rails',        '2.13.0'
-  gem 'time_bandits'        # improved logging of execution time
+  # improved logging of execution time. Unfortunately makes assets noisy
+  # again, so disabled for now
+  #gem 'time_bandits'
   gem 'zeus', :require => false
   gem 'zeus-parallel_tests'
   gem 'parallel_tests'

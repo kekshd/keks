@@ -198,11 +198,7 @@ GEM
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
     thor (0.18.1)
-    thread_variables (0.2.0)
     tilt (1.4.1)
-    time_bandits (0.6.0)
-      activesupport (>= 2.3.2)
-      thread_variables
     tins (0.12.0)
     treetop (1.4.15)
       polyglot
@@ -258,7 +254,6 @@ DEPENDENCIES
   sqlite3 (= 1.3.7)
   therubyracer
   thin (= 1.5.0)
-  time_bandits
   turbo-sprockets-rails3
   uglifier (= 1.3.0)
   zeus
