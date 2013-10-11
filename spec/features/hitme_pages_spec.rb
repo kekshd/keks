@@ -43,10 +43,15 @@ describe "Hitme" do
       expect do
         category_select
         3.times {
-          all('.answer-submit a.button.big[data-action="save"]').last.click
-          sleep 0.5
+          expect do
+            # select correct answer to easily distinguish these stats
+            # from others inserted by race conditions
+            all('a.button.toggleable[data-correct="true"]').last.click
+            all('.answer-submit a.button.big[data-action="save"]').last.click
+            sleep 0.1
+          end.to change { Stat.where(correct: true).size }.by(1)
         }
-      end.to change { Stat.all.size }.by(3)
+      end.to change { Stat.where(correct: true).size }.by(3)
     end
   end
 
