@@ -8,6 +8,12 @@ if ENV['RAILS_ENV'] == 'test' && ENV["COVERAGE"]
   puts "required simplecov"
 end
 
+if ENV["IS_TRAVIS"]
+  require 'coveralls'
+  Coveralls.wear!('rails')
+end
+
+
 # This command will automatically be run when you run "rails" with Rails 3 gems installed from the root of your application.
 
 APP_PATH = File.expand_path('../../config/application',  __FILE__)

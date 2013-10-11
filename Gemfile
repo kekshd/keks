@@ -52,4 +52,6 @@ group :test do
   gem 'capybara-webkit'
   gem 'selenium-webdriver'
   gem 'simplecov',          '0.8.0.pre2', :require => false
+
+  gem 'coveralls',                        :require => false
 end
