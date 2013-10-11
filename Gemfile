@@ -47,6 +47,8 @@ end
 group :test do
   gem 'capybara',           '2.1.0'
   gem 'faker',              '1.1.2'
+  # show rspec error message immediately when it fails
+  gem 'rspec-instafail',    :require => false
 
   gem 'launchy',            '2.2.0'
   gem 'capybara-webkit'
