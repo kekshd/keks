@@ -68,7 +68,6 @@ GEM
       term-ansicolor
       thor
     daemons (1.1.9)
-    database_cleaner (0.9.1)
     debug_inspector (0.0.2)
     diff-lcs (1.2.4)
     docile (1.1.0)
@@ -239,7 +238,6 @@ DEPENDENCIES
   capybara-webkit
   coffee-rails (= 3.2.2)
   coveralls
-  database_cleaner (= 0.9.1)
   factory_girl_rails (= 4.2.0)
   faker (= 1.1.2)
   jquery-rails (= 2.2.1)

@@ -2,9 +2,10 @@
 
 set -e
 
-USE_THREADS=4
+USE_THREADS=`/usr/bin/nproc`
 
 if [ -S ".zeus.sock" ]; then
+  echo "Using $USE_THREADS threads"
   echo "Creating test.sqlite3"
   zeus rake "parallel:create[1]" "parallel:prepare[1]" > /dev/null
 

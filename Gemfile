@@ -37,7 +37,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'database_cleaner',   '0.9.1'
   gem 'factory_girl_rails', '4.2.0'
   gem 'rspec-rails',        '2.13.0'
   gem 'time_bandits'        # improved logging of execution time
