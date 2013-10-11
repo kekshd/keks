@@ -5,6 +5,8 @@ class QuestionsController < ApplicationController
   before_filter :signed_in_user, :only => [:star, :unstar]
 
   def star
+    expires_now
+
     @question = Question.find(params[:id])
     return render :json => "keine Frage" if !@question
     begin
@@ -14,6 +16,8 @@ class QuestionsController < ApplicationController
   end
 
   def unstar
+    expires_now
+
     @question = Question.find(params[:id])
     return render :json => false if !@question
     #~ begin
