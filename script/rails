@@ -2,15 +2,18 @@
 
 if ENV['RAILS_ENV'] == 'test' && ENV["COVERAGE"]
   require 'simplecov'
+
+  if ENV["COVERALLS"]
+    require 'coveralls'
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+      SimpleCov::Formatter::HTMLFormatter,
+      Coveralls::SimpleCov::Formatter
+    ]
+  end
+
   SimpleCov.start 'rails' do
     add_filter 'vendor'
   end
-  puts "required simplecov"
-end
-
-if ENV["IS_TRAVIS"]
-  require 'coveralls'
-  Coveralls.wear!('rails')
 end
 
 

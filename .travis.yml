@@ -9,6 +9,7 @@ script:
 before_install:
   - "export DISPLAY=:99.0"
   - "export BUNDLE_JOBS=4"
-  - "export IS_TRAVIS=true"
+  - "export COVERAGE=true"
+  - "export COVERALLS=true"
   - "sh -e /etc/init.d/xvfb start"
 bundler_args: --without development --deployment

@@ -1,14 +1,19 @@
 if ENV["COVERAGE"]
   require 'simplecov'
+
+  if ENV["COVERALLS"]
+    require 'coveralls'
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+      SimpleCov::Formatter::HTMLFormatter,
+      Coveralls::SimpleCov::Formatter
+    ]
+  end
+
   SimpleCov.start 'rails' do
     add_filter 'vendor'
   end
 end
 
-if ENV["IS_TRAVIS"]
-  require 'coveralls'
-  Coveralls.wear!('rails')
-end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] = 'test'
