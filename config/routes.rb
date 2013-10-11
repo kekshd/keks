@@ -15,7 +15,7 @@ Keks::Application.routes.draw do
   match "help", as: "main_help", to: "main#help"
 
 
-  resources :users
+  resources :users, except: :index
   match "users/:id/enrollment" => "users#enroll", as: "enroll_user", via: :post
   match "users/:id/starred" => "users#starred", as: "starred", via: :get
   match "users/:id/history" => "users#history", as: "history", via: :get
