@@ -87,7 +87,14 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(params[:question])
 
-    p = params[:parent].split('_')
+    begin
+      p = params[:parent].split('_')
+    rescue
+      flash[:error] = "Kein gültiges Elter-Element angegeben"
+      return render 'new'
+    end
+
+
     p = (p[0] == "Category") ? Category.find(p[1]) : Answer.find(p[1])
     @question.parent = p
 
