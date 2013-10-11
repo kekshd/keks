@@ -24,10 +24,15 @@ describe AdminController do
     response.body.should have_text "einsehbar"
   end
 
-  it "does not render the page for users" do
+  it "does not render export page for users" do
     sign_in user
     get :export
     response.should_not render_template :export
     response.body.should_not have_text "einsehbar"
+  end
+
+  it "generates dot and svgz tree representations" do
+    get :tree, :format => :dot
+    get :tree, :format => :svgz
   end
 end
