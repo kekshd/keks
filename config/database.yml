@@ -17,9 +17,9 @@ perf:
 # Do not set this db to the same as development or production.
 test:
   adapter: sqlite3
-  database: db/test.sqlite3
+  database: db/test<%= ENV['TEST_ENV_NUMBER'] %>.sqlite3
   pool: 5
-  timeout: 50000
+  timeout: 5000
 
 production:
   adapter: sqlite3

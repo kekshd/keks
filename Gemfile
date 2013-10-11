@@ -42,6 +42,8 @@ group :development, :test do
   gem 'rspec-rails',        '2.13.0'
   gem 'time_bandits'        # improved logging of execution time
   gem 'zeus', :require => false
+  gem 'zeus-parallel_tests'
+  gem 'parallel_tests'
 end
 
 group :test do

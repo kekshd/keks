@@ -70,6 +70,7 @@ RSpec.configure do |config|
   config.before do
     Capybara.current_driver = :webkit
     Capybara.javascript_driver = :webkit
+    Capybara.server_port = 9887 + ENV['TEST_ENV_NUMBER'].to_i
 
     # comment this in to see live action testing in firefox. IRB testing
     # is likely the better choice though:
