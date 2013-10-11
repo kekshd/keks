@@ -20,3 +20,5 @@ vendor/ruby
 
 
 config/initializers/git_revision.rb
+
+/coverage

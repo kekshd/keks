@@ -24,13 +24,21 @@ gem 'lazy_high_charts',     '1.4.0'
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby',          '3.0.1'
 
-# testing
+group :development do
+  gem 'pry-rails',          '0.3.2'
+  gem 'rack-livereload'     # automatically update pages in browser
+  gem 'awesome_print'       # console highlighting
+  gem 'better_errors'       # improve in browser error messages
+  gem 'binding_of_caller'   # allow to spawn a REPL for above
+  gem 'letter_opener'       # preview mails in browser rather than using an actual smtp
+  gem 'bullet'              # detect n+1 queries
+end
+
 group :development, :test do
   gem 'rspec-rails',        '2.13.0'
   gem 'spork',              '0.9.2'
-  gem 'time_bandits'
-  gem 'bullet'
-  gem 'wirble'
+  gem 'time_bandits'        # improved logging of execution time
+  gem 'zeus', :require => false
 end
 
 group :test do
@@ -41,4 +49,5 @@ group :test do
   gem 'launchy',            '2.2.0'
   gem 'capybara-webkit'
   gem 'selenium-webdriver'
+  gem 'simplecov',          '0.8.0.pre2', :require => false
 end
