@@ -42,8 +42,10 @@ describe "Hitme" do
     it "updates stats" do
       expect do
         category_select
-        3.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
-        sleep 0.5
+        3.times {
+          all('.answer-submit a.button.big[data-action="save"]').last.click
+          sleep 0.5
+        }
       end.to change { Stat.all.size }.by(3)
     end
   end
