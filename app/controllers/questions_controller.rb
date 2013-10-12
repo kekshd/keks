@@ -71,7 +71,14 @@ class QuestionsController < ApplicationController
   def update
     @question = Question.find(params[:id])
 
-    p = params[:parent].split('_')
+    begin
+      logger.warn PP.pp(params, "")
+      p = params[:parent].split('_')
+    rescue
+      flash[:error] = "Kein gültiges Elter-Element angegeben"
+      return render 'edit'
+    end
+
     p = (p[0] == "Category") ? Category.find(p[1]) : Answer.find(p[1])
     @question.parent = p
 
@@ -94,7 +101,6 @@ class QuestionsController < ApplicationController
       return render 'new'
     end
 
-
     p = (p[0] == "Category") ? Category.find(p[1]) : Answer.find(p[1])
     @question.parent = p
 
@@ -114,20 +120,5 @@ class QuestionsController < ApplicationController
       flash[:error] = "Frage nicht gelöscht. Siehe Log für mehr Informationen."
     end
     redirect_to questions_path
-  end
-
-
-  def json
-    @question = Question.find(params[:id])
-    hints = []
-    @question.hints.each do |h|
-      @hint = h
-      hints << render_to_string(partial: '/hints/render.html.erb')
-    end
-
-    render json: {
-      'hints' => hints,
-      'html' => render_to_string(partial: 'render.html.erb')
-    }
   end
 end

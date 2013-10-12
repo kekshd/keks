@@ -80,7 +80,7 @@ class Question < ActiveRecord::Base
   def trace_to_root(first = false)
     s = ""
     s << " ← Q:#{ident}" unless first
-    s << parent.trace_to_root
+    s << (parent ? parent.trace_to_root : "[[no parent]]")
     s
   end
 

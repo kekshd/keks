@@ -22,6 +22,17 @@ FactoryGirl.define do
     factory :physiker do
       study_path 3
     end
+
+    trait :stats do
+      after(:create) do |user|
+        ((rand*7).to_i + 1).times {
+          q = FactoryGirl.create(:question_with_answers)
+          FactoryGirl.create_list(:stat, (rand*5).to_i + 1 , user: user, question: q)
+        }
+      end
+    end
+
+    factory :user_with_stats, traits: [:stats]
   end
 
   factory :hint do
@@ -48,6 +59,10 @@ FactoryGirl.define do
       association :parent, factory: :answer
     end
 
+    trait :parent_answer_parent do
+      association :parent, factory: :answer
+    end
+
     trait :hints do
       after(:create) do |question|
         FactoryGirl.create_list(:hint, rand(3), question: question)
@@ -61,10 +76,30 @@ FactoryGirl.define do
       end
     end
 
+    trait :subs do
+      answers
+      after(:create) do |question|
+        FactoryGirl.create_list(:question_parent_answer, 2, parent: question.answers.sample)
+        FactoryGirl.create_list(:category_with_questions, 2, answers: [question.answers.sample])
+        FactoryGirl.create_list(:question_parent_answer, 2)
+      end
+    end
+
+    factory :question_parent_category_subs, traits: [:parent_category, :subs]
     factory :question_parent_category, traits: [:parent_category, :hints, :answers]
     factory :question_parent_answer, traits: [:parent_answer, :hints, :answers]
+    factory :question_parent_answer_subs, traits: [:parent_answer, :subs]
+    factory :question_subs, traits: [:subs]
     factory :question_no_answers, traits: [:parent_category, :hints]
     factory :question_with_answers, traits: [:hints, :answers]
+
+    factory :question_matrix do
+      after(:create) do |question|
+        FactoryGirl.create_list(:answer_matrix, 1, question: question)
+      end
+    end
+
+
   end
 
 
@@ -82,6 +117,11 @@ FactoryGirl.define do
 
     factory :answer_wrong do
       correct false
+    end
+
+    factory :answer_matrix do
+      correct true
+      text { "$\\begin{pmatrix}3\\\\3\\\\18\\end{pmatrix}$" }
     end
   end
 
@@ -101,11 +141,21 @@ FactoryGirl.define do
     end
   end
 
-  factory :stats do
-    question
+  factory :stat do
+    association :question, :factory => [:question_with_answers]
     user
-    answer
-    correct { |s| s.answer.correct? }
+    selected_answers do |s|
+      [s.question.answers.sample.id]
+    end
+    correct do |s|
+      s.selected_answers.all? { |a| Answer.find(a).correct? }
+    end
+
+    factory :stat_skipped do
+      skipped true
+      selected_answers []
+      correct false
+    end
   end
 
   factory :review do
@@ -113,5 +163,16 @@ FactoryGirl.define do
     user
     created_at Time.now
     updated_at Time.now
+  end
+
+  factory :text_storage do
+    value { Faker::Lorem.sentence }
+    sequence :ident do |n|
+      "textStorageIdent#{n}"
+    end
+
+    factory :text_storage_empty do
+      value ""
+    end
   end
 end

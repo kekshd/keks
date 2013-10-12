@@ -27,7 +27,7 @@ Keks::Application.routes.draw do
 
   get "admin/overview"
   scope "/admin" do
-    resources :text_storage
+    resources :text_storage, only: :update
 
     match "users", to: "users#index", as: "user_index", via: :get
     match "users/:id/reviews", to: "users#reviews", as: "user_reviews", via: :get
