@@ -37,10 +37,6 @@ class Answer < ActiveRecord::Base
     questions + categories.map { |c| c.questions }.flatten
   end
 
-  def get_all_subquestion_ids
-    get_all_subquestions.map { |q| q.id }
-  end
-
   def trace_to_root(first = false)
     s = ""
     s << " ← A:#{ident}" unless first
