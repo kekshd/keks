@@ -132,14 +132,14 @@ class Review < ActiveRecord::Base
       hide_in_menu: true,
       questions: lambda { |current_user|
         reviews = Review.where(user_id: current_user)
-        reviewed_question_ids = reviews.map { |r| r.question_id }
+        reviewed_question_ids = reviews.pluck(:question_id)
 
         questions = Question.includes(:reviews, :parent).all
         questions_need_review = questions.select do |q|
           q.reviews.size < REVIEW_MIN_REQUIRED_REVIEWS \
             and !reviewed_question_ids.include?(q.id)
         end
-        return questions
+        return questions_need_review
       }
     },
 
