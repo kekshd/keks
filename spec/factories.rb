@@ -17,6 +17,9 @@ FactoryGirl.define do
 
     factory :reviewer do
       reviewer true
+      after(:create) do |user|
+        FactoryGirl.create_list(:review, 5, user: user)
+      end
     end
 
     factory :physiker do
@@ -65,7 +68,7 @@ FactoryGirl.define do
 
     trait :hints do
       after(:create) do |question|
-        FactoryGirl.create_list(:hint, rand(3), question: question)
+        FactoryGirl.create_list(:hint, rand(3) + 1, question: question)
       end
     end
 
@@ -80,7 +83,7 @@ FactoryGirl.define do
       answers
       after(:create) do |question|
         FactoryGirl.create_list(:question_parent_answer, 2, parent: question.answers.sample)
-        FactoryGirl.create_list(:category_with_questions, 2, answers: [question.answers.sample])
+        FactoryGirl.create_list(:category_with_questions, 2, answers: [question.answers.sample], is_root: false)
         FactoryGirl.create_list(:question_parent_answer, 2)
       end
     end
@@ -99,7 +102,11 @@ FactoryGirl.define do
       end
     end
 
-
+    factory :question_with_many_good_reviews do
+      after(:create) do |question|
+        FactoryGirl.create_list(:review, 5, question: question, okay: true)
+      end
+    end
   end
 
 
@@ -161,6 +168,8 @@ FactoryGirl.define do
   factory :review do
     association :question, :factory => [:question_parent_category]
     user
+    okay { rand(2) == 1 }
+    comment { Faker::Lorem.sentence }
     created_at Time.now
     updated_at Time.now
   end

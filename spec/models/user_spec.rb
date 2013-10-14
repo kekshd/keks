@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 describe User do
+  let(:user) { FactoryGirl.create(:user) }
+
   it "can be saved" do
     FactoryGirl.build(:user).should be_valid
   end
@@ -20,11 +22,19 @@ describe User do
   end
 
   it "has a remember token" do
-    FactoryGirl.create(:user).remember_token.should_not be nil
+    user.remember_token.should_not be nil
   end
 
   it "has a password digest" do
-    FactoryGirl.create(:user).password_digest.should_not be nil
-    FactoryGirl.create(:user).password_digest.should_not be_empty
+    user.password_digest.should_not be nil
+    user.password_digest.should_not be_empty
+  end
+
+  it "sends password recovery mail" do
+    user.send_password_reset
+    mail = ActionMailer::Base.deliveries.last
+    expect(mail.to).to include(user.mail)
+    expect(mail.body.encoded).to include(user.password_reset_token)
+    expect(mail.body.encoded).to include("/password_resets/") # i.e. url
   end
 end

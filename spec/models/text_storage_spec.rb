@@ -12,4 +12,9 @@ describe TextStorage do
     expect(FactoryGirl.build(:text_storage)).to be_valid
     expect(FactoryGirl.build(:text_storage_empty)).to be_valid
   end
+
+  it "returns saved text" do
+    entry = FactoryGirl.create(:text_storage)
+    expect(TextStorage.get(entry.ident)).to eql(entry.value)
+  end
 end
