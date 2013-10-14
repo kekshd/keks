@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   end
 
   def toggle_reviewer
-    user = User.find(params[:id])
+    user = User.find(params[:id]) rescue nil
     unless user
       flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
       return redirect_to user_index_path
@@ -38,7 +38,7 @@ class UsersController < ApplicationController
   end
 
   def toggle_admin
-    user = User.find(params[:id])
+    user = User.find(params[:id]) rescue nil
     unless user
       flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
       return redirect_to user_index_path
@@ -91,7 +91,7 @@ class UsersController < ApplicationController
 
   def enroll
     key = (params[:enrollment_key] || '').gsub(/[^a-z0-9]/i, "")
-    if !key
+    if key.blank?
       flash[:error] = "Kein Einschreibeschlüssel angegeben."
       chart
       render 'edit'
@@ -125,6 +125,7 @@ class UsersController < ApplicationController
       sign_in @user
       redirect_to edit_user_path(@user)
     else
+      chart
       render 'edit'
     end
   end
