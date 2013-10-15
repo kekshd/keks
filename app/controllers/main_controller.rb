@@ -14,26 +14,25 @@ class MainController < ApplicationController
   end
 
   def feedback
-    @text = params[:text]
-    fresh_when(etag: etag(@text))
+    fresh_when(etag: etag)
   end
 
   def feedback_send
-    if params[:text].empty?
-      flash[:warning] = "Ohne Text kein Feedback. Ohne Feedback KeKs schlecht. Gib uns Text, bitte!"
-      return render "feedback"
-    end
-
     @name = params[:name]
     @mail = params[:mail]
     @text = params[:text]
+
+    if @text.empty?
+      flash[:warning] = "Ohne Text kein Feedback. Ohne Feedback KeKs schlecht. Gib uns Text, bitte!"
+      return render :feedback
+    end
 
     if UserMailer.feedback(@text, @name, @mail).deliver
       flash[:success] = "Mail ist raus, vielen Dank!"
       return redirect_to feedback_path
     else
       flash[:error] = "Das System ist kaputt. Kannst Du das bitte ganz klassisch an keks@uni-hd.de senden?"
-      return render "feedback"
+      return render :feedback
     end
   end
 
