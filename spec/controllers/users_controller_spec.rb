@@ -43,6 +43,13 @@ describe UsersController do
     expect(user.enrollment_keys).to include(ek)
   end
 
+  it "re-renders new page when something’s wrong" do
+    # i.e. post misses password confirmation
+    post :create, user: { nick: "Derpina", password: "123" }
+    expect(flash[:success]).to be_nil
+    expect(response).to render_template(:new)
+  end
+
   it "re-renders edit page when enrolling with unknown key" do
     sign_in user
     ek = EnrollmentKeys.names.first + "derp"
