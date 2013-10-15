@@ -23,7 +23,8 @@ Keks::Application.configure do
   config.assets.digest = true
 
   config.assets.handle_expiration = true
-  config.assets.expire_after = 2.weeks
+  # two weeks, for some reason 2.weeks doesn’t work
+  config.assets.expire_after = 14*24*60*60
 
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH
