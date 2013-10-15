@@ -38,4 +38,6 @@ class EnrollmentKeys < ActiveEnum::Base
   value :id => 1, :name => 'TestEnrollment'
   value :id => 2, :name => '2013LA2'
   value :id => 3, :name => 'mathphys2013'
+  value :id => 4, :name => '2013LA1'
+  value :id => 5, :name => '2013ANA1'
 end
