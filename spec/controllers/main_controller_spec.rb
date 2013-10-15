@@ -17,17 +17,36 @@ describe MainController do
     expect(response).to render_template(:feedback)
   end
 
-  it "automatically selects root categories if none given" do
-    FactoryGirl.create(:category_with_questions)
-    get :questions, count: 5
-    expect { JSON.parse(response.body) }.not_to raise_error
-    expect(JSON.parse(response.body)).to be_a(Array)
+  describe "#questions" do
+    it "automatically selects root categories if none given" do
+      FactoryGirl.create(:category_with_questions)
+      get :questions, count: 5
+      expect { JSON.parse(response.body) }.not_to raise_error
+      expect(JSON.parse(response.body)).to be_a(Array)
+    end
+
+    it "raises when given invalid data" do
+      FactoryGirl.create(:category_with_questions)
+      expect {
+        controller.stub!(:json_for_question).and_return(["borken"])
+        get :questions, count: 5
+      }.to raise_error
+    end
   end
 
   it "renders json for single question" do
     q = FactoryGirl.create(:question)
     get :single_question, id: q.id
     expect { JSON.parse(response.body) }.not_to raise_error
+  end
+
+  it "handles mail delivery backend failure" do
+    expect {
+      UserMailer.stub_chain('feedback.deliver').and_return(false)
+      post :feedback_send, name: user.nick, mail: user.mail, text: "derp"
+    }.not_to change{ sent_mails.size }
+    expect(flash[:error]).not_to be_nil
+    expect(response).to render_template(:feedback)
   end
 
   it "allows feedback to be sent" do
@@ -42,7 +61,7 @@ describe MainController do
   it "sends no mail when missing text" do
     expect {
       post :feedback_send, name: user.nick, mail: user.mail, text: ""
-    }.not_to change{ActionMailer::Base.deliveries.size}
+    }.not_to change{ sent_mails.size }
     expect(flash[:warning]).not_to be_nil
     expect(response).to render_template(:feedback)
     expect(response.body).to have_field(:name, with: user.nick)

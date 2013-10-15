@@ -43,6 +43,16 @@ describe QuestionsController do
     question.complete?.should == false
   end
 
+  it "shows an error when toggling fails" do
+    sign_in admin
+    Question.stub(:find).and_return {
+      question.stub(:save).and_return(false)
+      question
+    }
+    put :toggle_release, question_id: question.id
+    flash[:error].should_not be_nil
+  end
+
   it "renders new template for admins" do
     sign_in admin
     get :new
@@ -66,20 +76,34 @@ describe QuestionsController do
     expect(page).to have_select('parent', selected: "#{existing_question.ident}/#{answ.ident}")
   end
 
-  it "re-renders new template on failed save" do
-    sign_in admin
-    post :create
-    assigns[:question].should be_new_record
-    flash[:success].should be_nil
-    response.should render_template :new
-  end
 
-  it "shows question on successful save" do
-    sign_in admin
-    attr = {"utf8"=>"✓", "authenticity_token"=>"S1dVBhTWOqkzwOdTBRvVcLBUs4Gsr/9z+paAzT0p4X0=", "question"=>{"ident"=>"123", "text"=>"123", "difficulty"=>"5", "study_path"=>"1", "released"=>"0"}, "parent"=>"Category_#{existing_category.id}", "commit"=>"Frage anlegen"}
-    post :create, attr
-    flash[:success].should_not be_nil
-    response.should redirect_to question_path(Question.where(ident: "123").first)
+  describe "#create" do
+    before(:each) do
+      sign_in admin
+      @good_attr = {"utf8"=>"✓", "authenticity_token"=>"S1dVBhTWOqkzwOdTBRvVcLBUs4Gsr/9z+paAzT0p4X0=", "question"=>{"ident"=>"123", "text"=>"123", "difficulty"=>"5", "study_path"=>"1", "released"=>"0"}, "parent"=>"Category_#{existing_category.id}", "commit"=>"Frage anlegen"}
+    end
+
+    it "re-renders new template on failed save" do
+      post :create
+      assigns[:question].should be_new_record
+      flash[:success].should be_nil
+      response.should render_template :new
+    end
+
+    it "re-renders new template when missing required fields" do
+      attr = @good_attr.dup
+      attr["question"].delete("ident")
+      post :create, attr
+      assigns[:question].should be_new_record
+      flash[:success].should be_nil
+      response.should render_template :new
+    end
+
+    it "shows question on successful save" do
+      post :create, @good_attr
+      flash[:success].should_not be_nil
+      response.should redirect_to question_path(Question.where(ident: "123").first)
+    end
   end
 
   it "destroys question" do
@@ -90,6 +114,17 @@ describe QuestionsController do
       }.to change(Question, :count)
     }.to change(Answer, :count)
     flash[:success].should_not be_nil
+    response.should redirect_to questions_path
+  end
+
+  it "shows error when destroying fails" do
+    sign_in admin
+    Question.stub(:find).and_return {
+      question.stub(:destroy).and_return(false)
+      question
+    }
+    delete :destroy, id: question.id
+    flash[:error].should_not be_nil
     response.should redirect_to questions_path
   end
 

@@ -32,9 +32,8 @@ describe User do
 
   it "sends password recovery mail" do
     user.send_password_reset
-    mail = ActionMailer::Base.deliveries.last
-    expect(mail.to).to include(user.mail)
-    expect(mail.body.encoded).to include(user.password_reset_token)
-    expect(mail.body.encoded).to include("/password_resets/") # i.e. url
+    expect(last_mail.to).to include(user.mail)
+    expect(last_mail.body.encoded).to include(user.password_reset_token)
+    expect(last_mail.body.encoded).to include("/password_resets/") # i.e. url
   end
 end

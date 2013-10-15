@@ -26,3 +26,11 @@ def category_select
   sleep 0.5
   should have_selector('h3', text: 'Frage')
 end
+
+def last_mail
+  ActionMailer::Base.deliveries.last
+end
+
+def sent_mails
+  ActionMailer::Base.deliveries
+end

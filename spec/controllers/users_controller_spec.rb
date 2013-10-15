@@ -31,63 +31,76 @@ describe UsersController do
     expect(flash[:success]).to be_nil
   end
 
+  describe "#enroll" do
+    it "enables a user to enroll with a valid key" do
+      sign_in user
+      ek = EnrollmentKeys.names.first
+      post :enroll, id: user.id, enrollment_key: ek
+      expect(response).to redirect_to(edit_user_path(user))
+      expect(flash[:success]).not_to be_nil
+      expect(flash[:error]).to be_nil
+      user.reload
+      expect(user.enrollment_keys).to include(ek)
+    end
 
-  it "enables a user to enroll with a valid key" do
-    sign_in user
-    ek = EnrollmentKeys.names.first
-    post :enroll, id: user.id, enrollment_key: ek
-    expect(response).to redirect_to(edit_user_path(user))
-    expect(flash[:success]).not_to be_nil
-    expect(flash[:error]).to be_nil
-    user.reload
-    expect(user.enrollment_keys).to include(ek)
-  end
+    it "re-renders new page when something’s wrong" do
+      # i.e. post misses password confirmation
+      post :create, user: { nick: "Derpina", password: "123" }
+      expect(flash[:success]).to be_nil
+      expect(response).to render_template(:new)
+    end
 
-  it "re-renders new page when something’s wrong" do
-    # i.e. post misses password confirmation
-    post :create, user: { nick: "Derpina", password: "123" }
-    expect(flash[:success]).to be_nil
-    expect(response).to render_template(:new)
-  end
+    it "re-renders edit page when enrolling with unknown key" do
+      sign_in user
+      ek = EnrollmentKeys.names.first + "derp"
+      post :enroll, id: user.id, enrollment_key: ek
+      expect(flash[:error]).not_to be_nil
+      expect(response).to render_template(:edit)
+      user.reload
+      expect(user.enrollment_keys).to be_nil
+    end
 
-  it "re-renders edit page when enrolling with unknown key" do
-    sign_in user
-    ek = EnrollmentKeys.names.first + "derp"
-    post :enroll, id: user.id, enrollment_key: ek
-    expect(flash[:error]).not_to be_nil
-    expect(response).to render_template(:edit)
-    user.reload
-    expect(user.enrollment_keys).to be_nil
-  end
+    it "re-renders edit page when enrolling with empty key" do
+      sign_in user
+      post :enroll, id: user.id
+      expect(flash[:error]).not_to be_nil
+      expect(response).to render_template(:edit)
+      user.reload
+      expect(user.enrollment_keys).to be_nil
+    end
 
-  it "re-renders edit page when enrolling with empty key" do
-    sign_in user
-    post :enroll, id: user.id
-    expect(flash[:error]).not_to be_nil
-    expect(response).to render_template(:edit)
-    user.reload
-    expect(user.enrollment_keys).to be_nil
-  end
+    it "warns user if already enrolled with that key" do
+      sign_in user
+      ek = EnrollmentKeys.names.first
+      post :enroll, id: user.id, enrollment_key: ek
+      post :enroll, id: user.id, enrollment_key: ek
+      expect(flash[:warning]).not_to be_nil
+      expect(response).to redirect_to(edit_user_path(user))
+      user.reload
+      expect(user.enrollment_keys).to include(ek)
+      expect(user.enrollment_keys).not_to include("#{ek} #{ek}")
+    end
 
-  it "warns user if already enrolled with that key" do
-    sign_in user
-    ek = EnrollmentKeys.names.first
-    post :enroll, id: user.id, enrollment_key: ek
-    post :enroll, id: user.id, enrollment_key: ek
-    expect(flash[:warning]).not_to be_nil
-    expect(response).to redirect_to(edit_user_path(user))
-    user.reload
-    expect(user.enrollment_keys).to include(ek)
-    expect(user.enrollment_keys).not_to include("#{ek} #{ek}")
-  end
+    it "doesn’t allow user to enroll an other user" do
+      sign_in user
+      ek = EnrollmentKeys.names.first
+      post :enroll, id: other_user.id, enrollment_key: ek
+      expect(response).to redirect_to(root_path)
+      user.reload
+      expect(user.enrollment_keys).to be_nil
+    end
 
-  it "doesn’t allow user to enroll an other user" do
-    sign_in user
-    ek = EnrollmentKeys.names.first
-    post :enroll, id: other_user.id, enrollment_key: ek
-    expect(response).to redirect_to(root_path)
-    user.reload
-    expect(user.enrollment_keys).to be_nil
+    it "shows error when enrolling fails" do
+      sign_in user
+      User.stub(:find).and_return {
+        user.stub(:save).and_return(false)
+        user
+      }
+      ek = EnrollmentKeys.names.first
+      post :enroll, id: user.id, enrollment_key: ek
+      expect(flash[:error]).not_to be_nil
+     expect(response).to render_template(:edit)
+    end
   end
 
   it "renders the new template" do
@@ -149,6 +162,19 @@ describe UsersController do
     expect(response).to redirect_to(root_path)
   end
 
+  it "shows an error if toggling admin/reviewer fails" do
+    sign_in admin
+    User.stub(:find).and_return {
+      user.stub(:update_column).and_return(false)
+      user
+    }
+    put :toggle_reviewer, id: user.id
+    expect(response).to redirect_to(user_index_path)
+
+    put :toggle_admin, id: user.id
+    expect(response).to redirect_to(user_index_path)
+  end
+
 
   it "admins may make someone reviewer" do
     sign_in admin
@@ -160,7 +186,6 @@ describe UsersController do
     user.reviewer?.should == true
     user.admin?.should == false
   end
-
 
   it "admins may make someone admin" do
     sign_in admin
