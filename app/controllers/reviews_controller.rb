@@ -75,7 +75,7 @@ class ReviewsController < ApplicationController
 
 
   def get_question
-    @question = Question.find(params[:question_id]) if params[:question_id]
+    @question = Question.find(params[:question_id]) rescue nil
     unless @question
       flash[:error] = "Fragen-ID fehlt oder es existiert keine Frage mit dieser ID."
       redirect_to reviews_path
