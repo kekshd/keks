@@ -8,19 +8,19 @@ describe ReviewsController do
 
   render_views
 
-  it "it chooses the correct template to render (Admins)" do
+  it "chooses the correct template to render (Admins)" do
     sign_in admin
     get :need_attention
     response.should render_template :need_attention
   end
 
-  it "it chooses the correct template to render (Reviewer)" do
+  it "chooses the correct template to render (Reviewer)" do
     sign_in reviewer
     get :need_attention
     response.should render_template :need_attention
   end
 
-  it "it doesn’t render the page for non-signed in users" do
+  it "doesn’t render the page for non-signed in users" do
     get :need_attention
     response.should_not render_template :need_attention
   end
