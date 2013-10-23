@@ -492,7 +492,9 @@ H.Hitme.prototype = {
       });
     }
 
-    setTimeout("XkcdLoader.preload()", 100);
+    if($('#comiccheckbox').is(':checked')) {
+      setTimeout("XkcdLoader.preload()", 100);
+    }
   },
 
   _reshowSkippedQuestions: function() {
