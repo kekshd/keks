@@ -71,6 +71,7 @@ Keks::Application.routes.draw do
   match "feedback", to: "main#feedback", :as => "feedback", via: :get
   match "feedback_send", to: "main#feedback_send", :as => "feedback_send", via: :post
   match "random_xkcd", to: "main#random_xkcd", :as => "random_xkcd", via: :get
+  match "specific_xkcd/:id", to: "main#specific_xkcd", :as => "specific_xkcd", via: :get
 
   resources :sessions, only: [:new, :create, :destroy]
 
