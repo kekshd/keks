@@ -45,7 +45,7 @@ FactoryGirl.define do
   end
 
   factory :question do
-    content_changed_at Time.now
+    content_changed_at Time.now - 1000
     text { Faker::Lorem.sentence(30) }
     sequence :ident do |n|
       "questIdent#{n}"

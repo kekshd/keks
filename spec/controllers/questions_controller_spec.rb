@@ -134,21 +134,32 @@ describe QuestionsController do
     expect(response).to render_template :edit
   end
 
-  it "updates question" do
-    sign_in admin
-    new_ident = "new_test_ident"
-    q = existing_question
-    p = existing_category
-    post :update, id: q.id, question: { ident: new_ident }, parent: "#{p.class}_#{p.id}"
-    existing_question.reload
+  describe "#update" do
+    before(:each) do
+      sign_in admin
+      @new_ident = "new_test_ident"
+      @q = existing_question
+      @p = existing_category
+      post :update, id: @q.id,
+          question: { ident: @new_ident },
+          parent: "#{@p.class}_#{@p.id}"
+      existing_question.reload
+    end
 
-    expect(flash[:error]).to be_nil
-    expect(flash[:success]).not_to be_nil
-    expect(existing_question.ident).to eq(new_ident)
-    expect(existing_question.parent_id).to eq(p.id)
-    expect(existing_question.parent_type).to eq(p.class.to_s)
+    it "updates question" do
+      expect(flash[:error]).to be_nil
+      expect(flash[:success]).not_to be_nil
+      expect(existing_question.ident).to eq(@new_ident)
+      expect(existing_question.parent_id).to eq(@p.id)
+      expect(existing_question.parent_type).to eq(@p.class.to_s)
 
-    response.should redirect_to existing_question
+      response.should redirect_to existing_question
+    end
+
+    it "writes content_changed_at" do
+      @q.reload
+      expect(@q.content_changed_at).to be > Time.now - 60
+    end
   end
 
   it "re-renders edit template on failed save" do
