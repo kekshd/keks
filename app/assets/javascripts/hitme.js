@@ -491,6 +491,8 @@ H.Hitme.prototype = {
         }, 100);
       });
     }
+
+    setTimeout("XkcdLoader.preload()", 100);
   },
 
   _reshowSkippedQuestions: function() {
@@ -534,11 +536,7 @@ H.Hitme.prototype = {
       + '</div>';
 
     if($('#comiccheckbox').is(':checked')) {
-      code = code
-        + '<br/><br/>Zur Belohnung ist hier ein zufälliges XKCD-Comic:<br/>'
-        + '<div class="xkcd"></div>'
-        + '<br/>(eigentlich müsste hier ein Link auf XKCD stehen – zu Deinem Schutz fehlt er aber)'
-        + '</div>';
+      code = code + XkcdLoader.retrieveWithText();
     }
 
     $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
@@ -549,8 +547,6 @@ H.Hitme.prototype = {
     var anyFail = this.answersGiven.fail.join(',');
     $(allCorr).addClass('correct');
     $(anyFail).addClass('wrong');
-
-    $('.xkcd:last').load(Routes.random_xkcd_path() + ' #comic');
   },
 
   showNext: function() {
