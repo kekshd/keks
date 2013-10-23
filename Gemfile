@@ -4,6 +4,7 @@ gem 'rails',                '3.2.14'
 gem 'sqlite3',              '1.3.7'
 gem 'thin',                 '1.5.0'
 gem 'active_enum',          '0.9.12'
+gem 'nokogiri'
 
 # Gems used only for assets and not required
 # in production environments by default.

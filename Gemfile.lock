@@ -242,6 +242,7 @@ DEPENDENCIES
   launchy (= 2.2.0)
   lazy_high_charts (= 1.4.0)
   letter_opener
+  nokogiri
   parallel_tests
   pry-rails (= 0.3.2)
   rack-livereload

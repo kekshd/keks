@@ -115,7 +115,7 @@ class MainController < ApplicationController
 
   def random_xkcd
     begin
-      open("http://dynamic.xkcd.com/random/comic/") do |resp|
+      open("https://dynamic.xkcd.com/random/comic/") do |resp|
         id = resp.base_uri.path.gsub(/[^0-9]/, "")
         redirect_to specific_xkcd_path(id)
       end
@@ -130,12 +130,14 @@ class MainController < ApplicationController
     return "invalid id" if id.blank?
 
     begin
-      html = open("http://xkcd.com/#{id}/").read
+      html = open("https://xkcd.com/#{id}/").read
+
       comic_only = Nokogiri::HTML(html).at_css("#comic").to_s
+      comic_only.gsub!("http://", "https://")
       render :text => comic_only
-    rescue
+    rescue => e
       # TODO: this will be cached and there are no sweepers to remove it
-      render :text => "Der XKCD Server ist gerade nicht erreichbar. Sorry."
+      render :text => "Der XKCD Server ist gerade nicht erreichbar. Sorry. #{e.message}"
     end
   end
 end
