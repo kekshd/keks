@@ -6,7 +6,7 @@ class Answer < ActiveRecord::Base
   validates :ident, :uniqueness => { :scope => :question_id,
     :message => "Antwort-Idents müssen für eine Frage eindeutig sein" }
 
-  belongs_to :question, touch: true, inverse_of: :answers
+  belongs_to :question, inverse_of: :answers, touch: :content_changed_at
 
   # i.e. this answer has many questions and acts as parent to them
   has_many :questions, :as => :parent
