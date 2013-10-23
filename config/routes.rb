@@ -47,6 +47,7 @@ Keks::Application.routes.draw do
       resources :answers
       resources :hints
       match "toggle_release", to: "questions#toggle_release", as: "toggle_release", via: :put
+      match "overwrite_reviews", to: "questions#overwrite_reviews", as: "overwrite_reviews", via: :put
       match "review", to: "reviews#review", as: "review", via: :get
       match "review", to: "reviews#save", as: "review_save", via: :post # new reviews
     end

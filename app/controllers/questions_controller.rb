@@ -67,6 +67,28 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def overwrite_reviews
+    @question = Question.includes(:reviews).find(params[:question_id])
+    okay = true
+    @question.reviews.each do |r|
+      if r.okay?
+        r.touch if r.question_updated_since?
+      else
+        r.okay = true
+        time = Time.now.strftime("%Y-%m-%d %H:%M")
+        r.comment = "#{time}: von #{current_user.nick} auf „okay“ gestellt\n\n#{r.comment}".strip
+        okay = false unless r.save
+      end
+    end
+
+    if okay
+      flash[:success] = "Alle Reviews sollten jetzt „okay“ sein."
+    else
+      flash[:error] = "Es ist ein Fehler aufgetreten. Prüfe den Status der Reviews manuell."
+    end
+
+    redirect_to question_review_path(@question)
+  end
 
   def update
     @question = Question.find(params[:id])

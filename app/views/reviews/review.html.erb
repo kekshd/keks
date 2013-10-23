@@ -38,6 +38,32 @@
   <% if @question.reviews.none? %>
     bisher noch keine.
   <% else %>
+    <%
+      any_not_okay = @question.reviews.any? { |r| !r.okay }
+      any_unread = @question.reviews.any? { |r| r.question_updated_since? }
+
+      logger.warn @question.content_changed_at
+      logger.warn PP.pp(@question.reviews.map { |r| r.updated_at }, "")
+
+      if admin? && (any_not_okay || any_unread)
+        confirm = ["Wenn Du fortfährst, passiert folgendes:"]
+        if any_not_okay
+          confirm << "• nicht-okay-e Reviews, kriegen einen grünen Haken"
+          confirm << "• bei den umgestellten Reviews wird Dein Tun vermerkt"
+        end
+        confirm << "• die Frage wird für alle Reviewer als gelesen markiert"
+        confirm += ["", "Fortfahren und Reviews ignorieren?"]
+        %>
+        <%=link_to "Ich habe Recht™ und die Reviews sind mir egal",
+          question_overwrite_reviews_path(@question),
+          confirm: confirm*"\n",
+          method: :put
+        %>
+        <hr class="clear"/>
+        <%
+      end
+    %>
+
     <% question_edit_msg_shown = false %>
     <% @question.reviews.each do |r| %>
       <% if !question_edit_msg_shown && r.question_updated_since? %>

@@ -178,4 +178,41 @@ describe QuestionsController do
     post :update, id: q.id, question: { ident: new_ident }
     expect(response).to render_template :edit
   end
+
+  describe "#overwrite_reviews" do
+    before :each do
+      sign_in admin
+      @q = FactoryGirl.create(:question_with_many_good_reviews)
+    end
+
+    it "shows success message" do
+      put :overwrite_reviews, question_id: @q.id
+      expect(flash[:success]).not_to be_nil
+    end
+
+    it "doesn’t touch anything if nothing to do" do
+      upd = @q.updated_at
+      put :overwrite_reviews, question_id: @q.id
+      @q.reload
+      expect(@q.updated_at.to_s).to eql(upd.to_s)
+    end
+
+    it "leaves only okay reviews afterwards" do
+      r = @q.reviews.sample
+      r.okay = false
+      r.save
+      put :overwrite_reviews, question_id: @q.id
+      all_okay = @q.reviews.all? { |r| r.reload; r.okay? }
+      expect(all_okay).to be true
+    end
+
+    it "mentions admin in updated reviews" do
+      r = @q.reviews.sample
+      r.okay = false
+      r.save
+      put :overwrite_reviews, question_id: @q.id
+      r.reload
+      expect(r.comment).to include(admin.nick)
+    end
+  end
 end
