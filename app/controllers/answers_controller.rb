@@ -49,7 +49,7 @@ class AnswersController < ApplicationController
   private
 
   def get_question
-    @question = Question.find(params[:question_id])
+    @question = Question.find(params[:question_id]) rescue nil
     unless @question
       flash[:warning] = "Frage mit dieser ID nicht gefunden."
       redirect_to questions_path
