@@ -114,13 +114,24 @@ class MainController < ApplicationController
   end
 
   def random_xkcd
+    url = nil
+    err = nil
     begin
-      open("https://dynamic.xkcd.com/random/comic/") do |resp|
-        id = resp.base_uri.path.gsub(/[^0-9]/, "")
-        redirect_to specific_xkcd_path(id)
+      open("https://dynamic.xkcd.com/random/comic/", redirect: false) do
+        url = resp.base_uri
       end
-    rescue
-      render :text => "Der XKCD Server ist gerade nicht erreichbar. Sorry."
+    rescue OpenURI::HTTPRedirect => rdr
+      url = rdr.uri.to_s
+    rescue => e
+      err = e.message
+    ensure
+      if url
+        id = url.gsub(/[^0-9]/, "")
+        return redirect_to specific_xkcd_path(id)
+      end
+
+      err = "Der XKCD Server ist gerade nicht erreichbar. Sorry. Details: (random)  #{err}"
+      return render :text => err
     end
   end
 
@@ -137,7 +148,7 @@ class MainController < ApplicationController
       render :text => comic_only
     rescue => e
       # TODO: this will be cached and there are no sweepers to remove it
-      render :text => "Der XKCD Server ist gerade nicht erreichbar. Sorry. #{e.message}"
+      render :text => "Der XKCD Server ist gerade nicht erreichbar. Sorry. Details: (specific) #{e.message}"
     end
   end
 end
