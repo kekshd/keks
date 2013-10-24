@@ -34,6 +34,18 @@ describe MainController do
     end
   end
 
+  describe "#specific_xkcd" do
+    it "fails for invalid ids" do
+      get :specific_xkcd, id: "derp"
+      expect(response.body).to include("invalid id")
+    end
+
+    it "renders image tag for valid ids" do
+      get :specific_xkcd, id: 123
+      expect(response.body).to have_selector("img")
+    end
+  end
+
   it "renders json for single question" do
     q = FactoryGirl.create(:question)
     get :single_question, id: q.id

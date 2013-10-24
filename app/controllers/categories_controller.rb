@@ -9,7 +9,7 @@ class CategoriesController < ApplicationController
 
   def new
     @category = Category.new
-    @answer = Answer.find(params['parent']) if params['parent']
+    @answer = (Answer.find(params['parent']) rescue nil) if params['parent']
     @category.answers << @answer if @answer
   end
 
@@ -46,7 +46,11 @@ class CategoriesController < ApplicationController
 
 
   def edit
-    @category = Category.find(params[:id])
+    @category = Category.find(params[:id]) rescue nil
+    unless @category
+      flash[:warning] = "Diese Kategorie gibt es nicht. Wurde sie zwischenzeitlich evtl. gelöscht?"
+      return redirect_to categories_path
+    end
   end
 
   def update

@@ -114,7 +114,7 @@ FactoryGirl.define do
     text { Faker::Lorem.sentence }
     correct { rand(2) == 1 }
     sequence :ident do |n|
-      "answIdent#{n}"
+      n.to_s
     end
     question
 

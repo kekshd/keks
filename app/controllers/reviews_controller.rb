@@ -35,8 +35,14 @@ class ReviewsController < ApplicationController
 
   def find_next
     pf = params[:filter]
+    begin
+      f = Review.filter(pf)
+    rescue => e # most likely filter doesn’t exist
+      flash[:warning] = e.message
+      return redirect_to reviews_path
+    end
 
-    f = Review.filter(pf)
+
     qqs = f[:questions].call(current_user)
     qqs_ids = qqs.map { |q| q.id.to_s }
 

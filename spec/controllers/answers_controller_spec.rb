@@ -12,10 +12,6 @@ describe AnswersController do
     sign_in admin
   end
 
-  it "redirects to question list for non-existing question" do
-    get :edit, question_id: 9912939123123123436345, id: 5
-    expect(response).to redirect_to questions_path
-  end
 
   describe "#new" do
     it "renders new template" do
@@ -27,12 +23,23 @@ describe AnswersController do
       get :new, question_id: question.id
       expect(response.body).to have_selector("#answer_ident[value]")
     end
+
+    it "handles auto-generated ident when ident taken" do
+      question.answers.first.destroy
+      get :new, question_id: question.id
+      expect(response.body).to have_selector("#answer_ident[value]")
+    end
   end
 
   describe "#edit" do
     it "renders edit template" do
       get :edit, question_id: question.id, id: question.answers.sample.id
       expect(response).to render_template("edit")
+    end
+
+    it "redirects to question list for non-existing question" do
+      get :edit, question_id: 9912939123123123436345, id: 5
+      expect(response).to redirect_to questions_path
     end
   end
 

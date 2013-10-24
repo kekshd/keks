@@ -92,4 +92,42 @@ describe ReviewsController do
       expect(@r.comment).to eql("test123")
     end
   end
+
+  describe "#find_next" do
+    before(:each) do
+      sign_in reviewer
+    end
+
+    it "handles invalid filters" do
+      get :find_next, filter: "does not exist"
+      expect(response).to redirect_to(reviews_path)
+      expect(flash[:warning]).not_to be_nil
+    end
+
+    it "handles EOL" do
+      get :find_next, filter: "enough_good_reviews"
+      expect(response).to redirect_to(reviews_path)
+      expect(flash[:notice]).not_to be_nil
+    end
+
+    it "prefers order on the next list" do
+      get :find_next, filter: "all", next: "2,99"
+      expect(response).to redirect_to(question_review_path(2, filter: "all", next: "99"))
+    end
+
+    it "ignores next items if invalid" do
+      get :find_next, filter: "all", next: "99,88"
+      expect(flash[:notice]).not_to be_nil
+      # can’t use redirect_to because item is chosen at random
+      expect(response.location).to include("admin/questions", "review")
+    end
+
+    it "ignores invalid broken next list" do
+      get :find_next, filter: "all", next: "h4xx0r"
+      expect(flash[:notice]).not_to be_nil
+      # can’t use redirect_to because item is chosen at random
+      expect(response.location).to include("admin/questions", "review")
+    end
+
+  end
 end

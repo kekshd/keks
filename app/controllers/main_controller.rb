@@ -138,7 +138,7 @@ class MainController < ApplicationController
   caches_page :specific_xkcd
   def specific_xkcd
     id = params[:id].gsub(/[^0-9]/, "")
-    return "invalid id" if id.blank?
+    return render(status: 400, text: "invalid id") if id.blank?
 
     begin
       html = open("https://xkcd.com/#{id}/").read
