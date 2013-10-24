@@ -24,7 +24,7 @@ describe CategoriesController do
 
   describe "#show" do
     it "renders show template" do
-      get :show
+      get :show, id: category.id
       expect(response).to render_template("show")
     end
   end
