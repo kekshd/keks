@@ -34,7 +34,7 @@ var XkcdLoader = (function() {
   function retrieve() {
     if(!preloaded) {
       insert();
-      return '<div class="xkcd"></div>';
+      return '<div class="xkcd">Laden…</div>';
     }
     var html = '<div class="xkcd">' + comic + '</div>';
     reset();
