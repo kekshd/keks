@@ -48,7 +48,7 @@
     </tr>
 
     <tr><th>Text</th><td colspan="5"><%=@question.text%></td></tr>
-    <% if @question.text.include?("§") or @questions.answers.any? { |a| a.text.include?("§") } %>
+    <% if @question.text.include?("§") or @question.answers.any? { |a| a.text.include?("§") } %>
       <tr><th>Hinweis</th><td colspan="5">Diese Frage (oder eine der Antworten) verwendet die alte §-Notation. Bitte bei Gelegenheit auf die $-Notation umstellen, da die §-Unterstützung verschwinden wird.</td></tr>
     <% end %>
   </table>
