@@ -42,9 +42,6 @@
       any_not_okay = @question.reviews.any? { |r| !r.okay }
       any_unread = @question.reviews.any? { |r| r.question_updated_since? }
 
-      logger.warn @question.content_changed_at
-      logger.warn PP.pp(@question.reviews.map { |r| r.updated_at }, "")
-
       if admin? && (any_not_okay || any_unread)
         confirm = ["Wenn Du fortfährst, passiert folgendes:"]
         if any_not_okay
