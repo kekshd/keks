@@ -94,7 +94,6 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
 
     begin
-      logger.warn PP.pp(params, "")
       p = params[:parent].split('_')
     rescue
       flash[:error] = "Kein gültiges Elter-Element angegeben"
