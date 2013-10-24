@@ -16,6 +16,23 @@ describe "Hitme" do
     it { should_not have_selector('title', text: /^KeKs – $/) }
   end
 
+  describe "xkcd comic", :js => true do
+    before { visit main_hitme_path }
+
+    it "is shown at the end with default settings" do
+      category_select
+      5.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
+      expect(page).to have_selector('.xkcd')
+    end
+
+    it "is not shown when unchecked" do
+      all('#comiccheckbox').last.click
+      category_select
+      5.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
+      expect(page).to have_selector('.xkcd')
+    end
+  end
+
   describe "question answering", :js => true do
     it "has working category select" do
       visit main_hitme_path
