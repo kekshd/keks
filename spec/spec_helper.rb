@@ -24,6 +24,12 @@ require 'rspec/rails'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+Capybara.register_driver :webkit do |app|
+  driver = Capybara::Webkit::Driver.new(app)
+  driver.browser.set_skip_image_loading true
+  driver
+end
+
 RSpec.configure do |config|
   config.mock_with :rspec
 
