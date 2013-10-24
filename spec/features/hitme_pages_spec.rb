@@ -19,17 +19,16 @@ describe "Hitme" do
   describe "xkcd comic", :js => true do
     before { visit main_hitme_path }
 
-    it "is shown at the end with default settings" do
-      category_select
+    it "is shown at the end when checked" do
+      category_select({ xkcd: true })
       5.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
       expect(page).to have_selector('.xkcd')
     end
 
     it "is not shown when unchecked" do
-      all('#comiccheckbox').last.click
       category_select
       5.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
-      expect(page).to have_selector('.xkcd')
+      expect(page).not_to have_selector('.xkcd')
     end
   end
 
@@ -57,15 +56,19 @@ describe "Hitme" do
     end
 
     it "updates stats" do
+      def print_stats(pre = "")
+        puts "#{pre} c:#{Stat.where(correct: true).size}  f:#{Stat.where(correct: false).size}  a:#{Stat.all.size}"
+      end
+
       expect do
         category_select
         3.times {
           expect do
             # select correct answer to easily distinguish these stats
             # from others inserted by race conditions
-            all('a.button.toggleable[data-correct="true"]').last.click
+            all('a.button.toggleable[data-correct="true"]').each { |l| l.click }
             all('.answer-submit a.button.big[data-action="save"]').last.click
-            sleep 0.1
+            wait_for_non_dom_ajax
           end.to change { Stat.where(correct: true).size }.by(1)
         }
       end.to change { Stat.where(correct: true).size }.by(3)

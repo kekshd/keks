@@ -18,12 +18,14 @@ def sign_in(user)
   end
 end
 
-def category_select
-  wait_for_ajax(page)
+def category_select(ops = {})
   visit main_hitme_path
   fill_in "Anzahl", with: 5
+
+  # disable xkcd comic by default to avoid loading it in testing
+  first("#comiccheckbox").set(ops[:xkcd] ? true : false)
+
   first("#start-button").click
-  sleep 0.5
   should have_selector('h3', text: 'Frage')
 end
 
@@ -33,4 +35,15 @@ end
 
 def sent_mails
   ActionMailer::Base.deliveries
+end
+
+# Instructs Capybara to wait for AJAX requests that do not modify the
+# DOM. Credit: https://coderwall.com/p/aklybw
+def wait_for_non_dom_ajax
+  Timeout.timeout(Capybara.default_wait_time) do
+    loop do
+      active = page.evaluate_script('$.active')
+      break if active == 0
+    end
+  end
 end
