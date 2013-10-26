@@ -17,7 +17,11 @@ class HintsController < ApplicationController
 
   # GET /hints/1/edit
   def edit
-    @hint = Hint.find(params[:id])
+    @hint = Hint.find(params[:id]) rescue nil
+    unless @hint
+      flash[:warning] = "Unbekannter Hinweis. Hast Du evtl. einen alten Link angeklickt?"
+      return redirect_to @question
+    end
   end
 
   def create
@@ -25,7 +29,7 @@ class HintsController < ApplicationController
     @hint.question = @question
 
     if @hint.save
-      flash[:success] = "Hiwneis gespeichert"
+      flash[:success] = "Hinweis gespeichert"
       redirect_to @question
     else
       render 'new'
@@ -57,10 +61,10 @@ class HintsController < ApplicationController
   private
 
   def get_question
-    @question = Question.find(params[:question_id])
+    @question = Question.find(params[:question_id]) rescue nil
     unless @question
       flash[:warning] = "Frage mit dieser ID nicht gefunden."
-      redirec_to questions_path
+      redirect_to questions_path
     end
   end
 end
