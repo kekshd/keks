@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <%= stylesheet_link_tag "users", media: "all" %>
-  <% if admin? %><%= stylesheet_link_tag "admins", media: "all" %><% end %>
+  <% if admin? || reviewer? %><%= stylesheet_link_tag "admins", media: "all" %><% end %>
   <link href='https://fonts.googleapis.com/css?family=Cabin:400' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Yanone%20Kaffeesatz&amp;text=%20AFGHKPRSabcdefgiklmnoprstuvwyz–' rel='stylesheet' type='text/css'>
   <title>KeKs – <%=yield(:title)%></title>
