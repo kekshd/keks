@@ -7,7 +7,8 @@
   <link href='https://fonts.googleapis.com/css?family=Cabin:400' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Yanone%20Kaffeesatz&amp;text=%20AFGHKPRSabcdefgiklmnoprstuvwyz–' rel='stylesheet' type='text/css'>
   <title>KeKs – <%=yield(:title)%></title>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "users" %>
+  <% if admin? || reviewer? %><%= javascript_include_tag "admins" %><% end %>
   <%= csrf_meta_tags %>
   <!--[if lte IE 9]>
   <%= stylesheet_link_tag "die-ie-die" %>
