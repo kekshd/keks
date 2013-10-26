@@ -1,11 +1,11 @@
 /*
  *
- *= require_self
  *= require jquery-tablesorter/theme.dropbox
  *= require css-noise
  *= require gh-buttons
  *= require hitme
  *= require main
+ *= require print
  *= require simple-slider
  *= require jquery.uix.multiselect
  *= require table-sorter
