@@ -15,6 +15,7 @@
 </div>
 
 <div>
+  <% content_for :script do %><%= javascript_include_tag "highcharts" %><% end %>
   <%= high_chart("chart_quests", @g_quests) %>
   <%= high_chart("chart_users", @g_users) %>
 </div>

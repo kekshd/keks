@@ -25,6 +25,7 @@
   <h2>Statistik</h2>
   In den letzten 30 Tagen hast Du <%=@user.correct_count%> (<%=n @user.correct_ratio%>) Fragen richtig beantwortet und <%=@user.skip_count%> (<%=n @user.skip_ratio%>) übersprungen. Außerdem hast Du <%=@user.starred.size%> Fragen merken lassen.
 
+  <% content_for :script do %><%= javascript_include_tag "highcharts" %><% end %>
   <%= high_chart("chart", @h) %>
 </div>
 

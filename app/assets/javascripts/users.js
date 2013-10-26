@@ -1,7 +1,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require js-routes
-//= require highcharts
 
 //= require shuffle
 //= require toggle

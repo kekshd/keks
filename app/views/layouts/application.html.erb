@@ -9,6 +9,7 @@
   <title>KeKs – <%=yield(:title)%></title>
   <%= javascript_include_tag "users" %>
   <% if admin? || reviewer? %><%= javascript_include_tag "admins" %><% end %>
+  <%= yield :script %>
   <%= csrf_meta_tags %>
   <!--[if lte IE 9]>
   <%= stylesheet_link_tag "die-ie-die" %>
