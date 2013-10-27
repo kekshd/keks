@@ -204,7 +204,7 @@ class Question < ActiveRecord::Base
     return "" unless parent.respond_to?(:questions)
 
     limit = 6
-    qs = parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1)
+    qs = parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1).to_a
     qs.reject! { |q| q == self }
 
     d = dot_link_to(parent, qs)
