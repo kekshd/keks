@@ -33,16 +33,8 @@ module StatsHelper
 
   def render_graph
     LazyHighCharts::HighChart.new('graph') do |f|
-
-      f.options[:legend][:align] = 'right'
-      f.options[:legend][:verticalAlign] = 'top'
-      f.options[:chart][:defaultSeriesType] = "line"
-      f.options[:chart][:width] = 700
-      f.options[:chart][:height] = 280
-      f.options[:tooltip][:enabled] = false
+      graph_defaults(f)
       f.options[:plotOptions][:series] = {pointInterval: 7.days, pointStart: (91-7).days.ago}
-      f.options[:plotOptions][:line] = {animation: false}
-      f.xAxis(type: :datetime, dateTimeLabelFormats: { day: '%e. %b' })
       f.yAxis({title: {text: "Anteil in Prozent"}, min: 0, max: 100})
     end
   end
@@ -58,19 +50,25 @@ module StatsHelper
     range.days.ago.to_date.upto(Date.today).each { |x| date_to_count_hash[x.to_s] ||= 0 }
 
     @h = LazyHighCharts::HighChart.new('graph') do |f|
-      f.options[:legend][:align] = 'right'
-      f.options[:legend][:verticalAlign] = 'top'
-      f.options[:chart][:defaultSeriesType] = "line"
-      f.options[:chart][:width] = 700
-      f.options[:chart][:height] = 280
-      f.options[:tooltip][:enabled] = false
+      graph_defaults(f)
       f.options[:plotOptions][:series] = {pointInterval: 1.days, pointStart:  @range.days.ago}
-      f.options[:plotOptions][:line] = {animation: false}
-      f.xAxis(type: :datetime, dateTimeLabelFormats: { day: '%e. %b' })
       f.yAxis({title: {text: "Anzahl"}, min: 0, max: date_to_count_hash.values.max })
     end
 
     @h.series(name: name, data: date_to_count_hash.values)
     @h
+  end
+
+  private
+
+  def graph_defaults(graph)
+    graph.options[:legend][:align] = 'right'
+    graph.options[:legend][:verticalAlign] = 'top'
+    graph.options[:chart][:defaultSeriesType] = "line"
+    graph.options[:chart][:width] = 700
+    graph.options[:chart][:height] = 280
+    graph.options[:tooltip][:enabled] = false
+    graph.options[:plotOptions][:line] = {animation: false}
+    graph.xAxis(type: :datetime, dateTimeLabelFormats: { day: '%e. %b' })
   end
 end
