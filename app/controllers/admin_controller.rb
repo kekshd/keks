@@ -17,31 +17,7 @@ class AdminController < ApplicationController
 
     respond_to do |format|
       format.dot { send_data %(digraph graphname { rankdir=LR; #{dot} }), filename: "#{fn}.dot"}
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      logger.warn PP.pp(format, "")
-      format.svgz {
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        logger.warn "===================="
-        send_data get_dot_svgz(dot), filename: "#{fn}.svgz" }
+      format.svgz { send_data get_dot_svgz(dot), filename: "#{fn}.svgz" }
     end
   end
 
