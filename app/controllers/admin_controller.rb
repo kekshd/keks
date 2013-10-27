@@ -25,14 +25,11 @@ class AdminController < ApplicationController
   end
 
   private
-  def tree_category(cat)
-    dot = cat.dot
 
-    cat.questions.each do |q|
-      dot << tree_question(q)
-      dot << "#{cat.dot_id} -> #{q.dot_id};"
-    end
-    return dot
+  include DotTools
+
+  def tree_category(cat)
+    cat.dot + dot_iter_questions(cat)
   end
 
   def tree_question(quest)
@@ -41,21 +38,25 @@ class AdminController < ApplicationController
     dot << quest.dot_hints
 
     quest.answers.each do |a|
-      dot << a.dot
-      dot << "#{quest.dot_id} -> #{a.dot_id};\n"
+      dot << dot_link_to(quest, a)
 
       a.categories.each do |cc|
         dot << tree_category(cc)
-        dot << "#{a.dot_id} -> #{cc.dot_id};\n"
+        dot << dot_link(a, cc)
       end
 
-
-      a.questions.each do |qq|
-        dot << tree_question(qq)
-        dot << "#{a.dot_id} -> #{qq.dot_id};\n"
-      end
+      dot << dot_iter_questions(a)
     end
 
     return dot
+  end
+
+  def dot_iter_questions(from)
+    dot = ""
+    from.questions.each do |qq|
+      dot << tree_question(qq)
+      dot << dot_link(from, qq)
+    end
+    dot
   end
 end

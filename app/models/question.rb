@@ -184,18 +184,15 @@ class Question < ActiveRecord::Base
   # renders dot that shows how our parent fits into the whole tree, i.e.
   # it renders our parent’s parents.
   def dot_region_parent_of_parent
-    d = ""
+    return dot_link_from(parent.answers, parent) if parent.is_a?(Category)
+    return "" unless parent.is_a?(Answer)
 
-    if(parent.is_a?(Answer))
-      d << dot_link_from(parent.question, parent)
+    d = dot_link_from(parent.question, parent)
 
-      parent.question.subquestions.each do |qq|
-        next if qq == self
-        d << dot_link_to(parent.question, qq)
-      end
+    parent.question.subquestions.each do |qq|
+      next if qq == self
+      d << dot_link_to(parent.question, qq)
     end
-
-    d << dot_link_from(parent.answers, parent) if parent.is_a?(Category)
 
     d
   end
@@ -205,21 +202,20 @@ class Question < ActiveRecord::Base
   # all will be shown.
   def dot_region_siblings(may_omit)
     return "" unless parent.respond_to?(:questions)
-    d = ""
-    limit = 6
-    parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1).each do |q|
-      next if q == self
-      d << q.dot(false)
-      d << "#{parent.dot_id} -> #{q.dot_id};\n"
-    end
-    left = parent.questions.size - limit - 1
-    if left > 0
-      # this is not always correct, as above may include the current
-      # question. Thus, only left-1 questions would be left.
-      d << %(#{dot_id}_hidden_siblings [label="+#{left} weitere Fragen", shape=none];)
-      d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;\n)
-    end
 
+    limit = 6
+    qs = parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1)
+    qs.reject! { |q| q == self }
+
+    d = dot_link_to(parent, qs)
+    remaining = may_omit ? parent.questions.size - limit - 1 : 0
+
+    return d if remaining <= 0
+
+    # this is not always correct, as above may include the current
+    # question. Thus, only left-1 questions would be left.
+    d << %(#{dot_id}_hidden_siblings [label="+#{left} weitere Fragen", shape=none];)
+    d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;\n)
     d
   end
 
