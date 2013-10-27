@@ -195,4 +195,14 @@ module ApplicationHelper
     tag << text unless text.blank?
     tag.join("_")
   end
+
+  # retrieves question from URL parameters for all nested resources.
+  # Usage: before_filter :get_question
+  def get_question(redirect_on_error = questions_path)
+    @question = Question.find(params[:question_id]) rescue nil
+    unless @question
+      flash[:warning] = "Frage mit dieser ID nicht gefunden."
+      redirect_to redirect_on_error
+    end
+  end
 end

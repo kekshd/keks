@@ -4,7 +4,7 @@ class ReviewsController < ApplicationController
   before_filter :require_admin_or_reviewer
   before_filter :require_reviewer, only: :save
 
-  before_filter :get_question, only: [:review, :save]
+  before_filter only: [:review, :save] do get_question(reviews_path) end
 
   def messages
     @message = TextStorage.find_or_create_by_ident("review_admin_hints")
@@ -77,14 +77,5 @@ class ReviewsController < ApplicationController
 
   def get_review
     @review = Review.find_or_initialize_by_user_id_and_question_id(current_user.id, @question.id)
-  end
-
-
-  def get_question
-    @question = Question.find(params[:question_id]) rescue nil
-    unless @question
-      flash[:error] = "Fragen-ID fehlt oder es existiert keine Frage mit dieser ID."
-      redirect_to reviews_path
-    end
   end
 end

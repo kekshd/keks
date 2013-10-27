@@ -38,7 +38,7 @@ describe ReviewsController do
     sign_in reviewer
     get :review, question_id: 1312312312312
     expect(response).to redirect_to :reviews
-    expect(flash[:error]).not_to be_nil
+    expect(flash[:warning]).not_to be_nil
   end
 
   it "shows all reviews for question" do

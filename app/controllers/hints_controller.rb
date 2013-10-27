@@ -57,14 +57,4 @@ class HintsController < ApplicationController
     end
     redirect_to @question
   end
-
-  private
-
-  def get_question
-    @question = Question.find(params[:question_id]) rescue nil
-    unless @question
-      flash[:warning] = "Frage mit dieser ID nicht gefunden."
-      redirect_to questions_path
-    end
-  end
 end

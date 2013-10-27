@@ -48,14 +48,6 @@ class AnswersController < ApplicationController
 
   private
 
-  def get_question
-    @question = Question.find(params[:question_id]) rescue nil
-    unless @question
-      flash[:warning] = "Frage mit dieser ID nicht gefunden."
-      redirect_to questions_path
-    end
-  end
-
   def gen_answer_ident(question)
     idents = question.answers.map { |a| a.ident.to_s }
     id = question.answers.size + 1
