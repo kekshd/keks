@@ -20,7 +20,6 @@ describe QuestionsHelper do
   describe "#get_question_stat_counts" do
     it "returns stats for all questions when none given" do
       r = helper.get_question_stat_counts
-      pp r
       expect(r[:all]).to eql({})
       expect(r[:skip]).to eql({})
       expect(r[:correct]).to eql({})

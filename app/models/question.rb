@@ -113,6 +113,8 @@ class Question < ActiveRecord::Base
     rows.join("  ")
   end
 
+  include DotTools
+
   def dot(active = false)
     id = ident.gsub('"', '')
 
@@ -125,19 +127,16 @@ class Question < ActiveRecord::Base
   end
 
   def dot_id
-    'q' + ident.gsub(/[^a-z0-9_]/i, '')
+    'q' + dot_clean(ident)
   end
 
   def dot_hints
     return '' if hints.none?
 
-    hintTexts = []
-    hints.each do |h|
-      hintTexts << h.dot_text
-    end
+    hintTexts = hints.map { |h| h.dot_text }.join("\\n")
 
     d = ""
-    d << %(HINT#{dot_id} [label="#{hintTexts.join("\\n")}", shape=none];)
+    d << %(HINT#{dot_id} [label="#{hintTexts}", shape=none];)
     d << "#{dot_id} -> HINT#{dot_id};"
     d << "{ rank=same; #{dot_id} HINT#{dot_id} };\n"
     d
@@ -146,72 +145,13 @@ class Question < ActiveRecord::Base
   def dot_region(may_omit = false)
     d = ''
 
-    if parent
-      d << parent.dot
-
-      # link to ourselves
-      d << dot(true)
-      d << "#{parent.dot_id} -> #{dot_id};\n"
-
-      # link parent to our siblings
-      if parent.respond_to?(:questions)
-        limit = 6
-        parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1).each do |q|
-          next if q == self
-          d << q.dot(false)
-          d << "#{parent.dot_id} -> #{q.dot_id};\n"
-        end
-        left = parent.questions.size - limit - 1
-        if left > 0
-          # this is not always correct, as above may include the current
-          # question. Thus, only left-1 questions would be left.
-          d << %(#{dot_id}_hidden_siblings [label="+#{left} weitere Fragen", shape=none];)
-          d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;\n)
-        end
-      end
-
-
-
-      parent.categories.each do |c|
-        d << c.dot
-        d << "#{parent.dot_id} -> #{c.dot_id};\n"
-      end if parent.respond_to?(:categories)
-
-      # parent of parent
-      if(parent.is_a?(Answer))
-        d << parent.question.dot
-        d << "#{parent.question.dot_id} -> #{parent.dot_id};\n"
-
-        parent.question.subquestions.each do |qq|
-          next if qq == self
-          d << qq.dot
-          d << "#{parent.question.dot_id} -> #{qq.dot_id};\n"
-        end
-      end
-
-      if(parent.is_a?(Category))
-        parent.answers.each do |aa|
-          d << aa.dot
-          d << "#{aa.dot_id} -> #{parent.dot_id};\n"
-        end
-      end
-    else
-      d << dot(true)
-    end
+    d << dot(true)
+    d << dot_region_parent(may_omit)
 
     answers.each do |a|
-      d << a.dot
-      d << "#{dot_id} -> #{a.dot_id};\n"
-
-      a.questions.each do |q|
-        d << q.dot
-        d << "#{a.dot_id} -> #{q.dot_id};\n"
-      end
-
-      a.categories.each do |c|
-        d << c.dot
-        d << "#{a.dot_id} -> #{c.dot_id};\n"
-      end
+      d << dot_link_to(self, a)
+      d << dot_link_to(a, a.questions)
+      d << dot_link_to(a, a.categories)
     end
 
     d << dot_hints
@@ -220,6 +160,70 @@ class Question < ActiveRecord::Base
   end
 
   private
+
+  def dot_region_parent(may_omit)
+    return "" unless parent
+
+    d = parent.dot
+
+    # link to ourselves
+    d << "#{parent.dot_id} -> #{dot_id};\n"
+
+    # link parent to our siblings, i.e. other questions
+    d << dot_region_siblings(may_omit)
+
+    # link to other children of the parents. Those are the same level
+    # as the sibling questions above.
+    d << dot_link_to(parent, parent.categories) if parent.respond_to?(:categories)
+
+    d << dot_region_parent_of_parent
+
+    d
+  end
+
+  # renders dot that shows how our parent fits into the whole tree, i.e.
+  # it renders our parent’s parents.
+  def dot_region_parent_of_parent
+    d = ""
+
+    if(parent.is_a?(Answer))
+      d << dot_link_from(parent.question, parent)
+
+      parent.question.subquestions.each do |qq|
+        next if qq == self
+        d << dot_link_to(parent.question, qq)
+      end
+    end
+
+    d << dot_link_from(parent.answers, parent) if parent.is_a?(Category)
+
+    d
+  end
+
+  # renders dot code for the siblings of this question. If may omit is
+  # set to true, it may only include some of the siblings. Otherwise
+  # all will be shown.
+  def dot_region_siblings(may_omit)
+    return "" unless parent.respond_to?(:questions)
+    d = ""
+    limit = 6
+    parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1).each do |q|
+      next if q == self
+      d << q.dot(false)
+      d << "#{parent.dot_id} -> #{q.dot_id};\n"
+    end
+    left = parent.questions.size - limit - 1
+    if left > 0
+      # this is not always correct, as above may include the current
+      # question. Thus, only left-1 questions would be left.
+      d << %(#{dot_id}_hidden_siblings [label="+#{left} weitere Fragen", shape=none];)
+      d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;\n)
+    end
+
+    d
+  end
+
+
   def is_complete_helper
     key = ["question_complete_helper"]
     key << last_admin_or_reviewer_change

@@ -47,9 +47,11 @@ class Category < ActiveRecord::Base
     s
   end
 
+  include DotTools
+
   def dot(active = false)
     id = ident.gsub('"', '')
-    id = id.scan(/./).join('̶')+'̶' if !released?
+    id = dot_strike(id) if !released?
 
     txt = 'K: ' + id
     bg = active ? ', style=filled, fillcolor = "#AAC6D2"' : ''
@@ -57,32 +59,21 @@ class Category < ActiveRecord::Base
   end
 
   def dot_id
-    'c' + ident.gsub(/[^a-z0-9_]/i, '')
+    'c' + dot_clean(ident)
   end
 
   def dot_region
     d = dot(true)
     questions.each do |q|
-      d << q.dot
-      d << "#{dot_id} -> #{q.dot_id};\n"
+      d << dot_link_to(self, q)
 
-      q.subquestions.each do |qq|
-        d << qq.dot
-        d << "#{q.dot_id} -> #{qq.dot_id};\n"
-      end
-
-      q.subcategories.each do |c|
-        d << c.dot
-        d << "#{q.dot_id} -> #{c.dot_id};\n"
-      end
+      d << dot_link_to(q, q.subquestions)
+      d << dot_link_to(q, q.subcategories)
     end
 
     answers.each do |a|
-      d << a.dot
-      d << "#{a.dot_id} -> #{dot_id};\n"
-
-      d << a.question.dot
-      d << "#{a.question.dot_id} -> #{a.dot_id};\n"
+      d << dot_link_from(a, self)
+      d << dot_link_from(a.question, a)
     end
 
     d

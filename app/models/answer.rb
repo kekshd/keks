@@ -57,12 +57,14 @@ class Answer < ActiveRecord::Base
     "#{question.ident}/#{ident}"
   end
 
+  include DotTools
+
   def dot
     txt = 'A: ' + ident.gsub('"', '')
     %(#{dot_id} [label="#{txt}", shape=hexagon, color=#{correct? ? 'green' : 'red'}];\n)
   end
 
   def dot_id
-    'a' + ident.gsub(/[^a-z0-9_]/i, '') + question.dot_id
+    'a' + dot_clean(ident) + question.dot_id
   end
 end
