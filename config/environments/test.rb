@@ -35,5 +35,8 @@ Keks::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
+  # disable logging when doing coverage tests
+  config.log_level = ENV["COVERAGE"] ? :unknown : :debug
+
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 end

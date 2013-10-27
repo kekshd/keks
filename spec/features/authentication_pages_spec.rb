@@ -3,6 +3,9 @@
 require 'spec_helper'
 
 describe "Authentication" do
+  let(:user) { FactoryGirl.create(:user) }
+  let(:wrong_user) { FactoryGirl.create(:user, mail: "wrong@example.com") }
+  let(:non_admin) { FactoryGirl.create(:user) }
 
   subject { page }
 
@@ -31,8 +34,22 @@ describe "Authentication" do
       end
     end
 
+    describe "with valid information permanently" do
+      before do
+        fill_in "Nick",     with: user.nick
+        fill_in "Passwort", with: user.password
+        check "Dauerhaft?"
+        click_button "Einloggen"
+      end
+
+      it { should have_link('Ausloggen', href: signout_path) }
+      it "has set remember cookie" do
+        expect(page.driver.cookies.find("remember_token").to_s).to \
+          include(user.remember_token, "2033")
+      end
+    end
+
     describe "with valid information" do
-      let!(:user) { FactoryGirl.create(:user) }
       before do
         fill_in "Nick",     with: user.nick
         fill_in "Passwort", with: user.password
@@ -57,8 +74,6 @@ describe "Authentication" do
   describe "authorization" do
 
     describe "for non-signed-in users" do
-      let(:user) { FactoryGirl.create(:user) }
-
       describe "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
@@ -106,8 +121,6 @@ describe "Authentication" do
     end
 
     describe "as wrong user" do
-      let(:user) { FactoryGirl.create(:user) }
-      let(:wrong_user) { FactoryGirl.create(:user, mail: "wrong@example.com") }
       before { sign_in user }
 
       describe "visiting Users#edit page" do
@@ -122,9 +135,6 @@ describe "Authentication" do
     end
 
     describe "as non-admin user" do
-      let(:user) { FactoryGirl.create(:user) }
-      let(:non_admin) { FactoryGirl.create(:user) }
-
       before { sign_in non_admin }
 
       describe "submitting a DELETE request to the Users#destroy action" do

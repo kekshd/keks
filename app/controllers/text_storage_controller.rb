@@ -4,9 +4,9 @@ class TextStorageController < ApplicationController
   before_filter :require_admin
 
   def update
-    @message = TextStorage.find(params[:id])
+    @message = (TextStorage.find(params[:id])) rescue nil
 
-    if @message.update_attributes(params[:text_storage])
+    if @message && @message.update_attributes(params[:text_storage])
       flash[:success] = "Mitteilung aktualisiert"
       redirect_to :back
     else

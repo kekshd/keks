@@ -16,17 +16,22 @@ class PasswordResetsController < ApplicationController
   end
 
   def edit
-    @user = User.find_by_password_reset_token!(params[:id])
+    begin
+      @user = User.find_by_password_reset_token!(params[:id])
+    rescue
+      flash[:error] = "Dieser Zurücksetzen-Link ist nicht gültig. Bedenke, dass der Link ungültig wird, sobald Du das Passwort erfolgreich zurückgesetzt hast."
+      redirect_to new_password_reset_path
+    end
   end
 
   def update
     @user = User.find_by_password_reset_token!(params[:id])
     if @user.password_reset_sent_at < 2.hours.ago
-      redirect_to new_password_reset_path, :alert => "Dieser Passwort-zurücksetzen Link ist abgelaufen. Bitte versuche es erneut."
+      return redirect_to new_password_reset_path, :alert => "Dieser Passwort-zurücksetzen Link ist abgelaufen. Bitte versuche es erneut."
     elsif @user.update_attributes(params[:user])
-      redirect_to signin_path, :notice => "Das Passwort wurde geändert."
+      return redirect_to signin_path, :notice => "Das Passwort wurde geändert."
     else
-      render :edit
+      return render :edit
     end
   end
 end

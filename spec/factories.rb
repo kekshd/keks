@@ -130,6 +130,12 @@ FactoryGirl.define do
       correct true
       text { "$\\begin{pmatrix}3\\\\3\\\\18\\end{pmatrix}$" }
     end
+
+    factory :answer_with_subquestion do
+      after(:create) do |answer|
+        FactoryGirl.create_list(:question_with_answers, 1, parent: answer)
+      end
+    end
   end
 
   factory :category do
