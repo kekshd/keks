@@ -50,7 +50,7 @@
   </div>
 
   <% if flash.any? %>
-    <div class="flash">
+    <div class="flash box">
       <ul>
         <% flash.each do |key, value| %>
           <%= content_tag(:li, value, class: "alert alert-#{key}") %>

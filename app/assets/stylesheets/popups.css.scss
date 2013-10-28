@@ -1,0 +1,53 @@
+.mfp-content {
+  background: #fff;
+  max-width:800px;
+
+  padding: 20px;
+  margin: 10px 20px;
+
+  box-shadow: 0 0 40px rgba(0, 0, 0, 1);
+  border-radius: 5px;
+
+  border:1px solid #000;
+}
+
+/* overlay at start */
+.mfp-fade.mfp-bg {
+  opacity: 0;
+
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
+}
+/* overlay animate in */
+.mfp-fade.mfp-bg.mfp-ready {
+  opacity: 0.5;
+}
+/* overlay animate out */
+.mfp-fade.mfp-bg.mfp-removing {
+  opacity: 0;
+}
+
+/* content at start */
+.mfp-fade.mfp-wrap .mfp-content {
+  opacity: 0;
+
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
+}
+/* content animate it */
+.mfp-fade.mfp-wrap.mfp-ready .mfp-content {
+  opacity: 1;
+}
+/* content animate out */
+.mfp-fade.mfp-wrap.mfp-removing .mfp-content {
+  opacity: 0;
+}
+
+.mfp-preloader {
+  color: #fff;
+  font-weight: bold;
+  font-size: 200%;
+  text-shadow: 0 0 2px #000;
+}

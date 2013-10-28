@@ -103,6 +103,7 @@ GEM
       launchy (~> 2.2)
     libv8 (3.16.14.3)
     lockfile (2.1.0)
+    magnific-popup-rails (0.9.7)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -242,6 +243,7 @@ DEPENDENCIES
   launchy (= 2.2.0)
   lazy_high_charts (= 1.4.0)
   letter_opener
+  magnific-popup-rails
   nokogiri
   parallel_tests
   pry-rails (= 0.3.2)
