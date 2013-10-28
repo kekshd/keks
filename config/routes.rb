@@ -50,6 +50,8 @@ Keks::Application.routes.draw do
       match "overwrite_reviews", to: "questions#overwrite_reviews", as: "overwrite_reviews", via: :put
       match "review", to: "reviews#review", as: "review", via: :get
       match "review", to: "reviews#save", as: "review_save", via: :post # new reviews
+      match "copy", to: "questions#copy", as: "copy", via: :get
+      match "copy_to", to: "questions#copy_to", as: "copy_to", via: :post
     end
 
 

@@ -3,11 +3,45 @@
 class QuestionsController < ApplicationController
   before_filter :require_admin, :except => [:star, :unstar, :perma]
   before_filter :signed_in_user, :only => [:star, :unstar]
+  before_filter :find_question, except: [:create, :overwrite_reviews, :show, :new, :index]
+
+  def copy
+    render partial: 'copy'
+  end
+
+  def copy_to
+    def abort(msg)
+      flash[:error] = msg
+      redirect_to @question
+    end
+
+    ident = params[:ident].strip rescue ""
+    if ident.blank?
+      return abort("Kein Ident angegeben, daher kann die Frage nicht kopiert werden.")
+    end
+
+    if Question.where(ident: ident).count != 0
+      return abort("Der angegebene Ident „#{ident}“ wird bereits verwendet. Kopieren fehlgeschlagen.")
+    end
+
+    new_question = @question.dup
+    new_question.ident = ident
+    new_question.released = false
+
+    if new_question.save
+      flash[:success] = "Frage kopiert. Du musst die Frage erst freigeben, bevor sie den Studis angezeigt wird."
+    else
+      return abort("Ein interner Fehler ist aufgetreten und die Frage konnte nicht kopiert werden. Details in den Logs.")
+    end
+
+    copy_assoc_objects(new_question)
+
+    redirect_to new_question
+  end
 
   def star
     expires_now
 
-    @question = Question.find(params[:id])
     return render :json => "keine Frage" if !@question
     begin
       current_user.starred << @question
@@ -18,7 +52,6 @@ class QuestionsController < ApplicationController
   def unstar
     expires_now
 
-    @question = Question.find(params[:id])
     return render :json => false if !@question
     #~ begin
       current_user.starred.delete(@question)
@@ -45,19 +78,16 @@ class QuestionsController < ApplicationController
   end
 
   def edit
-    @question = Question.find(params[:id])
   end
 
   def show
-    @question = Question.includes(:answers => [:questions, :categories]).find(params[:id])
+    @question = Question.includes(:reviews, answers: [:questions, :categories]).find(params[:id])
   end
 
   def perma
-    @question = Question.find(params[:id])
   end
 
   def toggle_release
-    @question = Question.find(params[:question_id])
     if @question.toggle(:released) && @question.save
       flash[:success] = "Frage aktualisiert (Released: #{@question.released})"
       redirect_to :back
@@ -91,8 +121,6 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question = Question.find(params[:id])
-
     begin
       p = params[:parent].split('_')
     rescue
@@ -134,12 +162,36 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question = Question.find(params[:id])
     if @question.destroy
       flash[:success] = "Frage gelöscht"
     else
       flash[:error] = "Frage nicht gelöscht. Siehe Log für mehr Informationen."
     end
     redirect_to questions_path
+  end
+
+  private
+  def find_question
+    id = params[:question_id] ? params[:question_id] : params[:id]
+    @question = Question.find(id)
+  end
+
+  # copies answers and hints from this question to the specified one if
+  # enabled. The status is directly read from the post parameters.
+  def copy_assoc_objects(question)
+    objs = []
+    objs += @question.answers if params[:copy_answers] == "1"
+    objs += @question.hints if params[:copy_hints] == "1"
+
+    all_ok = true
+    objs.each do |o|
+      new_obj = o.dup
+      new_obj.question = question
+      all_ok = false unless new_obj.save
+    end
+
+    unless all_ok
+      flash[:warning] = "Nicht alle Antworten/Hinweise konnten kopiert werden. Details in den Logs."
+    end
   end
 end

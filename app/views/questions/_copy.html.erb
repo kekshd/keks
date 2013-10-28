@@ -1,0 +1,22 @@
+<h2>Frage <%=@question.ident%> kopieren</h2>
+<%= form_tag(question_copy_to_path(@question), method: :post) do %>
+  <%= label_tag :ident %>
+  <%= text_field_tag :ident %>
+  <span>Benötigt. Muss eindeutig sein bzgl. aller Fragen.</span>
+
+  <% if @question.answers.any? %>
+    <%= label_tag :copy_answers, "Antworten kopieren" %>
+    <%= check_box_tag :copy_answers, 1, true %>
+  <% end %>
+
+  <% if @question.hints.any? %>
+    <%= label_tag :copy_hints, "Hinweise kopieren" %>
+    <%= check_box_tag :copy_hints, 1, true %>
+  <% end %>
+
+  <hr class="clear"/>
+  <div class="button-group">
+    <%= submit_tag "Kopieren", class: "button primary", disable_with: "Bitte warten…" %>
+    <%= link_to "Abbrechen", @question, class: "button", data: { action: "close-popup" } %>
+  </div>
+<% end %>

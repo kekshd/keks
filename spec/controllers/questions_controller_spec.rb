@@ -219,4 +219,106 @@ describe QuestionsController do
       expect(r.comment).to include(admin.nick)
     end
   end
+
+  describe "#copy" do
+    before { sign_in admin }
+
+    it "renders copy form" do
+      get :copy, question_id: question.id
+      expect(response).to render_template('_copy')
+    end
+
+    it "has an abort button" do
+      get :copy, question_id: question.id
+      expect(response.body).to include('Abbrechen')
+    end
+  end
+
+  describe "#copy_to" do
+    before { sign_in admin }
+
+    context "with existing ident" do
+      def copy
+        q = existing_question
+        post :copy_to, question_id: q.id, ident: q.ident, copy_answers: "1"
+      end
+
+      it "returns to previous question" do
+        copy
+        expect(response).to redirect_to existing_question
+      end
+
+      it "shows an error" do
+        copy
+        expect(flash[:error]).not_to be_nil
+      end
+
+      it "doesn’t add answers" do
+        expect { copy }.not_to change { Answer.count }
+      end
+
+      it "doesn’t add hints" do
+        expect { copy }.not_to change { Hint.count }
+      end
+
+      it "doesn’t add new question" do
+        expect { copy }.not_to change { Question.count }
+      end
+    end
+
+    context "with unique ident" do
+      before { @s = existing_question }
+
+      def copy(copy_answers = true, copy_hints = true)
+        ca = copy_answers ? "1" : "0"
+        ch = copy_hints ? "1" : "0"
+        post :copy_to, question_id: @s.id,
+          ident: @s.ident + "_copy", copy_answers: ca, copy_hints: ch
+        @q = Question.where(ident: @s.ident + "_copy").first
+      end
+
+      it "redirects to copied question" do
+        copy
+        expect(response).to redirect_to @q
+      end
+
+      it "shows a success message" do
+        copy
+        expect(flash[:success]).not_to be_nil
+      end
+
+      it "adds as much answers as the source question has" do
+        expect { copy }.to change { Answer.count }.by(@s.answers.count)
+      end
+
+      it "adds as much hints as the source question has" do
+        expect { copy }.to change { Hint.count }.by(@s.hints.count)
+      end
+
+      it "doesn’t produce a warning when copying answers and hints" do
+        copy
+        expect(flash[:warning]).to be_nil
+      end
+
+      it "adds one new question" do
+        expect { copy }.to change { Question.count }.by(1)
+      end
+
+      it "creates a valid copy" do
+        expect(copy).to be_valid
+      end
+
+      it "doesn’t carry over the reviews" do
+        expect(copy.reviews.count).to eql 0
+      end
+
+      it "doesn’t copy answers if unchecked" do
+        expect { copy(false) }.not_to change { Answer.count }
+      end
+
+      it "doesn’t copy hints if unchecked" do
+        expect { copy(false, false) }.not_to change { Hint.count }
+      end
+    end
+  end
 end
