@@ -1,12 +1,14 @@
+<% provide(:title, "Export") %>
+
 <div>Diese Seite ist für das Review von Fragen gedacht. Fragen die noch nicht fertig sind oder noch nicht freigegeben wurden sind mit einem „UNFERTIG“ versehen. Die Seite ist für Admins und Reviewer (wenn sie den Link kennen) einsehbar.</div>
 
 <% Category.includes(:questions).all.each do |c| %>
   <% next unless c.is_root? %>
   <div>
     <h2><%= c.title %></h2>
-    <div class="toggle" style="display: none">
+    <div class="toggle search-content-urls" style="display: none">
     <% c.questions.each do |q| %>
-      <%= render "export_question", question: q, max_depth: 10 %>
+      <div data-content-url="<%=export_question_path(q)%>">…Lade…</div>
     <% end %>
     </div>
   </div>

@@ -24,6 +24,11 @@ class AdminController < ApplicationController
   def export
   end
 
+  def export_question
+    get_question
+    render partial: "export_question", locals: { question: @question, max_depth: 10 }
+  end
+
   private
 
   include DotTools

@@ -5,6 +5,7 @@ require 'spec_helper'
 describe AdminController do
   let(:user) { FactoryGirl.create(:user) }
   let(:admin) { FactoryGirl.create(:admin) }
+  let(:question) { FactoryGirl.create(:question_with_answers) }
   let(:reviewer) { FactoryGirl.create(:reviewer) }
   let!(:cats) { FactoryGirl.create(:question_parent_category_subs) }
 
@@ -15,6 +16,15 @@ describe AdminController do
     get :export
     response.should render_template :export
     response.body.should have_text "einsehbar"
+    has_title
+  end
+
+  describe "#export_question" do
+    it "renders question export partial" do
+      sign_in admin
+      get :export_question, question_id: question.id
+      response.should render_template :export_question
+    end
   end
 
   it "renders the export page for reviewers" do

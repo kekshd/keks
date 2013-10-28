@@ -65,6 +65,7 @@ Keks::Application.routes.draw do
     match "tree", to: "admin#tree", :as => "tree", via: :get
     #~ match "tree", to: "admin#tree", :as => "tree", via: :get
     match "export", to: "admin#export", :as => "export", via: :get
+    match "export_question/:question_id", to: "admin#export_question", :as => "export_question", via: :get
   end
 
   #~ match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get

@@ -17,5 +17,14 @@ $(document).ready(function() {
       elm.toggle('slide fade');
       head.toggleClass('toggle-opened toggle-closed');
     });
+
+    if(elm.hasClass('search-content-urls')) {
+      head.one('click', function() {
+        elm.find('div[data-content-url]').each(function(ind, resolve) {
+          var url = $(resolve).data('content-url');
+          $(resolve).load(url, function() { MathJax.Hub.Queue(["Typeset",MathJax.Hub]); });
+        });
+      });
+    }
   });
 });

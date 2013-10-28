@@ -47,3 +47,7 @@ def wait_for_non_dom_ajax
     end
   end
 end
+
+def has_title
+  expect(response.body).not_to include("<title>KeKs – </title>")
+end
