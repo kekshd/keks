@@ -35,7 +35,7 @@
         </td>
         <td>
           <% q.answers.each do |a| %>
-            <%= content_tag :span, a.ident, title: a.text, class: a.correct? ? "correct" : "wrong" %>
+            <%= content_tag :span, a.id.to_s, title: a.text, class: a.correct? ? "correct" : "wrong" %>
             <br/>
           <% end %>
         </td>

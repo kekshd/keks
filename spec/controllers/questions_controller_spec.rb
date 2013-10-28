@@ -21,8 +21,12 @@ describe QuestionsController do
 
   it "renders questions index for admins" do
     sign_in admin
+    existing_question
+    a = existing_question.answers.sample
     get :index
     response.should render_template :index
+    expect(response.status).to eq(200)
+    expect(response.body).to include(existing_question.ident, a.id.to_s, a.text)
   end
 
   it "renders question details for admins" do
