@@ -20,6 +20,26 @@ describe StatsController do
       post :new, question_id: q, skipped: "true", correct: "true", selected_answers: [q.answers.sample, 9999123123123]
       expect(q.stats.last.selected_answers).not_to include(9999123123123)
     end
+
+    context "question with all false answers" do
+      before do
+        q.answers.each do |a|
+          next unless a.correct?
+          a.destroy
+        end
+        q.reload
+      end
+
+      it "can be answered correctly" do
+        post :new, question_id: q, skipped: "false", correct: "true", selected_answers: []
+        expect(q.stats.last.correct).to eql true
+      end
+
+      it "can be answered incorrectly" do
+        post :new, question_id: q, skipped: "false", correct: "false", selected_answers: [q.answers.sample]
+        expect(q.stats.last.correct).to eql false
+      end
+    end
   end
 
   describe "#report" do

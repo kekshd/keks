@@ -33,6 +33,10 @@ describe "Hitme" do
   end
 
   describe "question answering", :js => true do
+    def save_answer_button
+      all('.answer-submit a.button.big[data-action="save"]').last
+    end
+
     it "has working category select" do
       visit main_hitme_path
       should have_xpath("//ul[@id='categories']/li//a[1]", visible: false)
@@ -51,7 +55,7 @@ describe "Hitme" do
 
     it "can be finished" do
       category_select
-      5.times { all('.answer-submit a.button.big[data-action="save"]').last.click }
+      5.times { save_answer_button.click }
       should have_selector('h3', text: 'Fertig!')
     end
 
@@ -67,11 +71,34 @@ describe "Hitme" do
             # select correct answer to easily distinguish these stats
             # from others inserted by race conditions
             all('a.button.toggleable[data-correct="true"]').each { |l| l.click }
-            all('.answer-submit a.button.big[data-action="save"]').last.click
+            save_answer_button.click
             wait_for_non_dom_ajax
           end.to change { Stat.where(correct: true).size }.by(1)
         }
       end.to change { Stat.where(correct: true).size }.by(3)
+    end
+
+    context "with all wrong answers" do
+      before do
+        @q = FactoryGirl.create(:question)
+        FactoryGirl.create_list(:answer_wrong, 3, question: @q)
+        @q.reload
+        visit main_hitme_path + "#question=#{@q.id}"
+        wait_for_non_dom_ajax
+      end
+
+      it "may be answered correctly" do
+        save_answer_button.click
+        10.times { break if @q.stats.count > 0; sleep 0.2 }
+        expect(@q.stats.last.correct).to eql true
+      end
+
+      it "may be answered incorrectly by selecting an answer" do
+        all('a.button.toggleable[data-correct="false"]').last.click
+        save_answer_button.click
+        10.times { break if @q.stats.last; sleep 0.2 }
+        expect(@q.stats.last.correct).to eql false
+      end
     end
   end
 

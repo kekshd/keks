@@ -16,6 +16,12 @@ describe Question do
     expect(question).to be_valid
   end
 
+  it "is valid with all answers false" do
+    q = question
+    q.answers << FactoryGirl.build(:answer_wrong)
+    expect(q.complete?).to eql(true)
+  end
+
   it "retrieves subquestions" do
     q1 = FactoryGirl.create(:question_with_answers)
     q2 = FactoryGirl.create(:question_parent_answer)

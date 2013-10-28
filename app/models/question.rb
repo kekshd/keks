@@ -214,7 +214,7 @@ class Question < ActiveRecord::Base
   def is_complete_helper_real
     return false, "nicht freigegeben" if !released?
     return false, "keine Antworten" if answers.size == 0
-    return false, "keine richtige Antwort" if answers.none? { |a| a.correct? }
+    return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && !answers.all? { |a| a.correct? }
     return false, "Reviewer sagt „nicht okay“" if reviews.any? { |a| !a.okay? }
     # allow questions to be released regardless of # of reviews
     #return false, "nicht genug Reviews" if reviews.size < REVIEW_MIN_REQUIRED_REVIEWS
