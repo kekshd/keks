@@ -54,24 +54,7 @@ class Question < ActiveRecord::Base
     all > 0 ? correct/all.to_f : 0
   end
 
-  # returns the ratio of correct answers. Skipped ones are not counted.
-  def correct_ratio
-    all = stats.where(:skipped => false).size.to_f
-    all > 0 ? correct_count.to_f/all : 0
-  end
-
-  def skip_ratio
-    all = stats.size.to_f
-    all > 0 ? skip_count.to_f/all : 0
-  end
-
-  def correct_count
-    stats.where(:correct => true, :skipped => false).size
-  end
-
-  def skip_count
-    stats.where(:skipped => true).size
-  end
+  include StatTools
 
   def get_parent_category
     parent.is_a?(Category) ? parent : parent.get_parent_category

@@ -47,28 +47,7 @@ class User < ActiveRecord::Base
     User.count_by_sql("SELECT 1 FROM starred WHERE user_id = #{id} AND question_id = #{qid}") > 0
   end
 
-  def correct_ratio
-    all = recent_stats.where(:skipped => false).size.to_f
-    all > 0 ? correct_count.to_f/all : 0.0
-  end
-
-  def skip_ratio
-    all = recent_stats.size.to_f
-    all > 0 ? skip_count.to_f/all : 0.0
-  end
-
-  def correct_count
-    recent_stats.where(:skipped => false, :correct => true).size
-  end
-
-  def skip_count
-    recent_stats.where(:skipped => true).size
-  end
-
-  def recent_stats
-    stats.where("stats.created_at > ?", 30.days.ago)
-  end
-
+  include StatTools
 
   def send_password_reset
     generate_token(:password_reset_token)
