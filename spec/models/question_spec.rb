@@ -111,4 +111,12 @@ describe Question do
       expect(qq.incomplete_reason).to include("andere Zielgruppe")
     end
   end
+
+  describe "#dot_region_siblings" do
+    it "limits amount of visible siblings" do
+      c = FactoryGirl.create(:category_with_questions)
+      siblings_dot = c.questions.sample.send(:dot_region_siblings, true)
+      expect(siblings_dot).to include("_hidden_siblings")
+    end
+  end
 end

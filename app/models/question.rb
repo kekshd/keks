@@ -194,7 +194,7 @@ class Question < ActiveRecord::Base
 
     # this is not always correct, as above may include the current
     # question. Thus, only left-1 questions would be left.
-    d << %(#{dot_id}_hidden_siblings [label="+#{left} weitere Fragen", shape=none];)
+    d << %(#{dot_id}_hidden_siblings [label="+#{remaining} weitere Fragen", shape=none];)
     d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;\n)
     d
   end
