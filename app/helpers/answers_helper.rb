@@ -3,7 +3,7 @@
 module AnswersHelper
   def render_correctness(answer)
     c = answer.correct?
-    txt = c ? "✔ richtig" : "✘ falsch"
+    txt = answer.correct_text
     cls = c ? 'success' : 'error'
    %|<em class="alert-#{cls}">#{txt}</em>|.html_safe
   end

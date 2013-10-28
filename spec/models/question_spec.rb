@@ -79,7 +79,7 @@ describe Question do
     10.times { q.parent.questions << FactoryGirl.build(:question_subs) }
     q.parent.answers << FactoryGirl.build(:answer)
     dot = q.dot_region
-    expect(dot).to include(q.ident, q.parent.ident, q.answers.first.ident)
+    expect(dot).to include(q.ident, q.parent.ident, q.answers.first.id.to_s)
   end
 
   it "builds dot with parent answer" do
@@ -92,7 +92,7 @@ describe Question do
     subq.save
 
     dot = q.dot_region
-    expect(dot).to include(q.ident, q.parent.ident, q.answers.first.ident)
+    expect(dot).to include(q.ident, q.parent.id.to_s, q.answers.first.id.to_s)
   end
 
   it "detects unreachable questions" do

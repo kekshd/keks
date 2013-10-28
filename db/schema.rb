@@ -11,15 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130830203012) do
+ActiveRecord::Schema.define(:version => 20131028071004) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
     t.boolean  "correct"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.string   "ident"
-    t.string   "type"
     t.integer  "question_id"
   end
 
@@ -61,7 +59,6 @@ ActiveRecord::Schema.define(:version => 20130830203012) do
     t.datetime "content_changed_at"
   end
 
-  add_index "questions", ["id"], :name => "index_questions_on_id"
   add_index "questions", ["parent_id"], :name => "index_questions_on_parent_id"
 
   create_table "reviews", :force => true do |t|

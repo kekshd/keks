@@ -113,9 +113,6 @@ FactoryGirl.define do
   factory :answer do
     text { Faker::Lorem.sentence }
     correct { rand(2) == 1 }
-    sequence :ident do |n|
-      n.to_s
-    end
     question
 
     factory :answer_correct do

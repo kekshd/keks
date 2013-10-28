@@ -1,10 +1,10 @@
 # encoding: utf-8
 
 class Answer < ActiveRecord::Base
-  attr_accessible :correct, :text, :ident
+  attr_accessible :correct, :text
 
-  validates :ident, :uniqueness => { :scope => :question_id,
-    :message => "Antwort-Idents müssen für eine Frage eindeutig sein" }
+  validates :text, :uniqueness => { :scope => :question_id,
+    :message => "Es gibt bereits eine Antwort mit genau dem gleichen Text zu dieser Frage." }
 
   belongs_to :question, inverse_of: :answers, touch: :content_changed_at
 
@@ -39,7 +39,7 @@ class Answer < ActiveRecord::Base
 
   def trace_to_root(first = false)
     s = ""
-    s << " ← A:#{ident}" unless first
+    s << " ← A:#{id}" unless first
     s << question.trace_to_root
     s
   end
@@ -54,17 +54,21 @@ class Answer < ActiveRecord::Base
   end
 
   def link_text_short
-    "#{question.ident}/#{ident}"
+    "#{question.ident}/A#{id}"
+  end
+
+  def correct_text
+    correct ? "✔ richtig" : "✘ falsch"
   end
 
   include DotTools
 
   def dot
-    txt = 'A: ' + ident.gsub('"', '')
+    txt = 'A: ' + id.to_s
     %(#{dot_id} [label="#{txt}", shape=hexagon, color=#{correct? ? 'green' : 'red'}];\n)
   end
 
   def dot_id
-    'a' + dot_clean(ident) + question.dot_id
+    'a' + id.to_s + question.dot_id
   end
 end

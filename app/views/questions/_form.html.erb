@@ -15,9 +15,9 @@
   <select name="parent">
     <option></option>
     <optgroup label="Antworten">
-      <% Answer.includes(:question).find(:all, :order => :ident).each do |a| %>
+      <% Answer.includes(:question).find(:all, order: :id).each do |a| %>
         <% v = "Answer_#{a.id}" %>
-        <%= content_tag(:option, a.question.ident + '/' + a.ident, :value => v, :selected => selected == v) %>
+        <%= content_tag(:option, a.question.ident + '/' + a.id.to_s, :value => v, :selected => selected == v) %>
       <% end %>
     </optgroup>
     <optgroup label="Kategorien">

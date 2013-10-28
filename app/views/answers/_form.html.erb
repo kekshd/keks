@@ -1,15 +1,9 @@
 <%= form_for([@question, @answer]) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
-  <%= f.label :ident %>
-  <%= f.text_field :ident %>
-  <span>
-    Benötigt. Muss eindeutig sein bzgl. der Frage.
-    <br/>Vergeben: <%= @question.answers.map { |a| a.ident }.join(', ') %>
-  </span>
 
   <%= f.label :text %>
   <%= f.text_area :text, "data-preview" => "#preview" %>
-  <span>Benötigt. Ist genau eine <tt>\begin{pmatrix} … \end{pmatrix}</tt> enthalten, wird<br/>diese zur Validierung genutzt. Es darf dann nur eine Antwort geben. Correct muss auf wahr stehen. <br/><%= render "latex/help" %></span>
+  <span>Benötigt.<br/><br/><b>Für Matrix Berechnungen:</b> Ist genau eine <code>\begin{pmatrix} … \end{pmatrix}</code> enthalten, wird<br/>diese zur Validierung genutzt. Es darf dann nur eine Antwort geben. Correct muss auf wahr stehen. <br/><br/><%= render "latex/help" %><br/></span>
 
   <div id="preview"><%= render_tex(@answer.text) %></div>
 

@@ -10,7 +10,7 @@ describe Answer do
   end
 
   it "renders dot" do
-    expect(answer.dot).to include(answer.dot_id, answer.ident, answer.correct ? "green" : "red")
+    expect(answer.dot).to include(answer.dot_id, answer.id.to_s, answer.correct ? "green" : "red")
   end
 
   it "is released when its question is" do
@@ -18,7 +18,7 @@ describe Answer do
   end
 
   it "can be traced to root" do
-    expect(answer.trace_to_root).to include(answer.ident)
+    expect(answer.trace_to_root).to include(answer.id.to_s)
   end
 
   it "returns invalid ratio for matrix questions" do
@@ -46,6 +46,6 @@ describe Answer do
   end
 
   it "prints link text" do
-    expect(answer.link_text).to include(answer.ident)
+    expect(answer.link_text).to include(answer.id.to_s)
   end
 end

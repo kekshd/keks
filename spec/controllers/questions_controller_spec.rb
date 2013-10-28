@@ -73,7 +73,7 @@ describe QuestionsController do
     get :new, parent: "Answer_#{answ.id}"
     response.should render_template :new
     page = Capybara::Node::Simple.new(response.body)
-    expect(page).to have_select('parent', selected: "#{existing_question.ident}/#{answ.ident}")
+    expect(page).to have_select('parent', selected: "#{existing_question.ident}/#{answ.id}")
   end
 
 

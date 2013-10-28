@@ -23,7 +23,7 @@ describe Category do
     category.answers << a
     category.is_root = false
     category.save
-    expect(category.trace_to_root).to include(a.ident)
+    expect(category.trace_to_root).to include(a.id.to_s)
   end
 
   it "retrieves correct root categories" do
@@ -50,6 +50,6 @@ describe Category do
     expect(c.dot_region).to include(c.dot_id, q.ident,
                               q.subquestions.first.ident, subcat.ident)
 
-    expect(subcat.dot_region).to include(subcat.answers.first.ident)
+    expect(subcat.dot_region).to include(subcat.answers.first.id.to_s)
   end
 end

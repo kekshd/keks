@@ -18,17 +18,6 @@ describe AnswersController do
       get :new, question_id: question.id
       expect(response).to render_template("new")
     end
-
-    it "inserts auto-generated ident" do
-      get :new, question_id: question.id
-      expect(response.body).to have_selector("#answer_ident[value]")
-    end
-
-    it "handles auto-generated ident when ident taken" do
-      question.answers.first.destroy
-      get :new, question_id: question.id
-      expect(response.body).to have_selector("#answer_ident[value]")
-    end
   end
 
   describe "#edit" do
@@ -46,9 +35,9 @@ describe AnswersController do
   describe "#create" do
     before(:each) do
       post :create, question_id: question.id, answer: {
-        correct: false, text: "le work ✓", ident: "le id" }
+        correct: false, text: "le work ✓" }
       question.reload
-      @answ = question.answers.find { |a| a.ident == "le id" }
+      @answ = question.answers.find { |a| a.text == "le work ✓" }
     end
 
     it "updates question#content_changed_at" do
@@ -65,10 +54,10 @@ describe AnswersController do
     end
   end
 
-  describe "#create with existing ident" do
+  describe "#create with existing text" do
     before(:each) do
       post :create, question_id: question.id, answer: {
-        correct: false, text: "b0rk", ident: question.answers.first.ident }
+        correct: false, text: question.answers.first.text }
       question.reload
     end
 
@@ -108,12 +97,12 @@ describe AnswersController do
     end
   end
 
-  describe "#update with existing ident" do
+  describe "#update with existing text" do
     before(:each) do
       answers = question.answers.sample(2)
       @answ = answers.first
       post :update, question_id: question.id, id: @answ.id, answer: {
-        correct: false, text: "le work ✓", ident: answers.last.ident }
+        correct: false, text: answers.last.text }
     end
 
     it "renders edit template again" do

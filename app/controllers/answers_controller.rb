@@ -6,7 +6,6 @@ class AnswersController < ApplicationController
 
   def new
     @answer = Answer.new
-    @answer.ident ||= gen_answer_ident(@question)
   end
 
   def edit
@@ -44,17 +43,5 @@ class AnswersController < ApplicationController
       flash[:error] = "Antwort konnte nicht gelöscht werden. Vermutlich steht in den Logs mehr."
     end
     redirect_to @question
-  end
-
-  private
-
-  def gen_answer_ident(question)
-    idents = question.answers.map { |a| a.ident.to_s }
-    id = question.answers.size + 1
-    5.times do
-      break unless idents.include?(id.to_s)
-      id += 1
-    end
-    id.to_s
   end
 end
