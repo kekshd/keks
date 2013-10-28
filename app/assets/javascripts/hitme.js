@@ -416,7 +416,7 @@ H.Hitme.prototype = {
   _showNextQuestion: function() {
     this.questPositionPointer++;
     var q = window.currentQuestion = this.questions[this.questPositionPointer];
-    var code = '<div style="display:none" id="'+getUniqId(q.id)+'" class="hideMeOnMore">'
+    var code = '<div style="display:none" id="'+getUniqId(q.id)+'" class="box hideMeOnMore">'
       + q.html
       + '<br/>';
 
@@ -512,7 +512,7 @@ H.Hitme.prototype = {
 
     if(this.answersGiven.skip.length === 0) return false;
 
-    var code = '<div style="display:none;" class="hideMeOnMore reshowskipped">'
+    var code = '<div style="display:none;" class="box hideMeOnMore reshowskipped">'
       + '<h3>Übersprungene Fragen</h3>'
       + '<p>Du hast ' + this.answersGiven.skip.length + ' Frage(n) übersprungen. Sollen sie nochmal angezeigt werden, oder möchtest Du abschließen?</p>'
       + '<div class="button-group">'
@@ -529,7 +529,7 @@ H.Hitme.prototype = {
 
     var sum = this.answersGiven.correct.length + this.answersGiven.fail.length;
 
-    var code = '<div style="display:none;" class="hideMeOnMore">'
+    var code = '<div style="display:none;" class="box hideMeOnMore">'
       + '<h3>Fertig!</h3>'
       + '<p>Du hast den aktuellen Block abgeschlossen. Insgesamt hast Du '+sum+' Fragen beantwortet und davon '+this.answersGiven.fail.length+' falsch. Scrolle nach oben um jeweils die Antworten für die Fragen zu sehen.</p>'
       + '<div class="button-group">'
