@@ -32,12 +32,12 @@ group :development do
   gem 'pry-rails',          '0.3.2'
   gem 'rack-livereload'     # automatically update pages in browser
   gem 'awesome_print'       # console highlighting
-  gem 'better_errors'       # improve in browser error messages
   gem 'binding_of_caller'   # allow to spawn a REPL for above
   gem 'letter_opener'       # preview mails in browser rather than using an actual smtp
 end
 
 group :development, :test do
+  gem 'better_errors'       # improve in browser error messages
   gem 'factory_girl_rails', '4.2.0'
   gem 'rspec-rails',        '2.13.0'
   # improved logging of execution time. Unfortunately makes assets noisy
