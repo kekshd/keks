@@ -40,7 +40,7 @@ class Question < ActiveRecord::Base
   end
 
   def subquestions
-    answers.map { |a| a.questions }.flatten.uniq
+    Question.where(parent_type: Answer, parent_id: answers)
   end
 
   def subcategories
@@ -133,8 +133,7 @@ class Question < ActiveRecord::Base
 
     answers.each do |a|
       d << dot_link_to(self, a)
-      d << dot_link_to(a, a.questions)
-      d << dot_link_to(a, a.categories)
+      d << dot_link_to(a, [a.questions, a.categories])
     end
 
     d << dot_hints
@@ -171,12 +170,8 @@ class Question < ActiveRecord::Base
     return "" unless parent.is_a?(Answer)
 
     d = dot_link_from(parent.question, parent)
-
-    parent.question.subquestions.each do |qq|
-      next if qq == self
-      d << dot_link_to(parent.question, qq)
-    end
-
+    other_subquests = parent.question.subquestions.where(["id <> ?", self.id])
+    d << dot_link_to(parent.question, other_subquests)
     d
   end
 
@@ -186,14 +181,16 @@ class Question < ActiveRecord::Base
   def dot_region_siblings(may_omit)
     return "" unless parent.respond_to?(:questions)
 
-    limit = 6
-    qs = parent.questions.includes(:answers, :parent).limit(may_omit ? limit : -1).to_a
-    qs.reject! { |q| q == self }
+    limit = may_omit ? 6 : -1
+    qs = parent.questions
+      .where(["id <> ?", self.id])
+      .includes(:answers, :parent)
+      .limit(limit).to_a
 
     d = dot_link_to(parent, qs)
-    remaining = may_omit ? parent.questions.size - limit - 1 : 0
+    remaining = parent.questions.size - limit - 1
 
-    return d if remaining <= 0
+    return d if remaining <= 0 or !may_omit
 
     # this is not always correct, as above may include the current
     # question. Thus, only left-1 questions would be left.

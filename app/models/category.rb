@@ -66,9 +66,7 @@ class Category < ActiveRecord::Base
     d = dot(true)
     questions.each do |q|
       d << dot_link_to(self, q)
-
-      d << dot_link_to(q, q.subquestions)
-      d << dot_link_to(q, q.subcategories)
+      d << dot_link_to(q, [q.subquestions, q.subcategories])
     end
 
     answers.each do |a|

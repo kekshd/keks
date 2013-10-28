@@ -19,8 +19,8 @@ module DotTools
   # Any of the two parameters may be an array, in which case all pairs
   # are linked.
   def dot_link(a, b)
-    return a.map { |aa| dot_link(aa, b) }.join("\n") if a.is_a?(Array)
-    return b.map { |bb| dot_link(a, bb) }.join("\n") if b.is_a?(Array)
+    return a.compact.map { |aa| dot_link(aa, b) }.join("\n") if need_iter?(a)
+    return b.compact.map { |bb| dot_link(a, bb) }.join("\n") if need_iter?(b)
     "#{a.dot_id} -> #{b.dot_id};\n"
   end
 
@@ -35,6 +35,11 @@ module DotTools
   end
 
   def dot_include(arr)
-    arr.flatten.map { |a| a.dot }.join("  ")
+    arr.flatten.compact.map { |a| a.dot }.join("  ")
+  end
+
+  private
+  def need_iter?(obj)
+    obj.is_a?(Array) or obj.is_a?(ActiveRecord::Relation)
   end
 end
