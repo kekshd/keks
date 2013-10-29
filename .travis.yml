@@ -16,3 +16,6 @@ before_install:
   - "export COVERALLS=true"
   - "sh -e /etc/init.d/xvfb start"
 bundler_args: --without development --deployment
+cache:
+  - bundler
+  - apt
