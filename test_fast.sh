@@ -11,8 +11,6 @@ fi
 
 if [ -S ".zeus.sock" ]; then
   echo "Using $USE_THREADS threads"
-  #~　echo "Creating test.sqlite3"
-  #~　zeus rake "parallel:create[1]" "parallel:prepare[1]" > /dev/null
 
   echo "Copying test.sqlite3 for additional threads"
   for i in `seq 2 $USE_THREADS`; do
@@ -20,7 +18,10 @@ if [ -S ".zeus.sock" ]; then
   done
   wait
 
+  zeus rake "teaspoon"&
   zeus rake "parallel:spec[$USE_THREADS]"
+
+  wait
 else
   echo "Start zeus first, please:\n  RAILS_ENV=test zeus start"
 fi

@@ -47,6 +47,7 @@ group :development, :test do
   gem 'zeus', :require => false
   gem 'zeus-parallel_tests'
   gem 'parallel_tests'
+  gem 'teaspoon'
 end
 
 group :test do
@@ -57,7 +58,7 @@ group :test do
 
   gem 'launchy',            '2.2.0'
   gem 'capybara-webkit'
-  gem 'selenium-webdriver'
+  #gem 'selenium-webdriver'
   gem 'simplecov',          '0.8.0.pre2', :require => false
 
   gem 'coveralls',                        :require => false
