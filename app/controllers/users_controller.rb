@@ -5,8 +5,13 @@ class UsersController < ApplicationController
 
   before_filter :require_admin_or_reviewer, only: :reviews
   before_filter :require_admin, only: [:index, :toggle_reviewer, :toggle_admin]
+
+  # retrieve user from URL
+  before_filter :get_user, except: [:index, :new, :create]
+  # i.e. user from URL is equal to the one logged in
   before_filter :signed_in_user, only: [:edit, :update, :enroll, :starred, :history, :destroy]
-  before_filter :correct_user,  only: [:edit, :update, :enroll, :starred, :history]
+  before_filter :correct_user,   only: [:edit, :update, :enroll, :starred, :history]
+
 
   def index
     @users = User.where(admin: false, reviewer: false)
@@ -16,47 +21,20 @@ class UsersController < ApplicationController
   end
 
   def reviews
-    @user = User.find(params[:id])
     @reviews = @user.reviews.includes(:question).limit(REVIEW_MAX_OWN_REVIEWS)
   end
 
   def toggle_reviewer
-    user = User.find(params[:id]) rescue nil
-    unless user
-      flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
-      return redirect_to user_index_path
-    end
-
-    # skip before_save callbacks to keep the user signed in (avoid re-
-    # generating remember_token)
-    if user.update_column(:reviewer, !user.reviewer)
-      flash[:success] = "#{user.nick} ist #{user.reviewer ? "jetzt Reviewer" : "kein Reviewer mehr"}."
-    else
-      flash[:error] = "Konnte den Reviewer-Status für #{user.nick} nicht umschalten."
-    end
-    redirect_to user_index_path
+    return toggle_attr(:reviewer)
   end
 
   def toggle_admin
-    user = User.find(params[:id]) rescue nil
-    unless user
-      flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
+    if SUPERADMIN.include?(@user.nick)
+      flash[:error] = "Netter Versuch. Superadmins können nicht ohne weiteres den Admin-Status aberkannt bekommen."
       return redirect_to user_index_path
     end
 
-    if SUPERADMIN.include?(user.nick)
-      flash[:error] = "Netter Versuch."
-      return redirect_to user_index_path
-    end
-
-    # skip before_save callbacks to keep the user signed in (avoid re-
-    # generating remember_token)
-    if user.update_column(:admin, !user.admin)
-      flash[:success] = "#{user.nick} ist #{user.admin ? "jetzt Admin" : "kein Admin mehr"}."
-    else
-      flash[:error] = "Konnte den Admin-Status für #{user.nick} nicht umschalten."
-    end
-    redirect_to user_index_path
+    return toggle_attr(:admin)
   end
 
   def starred
@@ -131,7 +109,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
+    @user.destroy
     flash[:success] = "Deine Daten wurden gelöscht. Beehre uns bald wieder."
     redirect_to root_url
   end
@@ -139,8 +117,18 @@ class UsersController < ApplicationController
   private
 
   def correct_user
-    @user = User.find(params[:id])
+    logger.warn "correct_user: @user: #{@user.nick}"
     redirect_to(root_url) unless current_user?(@user)
+  end
+
+  def get_user
+    @user = User.find(params[:id]) rescue nil
+    logger.warn "get_user #{@user.try(:nick)}"
+
+    unless @user
+      flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
+      return redirect_to (admin? ? user_index_path : signin_path)
+    end
   end
 
 
@@ -161,5 +149,21 @@ class UsersController < ApplicationController
     @h = render_graph
     @h.series(:name=>'Richtig beantwortete Fragen', :data => percent_correct)
     @h.series(:name=>'Übersprungene Fragen', :data => percent_skipped)
+  end
+
+  private
+
+  def toggle_attr(attr)
+    raise "attr must be symbol" unless attr.is_a?(Symbol)
+    name = attr.to_s.humanize
+    # skip before_save callbacks to keep the user signed in (avoid re-
+    # generating remember_token)
+    if @user.update_column(attr, !@user.send(attr))
+      flash[:success] = "#{@user.nick} ist #{@user.send(attr) ? "jetzt #{name}" : "kein #{name} mehr"}."
+    else
+      flash[:error] = "Konnte den #{name}-Status für #{@user.nick} nicht umschalten."
+    end
+
+    redirect_to user_index_path
   end
 end
