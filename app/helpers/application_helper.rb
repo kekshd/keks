@@ -124,6 +124,8 @@ module ApplicationHelper
     # if you question corpus is large enough.
     if samp.size < cnt && question_ids.size > cnt
       logger.warn "Got less questions than requested. Try increasing INCREASE_FACTOR."
+      logger.warn "Available: #{question_ids*", "}"
+      logger.warn "Selected: #{samp*", "}"
     end
 
     #~ dbgsamp = samp.map { |s| s.id }.join('  ')
