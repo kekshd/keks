@@ -31,7 +31,7 @@
 
       def option_tags(answers, selected)
         # i.e. create text ⇒ id hash
-        opts = Hash[ *answers.collect { |a| [ "#{a.qident}/A#{a.aid}", a.id ] }.flatten ]
+        opts = Hash[ *answers.collect { |a| [ "#{a.qident}/A#{a.aid}", a.aid ] }.flatten ]
         options_for_select(opts, selected)
       end
     %>
