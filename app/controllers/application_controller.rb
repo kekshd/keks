@@ -9,12 +9,7 @@ class ApplicationController < ActionController::Base
   include DotHelper
   include JsonHelper
 
-  before_filter :init
   before_filter :set_csp
-
-  def init
-    @start_time = Time.now.usec
-  end
 
   def set_csp
     mathjax      = "https://c328740.ssl.cf1.rackcdn.com"

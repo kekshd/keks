@@ -16,4 +16,5 @@
 
 ActiveSupport::Inflector.inflections { |i|
   i.irregular 'text_storage', 'text_storage'
+  i.irregular 'perf',         'perfs'
 }

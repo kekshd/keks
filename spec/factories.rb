@@ -187,4 +187,11 @@ FactoryGirl.define do
       value ""
     end
   end
+
+  factory :perf do
+    load_time { (rand*1000).to_i }
+    user_id { (rand*10).to_i + 1 }
+    url { Faker::Internet.url }
+    agent { Faker::Name.title + " Browser" }
+  end
 end

@@ -9,3 +9,4 @@
 //= require no-effects-for-mobile
 //= require tools
 //= require xkcd
+//= require load_time
