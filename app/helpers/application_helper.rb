@@ -141,20 +141,7 @@ module ApplicationHelper
   # question_ids.
   # http://stackoverflow.com/a/5243844/1684530
   def roulette(question_ids, user, n)
-    # calculate ratio for each question how often it was answered in-
-    # correctly by the user. Effectively, all the code does is:
-    #   probs = questions.map { |q| [1 - q.correct_ratio_user(user), 0.1].max }
-    # but a lot faster.
-    tmp = Stat.unscoped.where(:user_id => user.id, :skipped => false)
-    correct = tmp.where(:correct => true).group(:question_id).size
-    wrong = tmp.where(:correct => false).group(:question_id).size
-
-    probs = question_ids.map do |qid|
-      c = correct[qid] || 0
-      w = wrong[qid] || 0
-      cw = c+w
-      [cw == 0 ? 1 : w/(c+w).to_f, 0.1].max
-    end
+    probs = wrong_ratio_for(question_ids, user)
 
     selected = []
     (n*INCREASE_FACTOR).to_i.times do
@@ -205,6 +192,43 @@ module ApplicationHelper
     unless @question
       flash[:warning] = "Frage mit dieser ID nicht gefunden."
       redirect_to redirect_on_error
+    end
+  end
+
+
+  private
+
+
+  # Counts how often each question has been answered by the given user
+  # either correctly or incorrectly. Skipped questions are not taken
+  # into account. Returns two hashes, the first with question_id to
+  # times of correctly answered. The second is for wrong answers. Each
+  # hash may omit question ids if the user never answered them.
+  def answer_count_by_question_for(user)
+    tmp = Stat.unscoped.where(:user_id => user.id, :skipped => false)
+    correct = tmp.where(:correct => true).group(:question_id).size
+    wrong = tmp.where(:correct => false).group(:question_id).size
+    return correct, wrong
+  end
+
+  # calculates the correctly-answered-ratio for all given question IDs
+  # and the given user. If a question was never answered, it gets a
+  # ratio of 1. Every question receives at least a ratio of 0.1 to
+  # prevent it from never appearing again after answering it correctly
+  # once. Values thus range from 1.0 to 0.1. Higher values mean the
+  # question has been answered wrong more often.
+  def wrong_ratio_for(question_ids, user)
+    # calculate ratio for each question how often it was answered in-
+    # correctly by the user. Effectively, all the code does is:
+    #   probs = questions.map { |q| [1 - q.correct_ratio_user(user), 0.1].max }
+    # but a lot faster.
+    correct, wrong = answer_count_by_question_for(user)
+
+    question_ids.map do |qid|
+      c = correct[qid] || 0
+      w = wrong[qid] || 0
+      cw = c+w
+      [cw == 0 ? 1 : w/cw.to_f, 0.1].max
     end
   end
 end
