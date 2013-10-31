@@ -45,12 +45,13 @@
   <div class="toggle" style="display: none">
     <p><%=link_to "Download als .SVGZ", tree_url + ".svgz" %> (mit Inkscape öffnen)</p>
     <p>Auf den meisten Linuxsystemen sollte folgender Befehl den Baum herunterladen und mit Evince anzeigen, sofern Inkscape installiert ist:</p>
-  <pre>pushd $TMP \
-    && rm -f tree.svgz \
-    && wget -q <%=tree_url%>.svgz \
-    && inkscape tree.svgz --export-pdf=tree.pdf \
-    && evince tree.pdf \
-    && rm tree.svgz; \
-    popd
+    <pre>pushd $TMP \
+      && rm -f tree.svgz \
+      && wget -q <%=tree_url%>.svgz \
+      && inkscape tree.svgz --export-pdf=tree.pdf \
+      && evince tree.pdf \
+      && rm tree.svgz; \
+      popd
+    </pre>
   </div>
-</pre>
+</div>
