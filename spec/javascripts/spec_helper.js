@@ -24,3 +24,22 @@
 // You can require javascript files here. A good place to start is by requiring your application.js.
 //= require users
 //= require admins
+
+
+function mock_ajax_success(return_value) {
+  // http://stackoverflow.com/a/13165885/1684530
+  spyOn($, 'ajax').andCallFake(function(req) {
+    var d = $.Deferred();
+    d.resolve(return_value);
+    return d.promise();
+  });
+}
+
+function mock_ajax_failure(return_value) {
+  // http://stackoverflow.com/a/13165885/1684530
+  spyOn($, 'ajax').andCallFake(function(req) {
+    var d = $.Deferred();
+    d.reject(fail_result);
+    return d.promise();
+  });
+}

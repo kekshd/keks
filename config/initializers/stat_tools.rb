@@ -1,6 +1,12 @@
 # encoding: utf-8
 
 module StatTools
+  # returns the average amount of time taken per question answer for
+  # the given stats. Includes skipped questions. Uses recent stats (30
+  # days) by default, but you can pass others: time_taken(all_stats)
+  def avg_time_taken(s = recent_stats)
+    s.average(:time_taken).to_f
+  end
 
   # returns the ratio of correct answers. Skipped ones are not counted.
   # Uses recent stats (30 days) by default. You can pass any other
@@ -12,7 +18,7 @@ module StatTools
 
   # calculates how often questions were skipped for the given stats.
   # Defaults to the stats created in the last 30 days. You can pass any
-  # stats association though, e.g. correct_ratio(all_stats).
+  # stats association though, e.g. skip_ratio(all_stats).
   def skip_ratio(s = recent_stats)
     all = s.size.to_f
     all > 0 ? skip_count(s).to_f/all : 0.0

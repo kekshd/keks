@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(:version => 20131030133528) do
     t.boolean  "correct"
     t.boolean  "skipped",          :default => false
     t.string   "selected_answers"
+    t.integer  "time_taken"
   end
 
   add_index "stats", ["user_id"], :name => "index_stats_on_user_id"

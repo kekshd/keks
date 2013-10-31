@@ -9,16 +9,27 @@ describe StatsController do
   render_views
 
   describe "#new" do
+    def params(*args)
+      d = {question_id: q.id, skipped: "false", correct: "true", selected_answers: [q.answers.sample], time_taken: 5}
+      args.each { |a| d.merge!(a) }
+      d
+    end
+
     it "sets correct to false and answers to empty array when skipping" do
-      post :new, question_id: q, skipped: "true", correct: "true", selected_answers: [q.answers.sample]
+      post :new, params(skipped: "true")
       expect(q.stats.last.skipped).to eql true
       expect(q.stats.last.correct).to eql false
       expect(q.stats.last.selected_answers).to be_empty
     end
 
     it "rejects invalid answer ids" do
-      post :new, question_id: q, skipped: "true", correct: "true", selected_answers: [q.answers.sample, 9999123123123]
+      post :new, params(selected_answers: [q.answers.sample, 9999123123123])
       expect(q.stats.last.selected_answers).not_to include(9999123123123)
+    end
+
+    it "stores time taken" do
+      post :new, params
+      expect(q.stats.last.time_taken).to eql 5
     end
 
     context "question with all false answers" do
@@ -31,12 +42,12 @@ describe StatsController do
       end
 
       it "can be answered correctly" do
-        post :new, question_id: q, skipped: "false", correct: "true", selected_answers: []
+        post :new, params(selected_answers: [])
         expect(q.stats.last.correct).to eql true
       end
 
       it "can be answered incorrectly" do
-        post :new, question_id: q, skipped: "false", correct: "false", selected_answers: [q.answers.sample]
+        post :new, params(correct: "false")
         expect(q.stats.last.correct).to eql false
       end
     end

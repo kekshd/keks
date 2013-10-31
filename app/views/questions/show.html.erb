@@ -45,6 +45,9 @@
 
       <th>Matrix-Mode?</th>
       <td><%= @question.matrix_validate? %></td>
+
+      <th>⌀-Zeit</th>
+      <td><%= tt = @question.avg_time_taken; "#{tt/60}min #{tt%60}s" %></td>
     </tr>
 
     <tr><th>Text</th><td colspan="5"><%=@question.text%></td></tr>

@@ -1,9 +1,3 @@
-function throwWithAlert(msg, extra) {
-  var strace = Error().stack;
-  alert("Es ist ein Fehler aufgetreten. Das ist vermutlich unsere Schuld.\n\nWenn Du magst, kannst Du uns helfen den Fehler zu beheben. Kopiere dazu die nachfolgenden Details und maile sie an keks@uni-hd.de oder nutze das Feedback Formular. Danke!\n\n" + msg + "\n\n" + strace + "\n\nExtra-Info: " + extra);
-  throw(msg);
-}
-
 // returns a unique ID to be used to identify an element within the
 // webpage. Depends on the current state of the page, i.e. if we already
 // are in ask-skipped-questions-again mode.
@@ -115,16 +109,7 @@ function getQuestionById(id) {
   return quest;
 }
 
-function storeStats(quest_id, selected_answers, skipped, correct) {
-  if(typeof selected_answers !== 'object') throwWithAlert('selected_answers must be an array');
-  if(skipped === undefined) throwWithAlert('skipped not given');
-  if(correct === undefined) throwWithAlert('correct not given');
-  $.post(Routes.new_stat_path(quest_id), {
-    selected_answers: selected_answers,
-    skipped: skipped,
-    correct: correct
-  });
-}
+
 
 
 function ensureValidDifficultySelection() {
@@ -352,6 +337,7 @@ H.Hitme.prototype = {
     var answerChooser = $(this).parent().siblings(".answer-chooser, .answer-chooser-matrix").first();
     var action = $(this).data('action');
     var boxSelector = '#' + getUniqId(window.currentQuestion);
+    var s = window.stat_reporting;
 
     // disable ui
     $(this).parent().children("a").addClass("disable");
@@ -363,7 +349,7 @@ H.Hitme.prototype = {
       window.currentHitme.skippedQuestionsData.push(quest);
       window.currentHitme.answersGiven.skip.push(boxSelector);
       $(this).parent().append("<span>Du hast diese Frage übersprungen</span>");
-      storeStats(quest.id, [], true, false);
+      s.skipped();
 
     } else if(action === 'save') {
       $(boxSelector).addClass('reveal');
@@ -372,7 +358,8 @@ H.Hitme.prototype = {
       if(quest.matrix) {
         var m = parseMatrix(answerChooser.find("textarea").val());
         correct = window.currentQuestion.matrix_solution === m;
-        storeStats(quest.id, [m], false, correct);
+        s.set_answers([m]);
+
       } else {
         var answ = answerChooser.find("a");
         correct = isAnswerSelectionCorrect(answ);
@@ -393,16 +380,18 @@ H.Hitme.prototype = {
           return $(answ).data('aid');
         });
 
-        storeStats(quest.id, selAnswIds, false, correct);
+        s.set_answers(selAnswIds);
       }
 
 
       if(correct) {
         //~ console.log("q" + quest.id + " answered correctly");
         window.currentHitme.answersGiven.correct.push(boxSelector);
+        s.success();
       } else {
         //~ console.log("q" + quest.id + " answered incorrectly");
         window.currentHitme.answersGiven.fail.push(boxSelector);
+        s.failed();
       }
 
 
@@ -495,6 +484,9 @@ H.Hitme.prototype = {
     if($('#comiccheckbox').is(':checked')) {
       setTimeout("XkcdLoader.preload()", 100);
     }
+
+    // start recording
+    window.stat_reporting = new StatReporting().record(q.id);
   },
 
   _reshowSkippedQuestions: function() {

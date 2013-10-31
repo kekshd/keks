@@ -2,52 +2,39 @@
 
 class StatsController < ApplicationController
   before_filter :require_admin, except: :new
+  before_filter :get_question, only: :new
 
   def new
-    begin
-      quest = Question.find(params[:question_id])
-      raise "could not find question" if quest.nil?
-
-      [:question_id, :skipped, :correct].each do |p|
-        raise "param #{p} missing" if params[p].nil?
-      end
-
-      # if nothing was checked, selected_answers will not be
-      # transmitted due to the way array transmission works in HTML
-      answers = params[:selected_answers] || []
-
-      skipped = params[:skipped] == "true" ? true : false
-      correct = params[:correct] == "true" ? true : false
-
-      if skipped
-        answers = []
-        correct = false
-      end
-
-      # keep valid answers only if in non-matrix mode
-      unless quest.matrix_validate?
-        answers = answers.map { |a| a.to_i }
-        answers.reject! { |a| quest.answers.find(a).nil? }
-      end
-
-      user_id = signed_in? ? current_user.id : -1;
-
-      s = Stat.new
-      s.question = quest
-      s.user_id = user_id
-      s.correct = correct
-      s.skipped = skipped
-      s.selected_answers = answers
-
-      render :json => s.save(:validate => false)
-    rescue => e
-      logger.warn "Could not save stats: debug output:"
-      logger.warn " MSG: #{e.message}"
-      logger.warn " QUESTION: #{PP.pp(quest, "")}"
-      logger.warn " PARAMS:   #{PP.pp(params, "")}"
-      logger.warn " STACKTRACE:   #{PP.pp(e.backtrace, "")}"
-      render :json => false
+    [:question_id, :skipped, :correct, :time_taken].each do |p|
+      return render(text: "param #{p} missing") if params[p].nil?
     end
+
+    # if nothing was checked, selected_answers will not be
+    # transmitted due to the way array transmission works in HTML
+    answers = params[:selected_answers] || []
+    skipped = params[:skipped] == "true"
+    correct = params[:correct] == "true"
+
+    if skipped
+      answers = []
+      correct = false
+    end
+
+    # keep valid answers only if in non-matrix mode
+    unless @question.matrix_validate?
+      answers = answers.map(&:to_i) & @question.answers.pluck(:id)
+    end
+
+    status = Stat.new(
+      question_id: @question.id,
+      user_id: current_user_id,
+      correct: correct,
+      skipped: skipped,
+      time_taken: params[:time_taken].to_i,
+      selected_answers: answers
+      ).save
+
+    render json: status
   end
 
   include StatsHelper
