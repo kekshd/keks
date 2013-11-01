@@ -214,20 +214,32 @@ class Question < ActiveRecord::Base
   def is_complete_helper_real
     return false, "nicht freigegeben" if !released?
     return false, "keine Antworten" if answers.size == 0
-    return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && !answers.all? { |a| a.correct? }
-    return false, "Reviewer sagt „nicht okay“" if reviews.any? { |a| !a.okay? }
-    # allow questions to be released regardless of # of reviews
-    #return false, "nicht genug Reviews" if reviews.size < REVIEW_MIN_REQUIRED_REVIEWS
-    return false, "Eltern-Frage nicht freigegeben" if parent_type == "Answer" && !parent.question.released?
-    return false, "Eltern-Kategorie nicht freigegeben" if parent_type == "Category" && !parent.released?
-
-    # skip checks if this question is valid for all study paths
-    return true, "" if study_path == 1
-    # ensure the study path doesn’t change in between to avoid unreachable questions
-    psp = parent.question.study_path if parent.is_a?(Answer)
-    if psp && psp != study_path && study_path != 1 && psp != 1
-      return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat."
-    end
+    return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && answers.where(correct: false).any?
+    return false, "Reviewer sagt „nicht okay“" if reviews.where(okay: false).any?
+    return false, "Elter nicht freigegeben" unless parent_released?
+    return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat." unless study_path_reachable?
     return true, ""
+  end
+
+  # returns false if the direct parent element has an incompatible study
+  # path to ours. I.e. returns false if this question is unreachable due
+  # to study path mismatches.
+  def study_path_reachable?
+    # skip checks if this question is valid for all study paths
+    return true if study_path == 1
+    # categories don’t have a study path. If the category is not a root
+    # one, it is be possible to create unreachable questions like this:
+    # RootCat → Q w/ study path 1 → Cat → Q w/ study path 2
+    # This isn’t checked as a speed trade off: it would require tracing
+    # every possible way to root and checking each for study paths.
+    return true if parent_type != "Answer"
+    psp = parent.question.study_path
+    return psp == study_path || psp == 1
+  end
+
+  def parent_released?
+    return parent.question.released? if parent_type == "Answer"
+    return parent.released? if parent_type == "Category"
+    false # i.e. no parent
   end
 end

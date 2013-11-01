@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/unixcharles/active-record-lax-includes.git
+  revision: bf860fa21899ddc257433618b36a1fab87946e93
+  specs:
+    activerecord_lax_includes (0.1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -228,6 +234,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_enum (= 0.9.12)
+  activerecord_lax_includes!
   awesome_print
   bcrypt-ruby (= 3.0.1)
   better_errors

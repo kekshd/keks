@@ -7,6 +7,9 @@ gem 'active_enum',          '0.9.12'
 gem 'nokogiri'
 gem 'magnific-popup-rails'
 
+# nested eager loading through polymorphic associations
+gem 'activerecord_lax_includes', :git => 'https://github.com/unixcharles/active-record-lax-includes.git'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -26,9 +29,6 @@ gem 'lazy_high_charts',     '1.4.0'
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby',          '3.0.1'
 
-# detect n+1 queries
-gem 'bullet'
-
 group :development do
   gem 'pry-rails',          '0.3.2'
   gem 'rack-livereload'     # automatically update pages in browser
@@ -38,6 +38,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'bullet'              # detect n+1 queries
   gem 'better_errors'       # improve in browser error messages
   gem 'factory_girl_rails', '4.2.0'
   gem 'rspec-rails',        '2.13.0'

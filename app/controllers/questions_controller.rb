@@ -60,7 +60,9 @@ class QuestionsController < ApplicationController
   end
 
   def index
-    @questions = Question.includes(:parent, :answers, :reviews).all
+    ActiveRecord::lax_includes do
+      @questions = Question.includes(parent: :question).all
+    end
   end
 
   def new

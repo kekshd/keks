@@ -18,7 +18,9 @@ describe Question do
 
   it "is valid with all answers false" do
     q = question
+    q.parent = FactoryGirl.build(:category)
     q.answers << FactoryGirl.build(:answer_wrong)
+    expect(q.incomplete_reason).to eql("")
     expect(q.complete?).to eql(true)
   end
 

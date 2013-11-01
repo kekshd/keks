@@ -4,7 +4,6 @@
       <th>Ident<br/>Typ<br/>Studiengang<br/>Elternname</th>
       <th>Text</th>
       <th>%-richtig<br/>%-übersprungen<br/>%-ok? (Review)</th>
-      <th>Antworten</th>
       <th>Aktionen</th>
     </tr>
   </thead>
@@ -17,7 +16,7 @@
       <tr>
         <td>
           <div style="width: 400px">
-            <%=link_to(q.ident, question_path(q), :class => q.complete? ? "" : "strike")%><br/>
+            <%=link_to(q.ident, question_path(q), :class => q.complete? ? "" : "strike")%><%=q.incomplete_reason%><br/>
             <%=q.difficulty(:name) %><br/>
             <%=q.study_path(:name) %><br/>
             <%=link_to_parent(q)%>
@@ -25,19 +24,14 @@
         </td>
         <td>
           <div style="width: 350px; max-height: 120px; overflow: hidden;">
-            <%= q.text %>
+            <%# heuristic, more text would probably be cut off anyway %>
+            <%= q.text[0..300]  %>
           </div>
         </td>
         <td>
           ✓&nbsp;<%=perc(counts[:correct][q.id], counts[:all][q.id], "nie beantwortet") %><br/>
           ↷&nbsp;<%=perc(counts[:skip][q.id], counts[:all][q.id], "nie beantwortet")%><br/>
           ☯&nbsp;<%=perc(revs[[q.id, true]], (revs[[q.id, true]] || 0) + (revs[[q.id, false]] || 0), "keine Reviews")%><br/>
-        </td>
-        <td>
-          <% q.answers.each do |a| %>
-            <%= content_tag :span, a.id.to_s, title: a.text, class: a.correct? ? "correct" : "wrong" %>
-            <br/>
-          <% end %>
         </td>
         <td>
           <%= link_to "Anzeigen", question_path(q) %><br/>

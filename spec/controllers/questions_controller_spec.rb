@@ -26,7 +26,7 @@ describe QuestionsController do
     get :index
     response.should render_template :index
     expect(response.status).to eq(200)
-    expect(response.body).to include(existing_question.ident, a.id.to_s, a.text)
+    expect(response.body).to include(existing_question.ident)
   end
 
   it "renders question details for admins" do
