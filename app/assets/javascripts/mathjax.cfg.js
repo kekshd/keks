@@ -11,7 +11,7 @@ function configureMathJax() {
 
     TeX: {
       Macros: {
-        emph: '' // no idea how this works, but it makes \emph in math possible
+        emph: ['\\style{font-style:italic}{\\text{#1}}', 1]
       }
     },
 
@@ -21,7 +21,10 @@ function configureMathJax() {
       processClass: "tex",
     },
 
-    "HTML-CSS": { scale: 90 }
+    "HTML-CSS": {
+      scale: 90,
+      mtextFontInherit: true
+    }
 
   });
 
