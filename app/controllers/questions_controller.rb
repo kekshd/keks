@@ -20,7 +20,7 @@ class QuestionsController < ApplicationController
       return abort("Kein Ident angegeben, daher kann die Frage nicht kopiert werden.")
     end
 
-    if Question.where(ident: ident).count != 0
+    if Question.where(ident: ident).any?
       return abort("Der angegebene Ident „#{ident}“ wird bereits verwendet. Kopieren fehlgeschlagen.")
     end
 
@@ -42,7 +42,7 @@ class QuestionsController < ApplicationController
   def star
     expires_now
 
-    return render :json => "keine Frage" if !@question
+    return render(json: "keine Frage") if !@question
     begin
       current_user.starred << @question
     rescue; end unless current_user.starred.include?(@question)
@@ -52,10 +52,8 @@ class QuestionsController < ApplicationController
   def unstar
     expires_now
 
-    return render :json => false if !@question
-    #~ begin
-      current_user.starred.delete(@question)
-    #~ rescue; end
+    return render(json: false) if !@question
+    current_user.starred.delete(@question)
     render :json => current_user.starred.include?(@question)
   end
 
@@ -101,13 +99,13 @@ class QuestionsController < ApplicationController
 
   def overwrite_reviews
     @question = Question.includes(:reviews).find(params[:question_id])
+    time = Time.now.strftime("%Y-%m-%d %H:%M")
     okay = true
     @question.reviews.each do |r|
       if r.okay?
         r.touch if r.question_updated_since?
       else
         r.okay = true
-        time = Time.now.strftime("%Y-%m-%d %H:%M")
         r.comment = "#{time}: von #{current_user.nick} auf „okay“ gestellt\n\n#{r.comment}".strip
         okay = false unless r.save
       end
