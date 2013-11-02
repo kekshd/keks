@@ -15,7 +15,6 @@ module JsonHelper
     ajson = {
       correct: a.correct,
       subquestion: get_subquestion_for_answer(a, max_depth),
-      correctness: render_correctness(a),
       id: a.id,
       html: render_tex(a.text)
     }

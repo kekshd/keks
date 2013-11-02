@@ -57,10 +57,6 @@ class Answer < ActiveRecord::Base
     "#{question.ident}/A#{id}"
   end
 
-  def correct_text
-    correct ? "✔ richtig" : "✘ falsch"
-  end
-
   include DotTools
 
   def dot

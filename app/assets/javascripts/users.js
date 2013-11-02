@@ -5,6 +5,7 @@
 //= require global_utils
 //= require shuffle
 //= require toggle
+//= require correctness_text
 //= require hitme
 //= require mathjax.cfg
 //= require no-effects-for-mobile

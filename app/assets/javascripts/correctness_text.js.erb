@@ -1,0 +1,12 @@
+<%# encoding: utf-8 %>
+<%
+environment.context_class.instance_eval do
+  include AnswersHelper
+  include ActionView::Helpers::JavaScriptHelper
+end
+%>
+
+var answer_correctness = {
+  true: "<%=escape_javascript render_correctness(true)%>",
+  false: "<%=escape_javascript render_correctness(false)%>"
+};

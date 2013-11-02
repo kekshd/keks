@@ -323,7 +323,7 @@ H.Hitme.prototype = {
       s += ' onclick="$(this).toggleClass(\'active\');"';
       s += ' data-correct="'+a.correct+'" data-qid="'+quest.id+'"';
       s += ' data-aid="'+a.id+'">'+a.html+'</a>';
-      s += '<span>'+a.correctness+'</span>';
+      s += '<span>'+answer_correctness[a.correct]+'</span>';
       s += '<span>(das hattest Du angekreuzt)</span>';
       s += '</div>';
     });
