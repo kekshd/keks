@@ -13,11 +13,13 @@ module JsonHelper
 
 
     ajson = {
-      correct: a.correct,
-      subquestion: get_subquestion_for_answer(a, max_depth),
+      correct: a.correct? ? 1 : 0,
       id: a.id,
-      html: render_tex(a.text)
+      html: render_tex(a.text, false)
     }
+
+    subq = get_subquestion_for_answer(a, max_depth)
+    ajson[:subqestion] = subq if subq
 
     cacheable = max_depth > 0 && ajson[:subquestion].nil?
     Rails.cache.write(key, ajson) if cacheable
@@ -42,15 +44,7 @@ module JsonHelper
       end
     end
 
-
-    hints = []
-    q.hints.each do |h|
-      @hint = h
-      hints << render_to_string(partial: '/hints/render')
-    end
-
     answers = []
-
 
     if max_depth > 0
       key = ["question_deep_answers_resolve"]
@@ -71,20 +65,33 @@ module JsonHelper
     end
 
     qjson = {
-      starred:   signed_in? ? current_user.has_starred?(q) : false,
-      hints:     hints,
       answers:   answers,
-      matrix:    q.matrix_validate?,
-      matrix_solution: q.matrix_solution,
       id:        q.id,
-      html:      render_to_string(partial: '/questions/render', locals: {question: q})
+      html:      q.text
     }
 
+    # only include these, if they evaluate to true to save bandwidth
+    if q.matrix_validate?
+      qjson[:matrix] = 1
+      qjson[:matrix_solution] = q.matrix_solution
+    end
+    qjson[:starred] = 1 if signed_in? && current_user.has_starred?(q)
+    qjson[:hints] = json_for_hints(q) if q.hints.any?
+
     # because subquestions are chosen randomly or roulette like, it’s
-    # not possible to cache the question if there any subquestion.
+    # not possible to cache the question if there subquestions.
     cachable = max_depth > 0 && answers.all? { |a| a[:subquestion].nil? }
     Rails.cache.write(qkey, qjson) if cachable
 
     qjson
+  end
+
+  def json_for_hints(question)
+    hints = []
+    question.hints.each do |h|
+      @hint = h
+      hints << render_to_string(partial: '/hints/render')
+    end
+    hints
   end
 end

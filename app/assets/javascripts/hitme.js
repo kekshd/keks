@@ -21,9 +21,10 @@ function isAnswerSelectionCorrect(answers) {
   $.each(answers, function(ind, answ) {
     answ = $(answ);
     // answer correct, but not checked
-    if(answ.data('correct') === true && !answ.hasClass("active")) correct = false;
+    if(answ.data('correct') === 1 && !answ.hasClass("active")) correct = false;
     // answer wrong, but checked
-    if(answ.data('correct') === false && answ.hasClass("active")) correct = false;
+    if(answ.data('correct') === 0 && answ.hasClass("active")) correct = false;
+    if(!correct) return false; // i.e. break
   });
   return correct;
 }
@@ -68,7 +69,7 @@ function renderStarred(question) {
     c += question.starred ? '&#9733; ' : '';
     c += '<a onclick="handleStarredClick(this)" '
     c += 'data-id="'+question.id+'" ';
-    c += 'data-starred="'+question.starred+'">Frage ';
+    c += 'data-starred="'+(question.starred ? 1 : 0)+'">Frage ';
     c += question.starred ? 'gemerkt' : 'merken';
     c += '</a>';
     c += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -223,8 +224,6 @@ function maybeInsertSubquestion(aid) {
     return false;
   }
 
-  // only try to show subquestion half of the time
-  //~ if(Math.random() < 0.5) return; // fix as per #5
   var q = window.currentQuestion;
   var s;
   $.each(q.answers, function(ind, answ) {
@@ -322,7 +321,7 @@ H.Hitme.prototype = {
       s += '<a class="button toggleable" id="'+getUniqId(quest, a)+'"';
       s += ' onclick="$(this).toggleClass(\'active\');"';
       s += ' data-correct="'+a.correct+'" data-qid="'+quest.id+'"';
-      s += ' data-aid="'+a.id+'">'+a.html+'</a>';
+      s += ' data-aid="'+a.id+'"><div class="tex">'+a.html+'</div></a>';
       s += '<span>'+answer_correctness[a.correct]+'</span>';
       s += '<span>(das hattest Du angekreuzt)</span>';
       s += '</div>';
@@ -406,10 +405,10 @@ H.Hitme.prototype = {
     this.questPositionPointer++;
     var q = window.currentQuestion = this.questions[this.questPositionPointer];
     var code = '<div style="display:none" id="'+getUniqId(q.id)+'" class="box hideMeOnMore">'
-      + q.html
+      + '<h3 class="count">Frage</h3><div class="tex">'+q.html+'</div>'
       + '<br/>';
 
-    if(q.hints.length >= 1) {
+    if(q.hints && q.hints.length >= 1) {
       code += '<div>'
       $.each(q.hints, function(ind, hint) {
         code += '<div style="display: none;margin: 5px 0">'+hint+'</div>';
@@ -435,7 +434,7 @@ H.Hitme.prototype = {
       code += '</div>';
       code += '<div style="float:right;width: 45%" class="initiallyHidden">';
       code += '<strong>Unsere Lösung</strong><br class="clear"/>';
-      code += a.html+'</div>';
+      code += '<div class="tex">'+a.html+'</div></div>';
       code += '<br class="clear"/>';
     } else {
       code += this._renderAnswersForQuestion(q);

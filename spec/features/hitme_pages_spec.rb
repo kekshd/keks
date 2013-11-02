@@ -95,7 +95,7 @@ describe "Hitme" do
 
       it "may be answered incorrectly by selecting an answer" do
         sleep 0.2
-        all('a.button.toggleable[data-correct="false"]').last.click
+        all('a.button.toggleable[data-correct="0"]').last.click
         save_answer_button.click
         10.times { break if @q.stats.last; sleep 0.2 }
         expect(@q.stats.last.correct).to eql false
