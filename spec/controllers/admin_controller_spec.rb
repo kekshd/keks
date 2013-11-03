@@ -15,7 +15,7 @@ describe AdminController do
     after do
       get :export
       expect(response).to render_template :export
-      expect(response.body)to have_text "einsehbar"
+      expect(response.body).to have_text "einsehbar"
       has_title
     end
 
