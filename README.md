@@ -33,13 +33,13 @@ To verify it works, run `ruby -v`. It should print something like `ruby 1.9.2p0 
 You also need bundler to install all the dependencies for you. Install it by running `gem install bundler`. If everything is setup up correctly you should be able to type `bundle help` and see its man page. Note the spelling: the executable is without `r` while the gem name includes it.
 
 
-### setting it up
+### setup (production only)
 - clone the repository
-- run `bundle install`
+- run `bundle install --deployment --without development`
 - adjust URLs in: `config/environments/production.rb` (absolute URLs when sending mails) and `app/views/main/help.html.erb` (“Fachschaft”)
 - adjust mail address. It’s used in several places, so just grep for `keks@uni-hd.de`.
 - `rake db:migrate`
-- If your setup works, running `rails server` in the console should spawn a server at `http://localhost:3000` with KeKs. If you have problems, try `bundle exec rails server` instead.
+- If your setup works, running `RAILS_ENV=production rails server` in the console should spawn a server at `http://localhost:3000` with KeKs. If you have problems, try `RAILS_ENV=production bundle exec rails server` instead.
 
 Note you need to be in production mode in order for the sub-URI magic to work.
 
@@ -60,3 +60,19 @@ Run `sudo a2ensite keks` to enable or disable the reverse proxy. If you plan to 
 ### handling reboots
 
 For Debian stable the best approach is probably using an init file and start-stop-daemon to manage the server. You can find an example in `initscript-example`. Adjust the paths, copy it to `/etc/init.d/` and make it executable. The filename should be the same as given in the “Provides:” directive on top of the file. That’ll be `keks` most likely.
+
+
+### setup (development)
+
+**Note:** If you’ve set up the production environment above, be sure to `rm -rf .bundle`. Otherwise `bundle install` will not install the development environments.
+
+KeKs dev setup uses [guard](https://github.com/guard/guard) and [zeus](https://github.com/burke/zeus) to speed up common operations. Basically run `guard` in a terminal and use the following commands:
+- `zeus s` to get a server
+- `zeus c` to open a rails console
+- `./test_fast.sh` to run all available tests
+- `./test_coverage.sh` same, but also generate test coverage reports using SimpleCov
+- `zeus rspec spec/models/question_spec.rb:19` run specific test
+
+With guard running, it should automatically reload the web page if you make changes.
+
+Additionally, if you install [RailsPanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg) in Chrome you should get development output directly in Chrome’s dev tools.

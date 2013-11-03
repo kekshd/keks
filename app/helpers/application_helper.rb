@@ -177,6 +177,9 @@ module ApplicationHelper
   end
 
   def etag(text = nil)
+    # always bust browser cache in development mode so pages that can be
+    # cached indefinitely in production mode get auto-reload support
+    return Time.now.to_s if Rails.env.development?
     tag = []
     tag << GIT_REVISION if defined?(GIT_REVISION)
     tag << current_user.id if current_user

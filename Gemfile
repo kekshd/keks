@@ -5,22 +5,12 @@ gem 'sqlite3',              '1.3.7'
 gem 'thin',                 '1.5.0'
 gem 'active_enum',          '0.9.12'
 gem 'nokogiri'
-gem 'magnific-popup-rails'
 
 # nested eager loading through polymorphic associations
 gem 'activerecord_lax_includes', :git => 'https://github.com/unixcharles/active-record-lax-includes.git'
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'turbo-sprockets-rails3'
-  gem 'sass-rails',         '3.2.6'
-  gem 'coffee-rails',       '3.2.2'
-  gem 'uglifier',           '1.3.0'
-  gem 'therubyracer'
-end
-
 # javascript
+gem 'magnific-popup-rails'
 gem 'jquery-rails',         '2.2.1'
 gem 'jquery-tablesorter',   '1.4.1'
 gem 'js-routes',            '0.8.7'
@@ -30,37 +20,47 @@ gem 'lazy_high_charts',     '1.4.0'
 gem 'bcrypt-ruby',          '3.0.1'
 
 group :development do
-  gem 'pry-rails',          '0.3.2'
-  gem 'rack-livereload'     # automatically update pages in browser
+  gem 'pry-rails'
   gem 'awesome_print'       # console highlighting
-  gem 'binding_of_caller'   # allow to spawn a REPL for above
-  gem 'letter_opener'       # preview mails in browser rather than using an actual smtp
-end
-
-group :development, :test do
   gem 'bullet'              # detect n+1 queries
   gem 'better_errors'       # improve in browser error messages
-  gem 'factory_girl_rails', '4.2.0'
-  gem 'rspec-rails',        '2.13.0'
-  # improved logging of execution time. Unfortunately makes assets noisy
-  # again, so disabled for now
-  #gem 'time_bandits'
-  gem 'zeus', :require => false
-  gem 'zeus-parallel_tests'
+  gem 'binding_of_caller'   # allow to spawn a REPL for above
+  gem 'letter_opener'       # preview mails in browser rather than using an actual smtp
+  gem 'meta_request'        # show log in Chrome dev tools with RailsPanel addon
+
+  gem 'guard'
+  # automatically reload web pages. rack- handles the browser part and
+  # guard-* listens to changes on the file systen.
+  gem 'rack-livereload'
+  gem 'guard-livereload',                 require: false
+
+  gem 'guard-zeus'          # run zeus when starting guard
+  gem 'guard-bundler'       # auto install/update gems
+
+  # not sure why this is required in development mode
   gem 'parallel_tests'
-  gem 'teaspoon'
 end
 
 group :test do
+  gem 'rspec-rails',        '2.13.0'
+  gem 'rspec-instafail',                  require: false
+  gem 'teaspoon'            # js unit test
+
+  gem 'factory_girl_rails', '4.2.0'
   gem 'capybara',           '2.1.0'
-  gem 'faker',              '1.1.2'
-  # show rspec error message immediately when it fails
-  gem 'rspec-instafail',    :require => false
-
-  gem 'launchy',            '2.2.0'
   gem 'capybara-webkit'
-  #gem 'selenium-webdriver'
-  gem 'simplecov',          '0.8.0.pre2', :require => false
+  gem 'faker',              '1.1.2'
 
-  gem 'coveralls',                        :require => false
+  gem 'zeus',                             require: false
+  gem 'zeus-parallel_tests',              require: false
+
+  gem 'simplecov',          '0.8.0.pre2', require: false
+  gem 'coveralls',                        require: false
+end
+
+group :assets do
+  gem 'turbo-sprockets-rails3'
+  gem 'sass-rails',         '3.2.6'
+  gem 'uglifier',           '1.3.0'
+  gem 'therubyracer'
 end

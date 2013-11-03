@@ -17,11 +17,12 @@ if [ -S ".zeus.sock" ]; then
     cp "db/test.sqlite3" "db/test${i}.sqlite3"&
   done
   wait
+  echo "Testing…"
 
-  zeus rake "teaspoon"&
+  RAILS_ENV=test bundle exec rake "teaspoon"
   zeus rake "parallel:spec[$USE_THREADS]"
 
   wait
 else
-  echo "Start zeus first, please:\n  RAILS_ENV=test zeus start"
+  echo "Start zeus first, by running one of:\n  guard\nzeus start"
 fi

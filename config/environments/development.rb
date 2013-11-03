@@ -3,7 +3,8 @@
 
 
 Keks::Application.configure do
-  # Settings specified here will take precedence over those in config/application.rb
+  # automatically reload web pages on file system changes
+  config.middleware.use Rack::LiveReload, no_swf: true
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -31,15 +32,16 @@ Keks::Application.configure do
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
-  config.active_record.auto_explain_threshold_in_seconds = 0.5
+  config.active_record.auto_explain_threshold_in_seconds = 0.3
 
   # Do not compress assets
   config.assets.compress = false
 
   # Expands the lines which load the assets
-  config.assets.debug = true
+  config.assets.debug = false
 
-  config.threadsafe!
+  # can’t use this in development, as it prevents auto-reloading
+  #config.threadsafe!
 
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
 
