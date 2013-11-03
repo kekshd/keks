@@ -18,6 +18,6 @@ for i in `seq 2 $USE_THREADS`; do
 done
 wait
 
-RAILS_ENV=test rake "parallel:spec[$USE_THREADS]"
+RAILS_ENV=development rake "parallel:spec[$USE_THREADS]"
 
 echo "\n\n\n\nx-www-browser ./coverage/index.html"
