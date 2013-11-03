@@ -13,7 +13,7 @@ class ReviewsController < ApplicationController
   def filter
     f = Review.filter(params[:filter])
     @title, @text, @questions = f[:title], f[:text], f[:questions].call(current_user)
-    @filter = params[:filter].to_sym
+    @filter = params[:filter]
   end
 
   def review

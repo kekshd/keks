@@ -49,9 +49,11 @@ class Review < ActiveRecord::Base
 
 
   def Review.filter(name)
+    valid = @@filters.keys.map(&:to_s)
+    raise "There is no “#{name}” filter." unless valid.include?(name.to_s)
+
     name = name.to_sym
     return @@filters[name].dup if @@filters[name]
-    raise "There is no “#{name}” filter."
   end
 
   def Review.get_filters
@@ -71,7 +73,7 @@ class Review < ActiveRecord::Base
       }
     },
 
-    # all ##############################################################
+    # not_okay##########################################################
     not_okay: {
       title: "nicht-okay-e Fragen",
       link_title: "Fragen mit „nicht okay“",
