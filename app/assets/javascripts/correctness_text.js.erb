@@ -1,8 +1,14 @@
 <%# encoding: utf-8 %>
 <%
 environment.context_class.instance_eval do
-  include AnswersHelper
   include ActionView::Helpers::JavaScriptHelper
+
+  unless defined?(AnswersHelper)
+    require "#{Rails.root}/app/models/answer.rb"
+    require "#{Rails.root}/app/helpers/answers_helper.rb"
+  end
+
+  include AnswersHelper
 end
 %>
 
