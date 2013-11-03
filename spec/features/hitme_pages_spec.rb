@@ -70,7 +70,7 @@ describe "Hitme" do
           expect do
             # select correct answer to easily distinguish these stats
             # from others inserted by race conditions
-            all('a.button.toggleable[data-correct="true"]').each { |l| l.click }
+            all('a.button.toggleable[data-correct="1"]').each { |l| l.click }
             save_answer_button.click
             wait_for_non_dom_ajax
           end.to change { Stat.where(correct: true).size }.by(1)
