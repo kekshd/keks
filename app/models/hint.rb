@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class Hint < ActiveRecord::Base
-  attr_accessible :sort_hint, :question_id, :text
+  attr_accessible :sort_hint, :text
 
   belongs_to :question, touch: true, inverse_of: :hints
 

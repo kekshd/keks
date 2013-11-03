@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class Category < ActiveRecord::Base
-  attr_accessible :text, :title, :answer_ids, :ident, :released, :is_root
+  attr_accessible :text, :title, :ident, :released, :is_root
 
   validates :ident, :uniqueness => true, :presence => true
   validates :title, :presence => true
