@@ -44,7 +44,8 @@ class User < ActiveRecord::Base
   # in theory this could return true for non-existing questions.
   def has_starred?(question)
     qid = question.is_a?(Integer) ? question : question.id
-    User.count_by_sql("SELECT 1 FROM starred WHERE user_id = #{id} AND question_id = #{qid}") > 0
+    sql = self.sanitize_sql_array(["SELECT 1 FROM starred WHERE user_id = ? AND question_id = ?", id, qid])
+    User.count_by_sql(sql) > 0
   end
 
   include StatTools
