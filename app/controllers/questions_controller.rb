@@ -36,7 +36,7 @@ class QuestionsController < ApplicationController
 
     copy_assoc_objects(new_question)
 
-    redirect_to new_question
+    redirect_to question_path(new_question)
   end
 
   def star
