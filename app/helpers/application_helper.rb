@@ -63,13 +63,11 @@ module ApplicationHelper
   end
 
   def difficulties_from_param
-    diff = params[:difficulty] ? params[:difficulty].split("_") : []
-    diff = diff.map { |d| d.to_i == 0 ? nil : d.to_i}.compact
+    diff = params[:difficulty].split("_").map(&:to_i) rescue []
     diff.reject! { |d| !Difficulty.ids.include?(d) }
     return diff if diff.any?
 
-    #~　logger.warn "No difficulties given, selecting first"
-    return [Difficulty.ids.first]
+    return Difficulty.ids
   end
 
   def reject_unsuitable_questions!(qs)
