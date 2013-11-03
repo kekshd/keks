@@ -22,3 +22,6 @@ vendor/ruby
 config/initializers/git_revision.rb
 
 /coverage
+
+
+.SECRET_TOKEN
