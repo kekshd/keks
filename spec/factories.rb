@@ -50,7 +50,7 @@ FactoryGirl.define do
     sequence :ident do |n|
       "questIdent#{n}"
     end
-    difficulty { Difficulty.ids.sample(1).first }
+    difficulty { Difficulty.ids.sample }
     study_path StudyPath.ids.first
     released true
 
