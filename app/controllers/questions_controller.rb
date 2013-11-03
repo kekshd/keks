@@ -3,7 +3,7 @@
 class QuestionsController < ApplicationController
   before_filter :require_admin, :except => [:star, :unstar, :perma]
   before_filter :signed_in_user, :only => [:star, :unstar]
-  before_filter :find_question, except: [:create, :overwrite_reviews, :show, :new, :index]
+  before_filter :find_question, except: [:create, :overwrite_reviews, :show, :new, :index, :single_parent_select]
 
   def copy
     render partial: 'copy'
@@ -123,12 +123,11 @@ class QuestionsController < ApplicationController
   def update
     begin
       p = params[:parent].split('_')
+      p = (p[0] == "Category") ? Category.find(p[1]) : Answer.find(p[1])
     rescue
       flash[:error] = "Kein gültiges Elter-Element angegeben"
       return render 'edit'
     end
-
-    p = (p[0] == "Category") ? Category.find(p[1]) : Answer.find(p[1])
     @question.parent = p
 
     if @question.update_attributes(params[:question])
@@ -137,6 +136,10 @@ class QuestionsController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def single_parent_select
+    render partial: "form_single_parent_select"
   end
 
 

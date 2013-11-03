@@ -121,7 +121,7 @@ describe "Authentication" do
     end
 
     describe "as wrong user" do
-      before { sign_in user }
+      before { sign_in user, true }
 
       describe "visiting Users#edit page" do
         before { visit edit_user_path(wrong_user) }
@@ -135,7 +135,7 @@ describe "Authentication" do
     end
 
     describe "as non-admin user" do
-      before { sign_in non_admin }
+      before { sign_in non_admin, true }
 
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }

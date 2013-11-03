@@ -54,6 +54,7 @@ Keks::Application.routes.draw do
       match "copy_to", to: "questions#copy_to", as: "copy_to", via: :post
     end
 
+    match "single_parent_select", to: "questions#single_parent_select", as: "single_parent_select", via: :get
 
     resources :categories
     match "categories/:id/release", to: "categories#release", :as => "release_category", via: :get

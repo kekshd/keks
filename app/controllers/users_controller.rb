@@ -123,9 +123,9 @@ class UsersController < ApplicationController
 
   def get_user
     @user = User.find(params[:id]) rescue nil
-    logger.warn "get_user #{@user.try(:nick)}"
 
     unless @user
+      logger.warn "get_user failed with id=#{params[:id]}"
       flash[:error] = "Nutzer mit id=#{params[:id]} nicht gefunden."
       return redirect_to (admin? ? user_index_path : signin_path)
     end

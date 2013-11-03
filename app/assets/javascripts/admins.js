@@ -5,3 +5,4 @@
 
 //= require preview
 //= require popups
+//= require click_to_load

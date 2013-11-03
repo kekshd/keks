@@ -36,6 +36,7 @@ module SessionsHelper
 
   def signed_in_user
     unless signed_in?
+      logger.warn "Tried to access this URL without being logged in: #{request.url}"
       store_location
       redirect_to signin_url, notice: "Bitte logge Dich ein um diese Funktion nutzen zu können."
     end

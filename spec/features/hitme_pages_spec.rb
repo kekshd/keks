@@ -113,13 +113,13 @@ describe "Hitme" do
     end
 
     it "show for logged in users" do
-      sign_in(user)
+      sign_in user, true
       category_select
       should have_content "Frage merken"
     end
 
     it "are stored to the database" do
-      sign_in(user)
+      sign_in user, true
       category_select
       should have_content "Frage merken"
       expect {

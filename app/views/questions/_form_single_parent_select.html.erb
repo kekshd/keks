@@ -1,0 +1,16 @@
+<select name="parent" class="comboxbox">
+  <option></option>
+  <optgroup label="Antworten">
+    <% Answer.joins(:question).select("answers.id, questions.ident AS quest_ident").order("answers.id").each do |a| %>
+      <% v = "Answer_#{a.id}" %>
+      <%= content_tag(:option, "#{a.quest_ident}/A#{a.id}", value: v, selected: params[:parent] == v) %>
+    <% end %>
+  </optgroup>
+  <optgroup label="Kategorien">
+    <% Category.order(:ident).select([:id, :ident]).each do |c| %>
+      <% v = "Category_#{c.id}" %>
+      <%= content_tag(:option, c.ident, value: v, selected: params[:parent] == v) %>
+    <% end %>
+  </optgroup>
+</select>
+<span>ggf. vorhergehende Fragen und Kategorien zuerst anlegen</span>

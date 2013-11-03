@@ -9,25 +9,18 @@
   <span>Benötigt<%=render "latex/help"%></span>
   <div id="preview"><%= render_tex(@question.text) %></div>
 
+  <%#= render "form_single_parent_select", f: f %>
 
-  <%= f.label :parent %>
-  <% selected = "#{@question.parent_type}_#{@question.parent_id}" %>
-  <select name="parent">
-    <option></option>
-    <optgroup label="Antworten">
-      <% Answer.joins(:question).select("answers.id, questions.ident AS quest_ident").order("answers.id").each do |a| %>
-        <% v = "Answer_#{a.id}" %>
-        <%= content_tag(:option, a.quest_ident + '/' + a.id.to_s, :value => v, :selected => selected == v) %>
-      <% end %>
-    </optgroup>
-    <optgroup label="Kategorien">
-      <% Category.find(:all, :order => :ident).each do |c| %>
-        <% v = "Category_#{c.id}" %>
-        <%= content_tag(:option, c.ident, :value => v, :selected => selected == v) %>
-      <% end %>
-    </optgroup>
-  </select>
-  <span>ggf. vorhergehende Fragen und Kategorien zuerst anlegen</span>
+  <%= f.label :parent, "Elter" %>
+  <% if @question.parent %>
+    <div style="float:left">
+      <input type="hidden" name="parent" value="<%=@question.parent_html_ref%>"/>
+      <%=@question.parent.link_text%>
+      <a data-replace-parent-url="<%=single_parent_select_path(parent: @question.parent_html_ref)%>" data-disable-with="…lädt…">(anderes Eltern-Element wählen?)</a>
+    </div>
+  <% else %>
+    <%= render "form_single_parent_select" %>
+  <% end %>
 
   <%= f.label :difficulty, "Fragentyp" %>
   <%= f.select :difficulty, Difficulty.to_select %>

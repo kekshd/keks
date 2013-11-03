@@ -6,7 +6,7 @@ describe "Review" do
   subject { page }
 
   let!(:reviewer) { FactoryGirl.create(:reviewer) }
-  before { sign_in reviewer }
+  before { sign_in reviewer, true }
 
   it "should not show up to date reviews with the updated filter" do
     rev = FactoryGirl.create(:review)

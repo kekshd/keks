@@ -63,23 +63,40 @@ describe QuestionsController do
     response.should render_template :new
   end
 
-  it "renders new template for admins with category pre-selected" do
-    sign_in admin
-    get :new, parent: "Category_#{existing_category.id}"
-    response.should render_template :new
-    page = Capybara::Node::Simple.new(response.body)
-    expect(page).to have_select('parent', selected: existing_category.ident)
-  end
+  describe "#new" do
+    before { sign_in admin }
 
-  it "renders new template for admins with answer pre-selected" do
-    sign_in admin
-    answ = existing_question.answers.first
-    get :new, parent: "Answer_#{answ.id}"
-    response.should render_template :new
-    page = Capybara::Node::Simple.new(response.body)
-    expect(page).to have_select('parent', selected: "#{existing_question.ident}/#{answ.id}")
-  end
+    it "uses new template" do
+      get :new
+      expect(response).to render_template :new
+    end
 
+    it "directly includes parent chooser w/o parent" do
+      get :new
+      expect(response.body).to include(%|<select name="parent"|)
+      expect(response.body).not_to include("anderes Eltern-Element wählen")
+    end
+
+    it "includes pre-selected parent category form element" do
+      get :new, parent: "Category_#{existing_category.id}"
+      expect(response.body).to include(%|"Category_#{existing_category.id}"|)
+    end
+
+    context "with pre-selected parent answer" do
+      before do
+        @answ = existing_question.answers.first
+        get :new, parent: "Answer_#{@answ.id}"
+      end
+
+      it "includes form element with parent" do
+        expect(response.body).to include(%|"Answer_#{@answ.id}"|)
+      end
+
+      it "offers link to choose parent element" do
+        expect(response.body).to include("anderes Eltern-Element wählen")
+      end
+    end
+  end
 
   describe "#create" do
     before(:each) do

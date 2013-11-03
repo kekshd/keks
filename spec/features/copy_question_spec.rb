@@ -9,7 +9,7 @@ describe 'Copy Question' do
   subject { page }
 
   before do
-    sign_in admin
+    sign_in admin, true
     visit question_path(question)
   end
 

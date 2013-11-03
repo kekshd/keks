@@ -96,6 +96,11 @@ class Question < ActiveRecord::Base
     rows.join("  ")
   end
 
+  def parent_html_ref
+    "#{parent_type}_#{parent_id}"
+  end
+
+
   include DotTools
 
   def dot(active = false)
