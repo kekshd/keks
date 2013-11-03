@@ -62,13 +62,15 @@ module StatsHelper
   private
 
   def graph_defaults(graph)
-    graph.options[:legend][:align] = 'right'
-    graph.options[:legend][:verticalAlign] = 'top'
+    graph.options[:legend] = { align: 'right', verticalAlign: 'top' }
     graph.options[:chart][:defaultSeriesType] = "line"
-    graph.options[:chart][:width] = 700
-    graph.options[:chart][:height] = 280
+    graph.options[:chart] = { width: 700, height: 280 }
     graph.options[:tooltip][:enabled] = false
-    graph.options[:plotOptions][:line] = {animation: false}
+    graph.options[:plotOptions][:line] = {
+      animation: false,
+      enableMouseTracking: false,
+      marker: { enabled: false }
+    }
     graph.xAxis(type: :datetime, dateTimeLabelFormats: { day: '%e. %b' })
   end
 end
