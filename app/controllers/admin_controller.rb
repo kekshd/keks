@@ -1,8 +1,7 @@
 # encoding: utf-8
 
 class AdminController < ApplicationController
-  before_filter :require_admin, :except => [:tree, :export]
-  before_filter :require_admin_or_reviewer
+  before_filter :require_admin, except: [:tree, :export]
 
   def overview
   end

@@ -11,12 +11,24 @@ describe AdminController do
 
   render_views
 
-  it "renders the export page for admins" do
-    sign_in admin
-    get :export
-    response.should render_template :export
-    response.body.should have_text "einsehbar"
-    has_title
+  describe "#export" do
+    after do
+      get :export
+      expect(response).to render_template :export
+      expect(response.body)to have_text "einsehbar"
+      has_title
+    end
+
+    it "renders for admins" do
+      sign_in admin
+    end
+
+    it "does for users" do
+      sign_in user
+    end
+
+    it "does for not logged in people" do
+    end
   end
 
   describe "#export_question" do
@@ -25,20 +37,6 @@ describe AdminController do
       get :export_question, question_id: question.id
       response.should render_template :export_question
     end
-  end
-
-  it "renders the export page for reviewers" do
-    sign_in reviewer
-    get :export
-    response.should render_template :export
-    response.body.should have_text "einsehbar"
-  end
-
-  it "does not render export page for users" do
-    sign_in user
-    get :export
-    response.should_not render_template :export
-    response.body.should_not have_text "einsehbar"
   end
 
   describe "#tree" do
