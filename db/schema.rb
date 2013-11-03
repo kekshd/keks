@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131101082610) do
+ActiveRecord::Schema.define(:version => 20131103092928) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(:version => 20131101082610) do
     t.integer  "time_taken"
   end
 
+  add_index "stats", ["created_at"], :name => "index_stats_on_created_at"
   add_index "stats", ["question_id", "skipped", "correct"], :name => "index_stats_on_question_id_and_skipped_and_correct"
   add_index "stats", ["user_id"], :name => "index_stats_on_user_id"
 

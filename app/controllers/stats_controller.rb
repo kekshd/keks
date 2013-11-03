@@ -89,10 +89,12 @@ class StatsController < ApplicationController
   end
 
   def activity_report
-    @range = [(params[:range] || "91" ).to_i, 1].max
+    max_days_ago = DateTime.now.mjd - DateTime.parse("2013-02-17").mjd
+    @range = [[(params[:range] || 91 ).to_i, 1].max, max_days_ago].min
 
     stats = Stat.unscoped.where("created_at > ?", @range.days.ago)
-    quests = stats.group('date(created_at)').count
+    quests = stats.group("date(created_at)").count
+
     users_inner = stats.group('user_id, date(created_at)').select("date(created_at) AS date").to_sql
     users_outer = "SELECT date, COUNT(*) FROM (#{users_inner}) GROUP BY date"
     users = Hash[ActiveRecord::Base.connection.select_rows(users_outer)]
