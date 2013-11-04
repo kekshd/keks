@@ -47,15 +47,20 @@ module StatsHelper
       raise "date_to_count_hash key’s must be strings like this: “2013-11-23”"
     end
 
-    range.days.ago.to_date.upto(Date.today).each { |x| date_to_count_hash[x.to_s] ||= 0 }
+    ago = range.days.ago
+
+    # extract values in order and fill in missing dates
+    values = ago.to_date.upto(Date.today).map do |x|
+      date_to_count_hash[x.to_s] || 0
+    end
 
     @h = LazyHighCharts::HighChart.new('graph') do |f|
       graph_defaults(f)
-      f.options[:plotOptions][:series] = {pointInterval: 1.days, pointStart:  @range.days.ago}
-      f.yAxis({title: {text: "Anzahl"}, min: 0, max: date_to_count_hash.values.max })
+      f.options[:plotOptions][:series] = {pointInterval: 1.days, pointStart: ago}
+      f.yAxis({title: {text: "Anzahl"}, min: 0, max: values.max })
     end
 
-    @h.series(name: name, data: date_to_count_hash.values)
+    @h.series(name: name, data: values)
     @h
   end
 
