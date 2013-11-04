@@ -92,6 +92,10 @@ class StatsController < ApplicationController
     extract_range_from_params
     extract_questions_from_params
 
+    key = "activity_report__#{@range}__#{(@questions || []).join("_")}"
+    cache = Rails.cache.fetch(key)
+    return (@g_quests, @g_users = *cache) if cache
+
     stats = Stat.unscoped.where("created_at > ?", @range.days.ago)
     stats = stats.where(question_id: @questions) if @questions
 
@@ -103,6 +107,8 @@ class StatsController < ApplicationController
 
     @g_quests = render_date_to_count_graph('beantwortete Fragen', quests,  @range)
     @g_users  = render_date_to_count_graph('aktive Nutzer',       users,   @range)
+
+    Rails.cache.write(key, [@g_quests, @g_users], expires_in: 24.hours)
   end
 
   private
@@ -113,7 +119,7 @@ class StatsController < ApplicationController
   end
 
   def extract_questions_from_params
-    @questions = params[:questions].split("_").map(&:to_i).compact rescue []
+    @questions = params[:questions].split("_").map(&:to_i).compact.uniq.sort rescue []
     @questions = nil if @questions.empty? || @questions.all? { |id| id == 0 }
   end
 end
