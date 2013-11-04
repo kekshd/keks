@@ -67,9 +67,8 @@ module StatsHelper
   private
 
   def graph_defaults(graph)
-    graph.options[:legend] = { align: 'right', verticalAlign: 'top' }
     graph.options[:chart][:defaultSeriesType] = "line"
-    graph.options[:chart] = { width: 700, height: 280 }
+    graph.options[:chart] = { width: 850, height: 280 }
     graph.options[:tooltip][:enabled] = false
     graph.options[:plotOptions][:line] = {
       animation: false,
