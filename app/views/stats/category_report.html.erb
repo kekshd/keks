@@ -1,3 +1,5 @@
+<% content_for :script do %><%= javascript_include_tag "highcharts" %><% end %>
+
 <div>
   <h2>Statistik nach Kategorie</h2>
   <ul class="button-group">
@@ -10,24 +12,32 @@
 
   <br/>
   Es werden nur Antworten innerhalb der letzten <%=@range%> Tage berücksichtigt.
-
-
 </div>
 
+<% attr = { ajax: 1, "extract-selector" => "#graphs",  "target-selector" => "#usestats" } %>
 <div>
   <style scoped>
-    th:first-child, td:first-child { text-align: left }
+    th:first-child, td:first-child, td:last-child { text-align: left }
     td, th { text-align: right }
   </style>
   <table>
-    <tr><th>Kategorie</th><th>Beide</th><th>Mit Account</th><th>Ohne Account</th></tr>
+    <tr><th>Kategorie</th><th>Beide</th><th>Mit Account</th><th>Ohne Account</th><th></th></tr>
     <% @keys.each do |cat, d| %>
       <tr>
         <td><%=cat%></td>
         <td><%=d[:all]%></td>
         <td><%=d[:registered]%></td>
         <td><%=d[:unregistered]%></td>
+        <% url = stat_activity_report_path(questions: d[:questions].join("_"), range: @range) %>
+        <td><%=link_to "Nutzungsstatistik für #{cat}", url, data: attr %></td>
       </tr>
     <% end %>
   </table>
+
+  <%=link_to "Nutzungsstatistik für alle Kategorien anzeigen", stat_activity_report_path, data: attr %>
+</div>
+
+<div>
+  <h3>Nutzungsstatistik</h2>
+  <div id="usestats">Bitte wähle oben aus, für welche Kategorie die Statistik angezeigt werden soll</div>
 </div>

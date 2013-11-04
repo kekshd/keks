@@ -84,14 +84,17 @@ class StatsController < ApplicationController
       unregistered = Stat.unscoped.where(:user_id => -1, :question_id => questions).where("created_at > ?", @range.days.ago).count
 
 
-      @keys[key] = {all: all, registered: all - unregistered, unregistered: unregistered}
+      @keys[key] = {all: all, registered: all - unregistered, unregistered: unregistered, questions: questions}
     end
   end
 
   def activity_report
     extract_range_from_params
+    extract_questions_from_params
 
     stats = Stat.unscoped.where("created_at > ?", @range.days.ago)
+    stats = stats.where(question_id: @questions) if @questions
+
     quests = stats.group("date(created_at)").count
 
     users_inner = stats.group('user_id, date(created_at)').select("date(created_at) AS date").to_sql
@@ -107,5 +110,10 @@ class StatsController < ApplicationController
   def extract_range_from_params
     max_days_ago = DateTime.now.mjd - DateTime.parse("2013-02-17").mjd
     @range = [[(params[:range] || 91 ).to_i, 1].max, max_days_ago].min
+  end
+
+  def extract_questions_from_params
+    @questions = params[:questions].split("_").map(&:to_i).compact rescue []
+    @questions = nil if @questions.empty? || @questions.all? { |id| id == 0 }
   end
 end

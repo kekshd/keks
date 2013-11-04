@@ -1,0 +1,11 @@
+.loading:before {
+  content: "Lädt…";
+  padding: 5px 8px;
+  position: absolute;
+  margin-right: -100px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  z-index: 10000
+}
