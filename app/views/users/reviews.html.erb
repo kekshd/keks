@@ -6,7 +6,7 @@
 
 <% @reviews.each do |r| %>
   <% q = r.question %>
-  <div class="<%=r.question_updated_since? ? "wrong" : "correct" %>">
+  <div class="<%=r.question_updated_since? ? "wrong" : "correct" %> box">
     <%=render "reviews/show", review: r %>
     <%=link_to q.ident, question_review_path(q)%>
     <%=trace_to_root_formatter q.trace_to_root(true)%>
