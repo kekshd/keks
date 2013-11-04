@@ -65,7 +65,7 @@ class StatsController < ApplicationController
   end
 
   def category_report
-    @range = [(params[:range] || "91" ).to_i, 1].max
+    extract_range_from_params
 
     groups = {}
 
@@ -89,8 +89,7 @@ class StatsController < ApplicationController
   end
 
   def activity_report
-    max_days_ago = DateTime.now.mjd - DateTime.parse("2013-02-17").mjd
-    @range = [[(params[:range] || 91 ).to_i, 1].max, max_days_ago].min
+    extract_range_from_params
 
     stats = Stat.unscoped.where("created_at > ?", @range.days.ago)
     quests = stats.group("date(created_at)").count
@@ -101,5 +100,12 @@ class StatsController < ApplicationController
 
     @g_quests = render_date_to_count_graph('beantwortete Fragen', quests,  @range)
     @g_users  = render_date_to_count_graph('aktive Nutzer',       users,   @range)
+  end
+
+  private
+
+  def extract_range_from_params
+    max_days_ago = DateTime.now.mjd - DateTime.parse("2013-02-17").mjd
+    @range = [[(params[:range] || 91 ).to_i, 1].max, max_days_ago].min
   end
 end
