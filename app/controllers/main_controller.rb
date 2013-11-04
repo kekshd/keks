@@ -114,7 +114,7 @@ class MainController < ApplicationController
     url = nil
     err = nil
     begin
-      open("https://dynamic.xkcd.com/random/comic/", redirect: false) do
+      open("http://dynamic.xkcd.com/random/comic/", redirect: false) do
         url = resp.base_uri
       end
     rescue OpenURI::HTTPRedirect => rdr
@@ -128,7 +128,7 @@ class MainController < ApplicationController
       end
 
       err = "Der XKCD Server ist gerade nicht erreichbar. Sorry. Details: (random)  #{err}"
-      return render :text => err
+      return render(status: 502, text: err)
     end
   end
 
@@ -138,7 +138,7 @@ class MainController < ApplicationController
     return render(status: 400, text: "invalid id") if id.blank?
 
     begin
-      html = open("https://xkcd.com/#{id}/").read
+      html = open("http://xkcd.com/#{id}/").read
 
       comic_only = Nokogiri::HTML(html).at_css("#comic").to_s
       comic_only.gsub!("http://", "https://")

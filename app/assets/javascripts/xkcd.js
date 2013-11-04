@@ -25,7 +25,7 @@ var XkcdLoader = (function() {
     var tempDiv = $("<div/>").load(path, function(responseText) {
       preloaded = true;
       // get comic innerHTML
-      comic = tempDiv.find("#comic").html();
+      comic = tempDiv.find("#comic").html() || responseText;
       if(insertImmediately) insert();
     });
   }
