@@ -1,7 +1,8 @@
 <% provide(:title, "Möglicherweise fehlende Verknüpfungen") %>
 
+<%= render "admin/action_menu" %>
+
 <div>
-  <%= render "admin/action_menu" %>
   <h2>Möglicherweise fehlende Verknüpfungen</h2>
 
   <p>Was macht diese Seite? Beispiel: Kategorie Kind wurde ursprünglich mit allen Antworten unter Kategorie Elter verknüpft. Nun haben sich einige Fragen in Elter geändert und daher verweisen nicht mehr alle Antworten aus Eltern nach Kind. Diese Seite listet alle Elter/Kind-Kombinationen auf, deren Verknüpfungen bei 70%+ liegen. Die wahrscheinlichste „Lösung“ ist die Kind-Kategorie zu bearbeiten und alle neu hinzugekommenen Antworten ebenfalls auf die Kind-Kategorie zeigen zu lassen.</p>

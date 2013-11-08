@@ -1,7 +1,8 @@
 <% provide(:title, "Frage #{@question.ident}") %>
 
+<%= render "admin/action_menu" %>
+
 <div>
-  <%= render "admin/action_menu" %>
   <%= render "action_menu" %>
   <h2>Frage <%=@question.ident%></h2>
   <%=trace_to_root_formatter @question.trace_to_root(true)%>

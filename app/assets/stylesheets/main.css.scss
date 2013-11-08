@@ -36,7 +36,7 @@ body {
   margin: 0;
 }
 
-body > div:not([class]), div.box {
+body > div:not([class]), .box {
   // no op that allows content inside to be placed relatively to the
   // container
   position: relative;

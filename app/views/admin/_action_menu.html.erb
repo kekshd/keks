@@ -1,8 +1,8 @@
-<ul class="button-group">
-  <li><%= link_to "Kategorienliste", categories_path, class: 'button primary' %></li>
-  <li><%= link_to "Fragenliste", questions_path, class: 'button primary' %></li>
-  <li><%= link_to "Nutzerliste", user_index_path, class: 'button' %></li>
-  <li><%= link_to "Neue Kategorie", new_category_path, class: 'button' %></li>
-  <li><%= link_to "Neue Frage", new_question_path, class: 'button' %></li>
-  <li><%= link_to "→ zu den Reviews", reviews_path, class: 'button' %></li>
+<ul class="submenu box">
+  <li><b>Admin:</b></li>
+  <li><%= link_to "Kategorienliste", categories_path, class: 'primary' %></li>
+  <li><%= link_to "Fragen suchen", search_questions_path, class: 'primary' %></li>
+  <li><%= link_to "Nutzerliste", user_index_path, class: '' %></li>
+  <li><%= link_to "Neue Kategorie", new_category_path, class: '' %></li>
+  <li><%= link_to "Neue Frage", new_question_path, class: '' %></li>
 </ul>

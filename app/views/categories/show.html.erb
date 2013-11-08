@@ -1,7 +1,8 @@
 <% provide(:title, "Kategorie #{@category.ident}") %>
 
+<%= render "admin/action_menu"%>
+
 <div>
-  <%= render "admin/action_menu"%>
   <%=render "action_menu"%>
 
   <h2>Kategorie <%=@category.ident%></h2>
@@ -27,7 +28,4 @@
 <div>
   Hinweis: Nachfolger-Antworten werden in diesem Teilgraph ausgelassen und es wird maximal die zweite Fragenebene angezeigt (d.h. (…) → Kategorie → Frage → Subfrage, aber nicht tiefer).<br/><br/>
   <%=render_dot(@category.dot_region)%>
-
-  <br/><br/>
-  <%=render "action_menu"%>
 </div>
