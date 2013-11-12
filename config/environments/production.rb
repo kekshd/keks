@@ -77,5 +77,7 @@ Keks::Application.configure do
   # expiration doesn’t matter
   config.static_cache_control = "public, max-age=#{60*60*24*365}"
 
-  config.threadsafe!
+  # not threadsafe when loading a rake task. For example, sunspot:solr:reindex breaks because
+  # it tries to load AdminController before ApplicationController. See http://stackoverflow.com/a/12570405/1684530
+  config.threadsafe! unless defined?($rails_rake_task) && $rails_rake_task
 end
