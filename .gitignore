@@ -23,6 +23,7 @@ solr/default/data
 solr/production
 solr/development
 solr/test
+solr/pids
 
 config/initializers/git_revision.rb
 
