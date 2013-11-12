@@ -237,6 +237,20 @@ describe QuestionsController do
     end
   end
 
+  describe "#search" do
+    before { sign_in admin }
+
+    it "renders search template" do
+      get :search
+      expect(response).to render_template('search')
+    end
+
+    it "includes query parameters in form" do
+      get :search, query: "derpina"
+      expect(response.body).to include('derpina')
+    end
+  end
+
   describe "#copy" do
     before { sign_in admin }
 
