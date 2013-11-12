@@ -41,11 +41,10 @@ group :development do
 
   gem 'guard-zeus'          # run zeus when starting guard
   gem 'guard-bundler'       # auto install/update gems
+  gem 'guard-sunspot'       # handle solr search engine
 
-  # not sure why this is required in development mode
+  # loaded in development mode, so it is picked up by zeus
   gem 'parallel_tests'
-
-  gem 'progress_bar'
 end
 
 group :test do

@@ -32,3 +32,9 @@ guard :bundler do
   # Uncomment next line if your Gemfile contains the `gemspec' command.
   # watch(/^.+\.gemspec/)
 end
+
+guard 'sunspot' do
+  watch('Gemfile.lock')
+  watch('config/sunspot.yml')
+  watch('solr/conf/schema.xml')
+end

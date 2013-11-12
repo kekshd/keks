@@ -85,7 +85,6 @@ GEM
       railties (>= 3.0.0)
     faker (1.1.2)
       i18n (~> 0.5)
-    fattr (2.2.1)
     ffi (1.9.3)
     formatador (0.2.4)
     guard (2.2.2)
@@ -101,11 +100,13 @@ GEM
       em-websocket (~> 0.5)
       guard (~> 2.0)
       multi_json (~> 1.8)
+    guard-sunspot (0.0.2)
+      guard
+      sunspot_solr
     guard-zeus (0.0.1)
       guard
       zeus
     hash-deep-merge (0.1.1)
-    highline (1.6.20)
     hike (1.2.3)
     http_parser.rb (0.5.3)
     i18n (0.6.5)
@@ -146,17 +147,12 @@ GEM
     multi_json (1.8.2)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
-    options (2.3.0)
-      fattr
     parallel (0.9.0)
     parallel_tests (0.16.2)
       parallel
     phantomjs (1.9.2.0)
     polyglot (0.3.3)
     pr_geohash (1.0.0)
-    progress_bar (1.0.0)
-      highline (~> 1.6.1)
-      options (~> 2.3.0)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -293,6 +289,7 @@ DEPENDENCIES
   guard
   guard-bundler
   guard-livereload
+  guard-sunspot
   guard-zeus
   jquery-rails (= 2.2.1)
   jquery-tablesorter (= 1.4.1)
@@ -303,7 +300,6 @@ DEPENDENCIES
   meta_request
   nokogiri
   parallel_tests
-  progress_bar
   pry-rails
   rack-livereload
   rails (= 3.2.14)
