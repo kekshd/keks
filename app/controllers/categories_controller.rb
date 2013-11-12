@@ -77,7 +77,10 @@ class CategoriesController < ApplicationController
   def suspicious_associations
     # fcategories and all associated answers (ignoring subquests)
     root_cats = Category.includes(:questions => [:answers])
-    root_cats_answers = Hash[root_cats.map { |rc| [rc, rc.answer_ids] }]
+    root_cats_answers = {}
+    root_cats.each do |rc|
+      root_cats_answers[rc] = rc.questions.map { |q| q.answers.map(&:id) }.flatten
+    end
 
     # find categories and their parents (answers). Ignoring root questions
     # because they have no parents by definition.
