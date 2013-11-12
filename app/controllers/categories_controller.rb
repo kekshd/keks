@@ -76,19 +76,13 @@ class CategoriesController < ApplicationController
 
   def suspicious_associations
     # fcategories and all associated answers (ignoring subquests)
-    root_cats =  Category.includes(:questions => [:answers])
-    root_cats_answers = {}
-    root_cats.each do |rc|
-      root_cats_answers[rc] =  rc.questions.map { |q| q.answers.map { |a| a.id } }.flatten
-    end
+    root_cats = Category.includes(:questions => [:answers])
+    root_cats_answers = Hash[root_cats.map { |rc| [rc, rc.answer_ids] }]
 
     # find categories and their parents (answers). Ignoring root questions
     # because they have no parents by definition.
     other_cats = Category.where(is_root: false).includes(:questions => [:answers])
-    other_cats_answers = {}
-    other_cats.each do |oc|
-      other_cats_answers[oc] = oc.answer_ids
-    end
+    other_cats_answers = Hash[other_cats.map { |oc| [oc, oc.answer_ids] }]
 
     # compare against each other to see if any non-root category selects
     # almost all answers of a root category. This makes it obvious if
