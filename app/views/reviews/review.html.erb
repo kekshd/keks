@@ -1,9 +1,8 @@
 <% provide(:title, "Frage reviewen") %>
 
-<div>
-  <%= render "menu"  %>
+<%= render "menu"  %>
 
-  <br class="clear"/><br/>
+<div>
   <% filter = Review.filter(params[:filter]) rescue nil %>
   <% if filter %>
     <%=link_to "Nächste Frage (in „#{filter[:link_title]}“)", review_find_next_path(filter: params[:filter], next: params[:next] || "") %>

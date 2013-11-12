@@ -1,13 +1,16 @@
-<ul class="box submenu">
-  <li><b>Reviews:</b></li>
-  <li><%= link_to "Mitteilungen", reviews_path, class: 'primary' %></li>
-  <li><%= link_to "Fragen die Deine Aufmerksamkeit benötigen", need_attention_questions_path, class: 'primary' %></li>
-  <li><%= link_to "Meine Reviews", user_reviews_path(current_user), class: '' %></li>
-</ul>
-<br class="clear"/><br/>
+<div class="box submenu">
+  <ul>
+    <li>Reviews:</li>
+    <li><%= link_to "Mitteilungen", reviews_path, class: 'primary' %></li>
+    <li><%= link_to "Fragen die Deine Aufmerksamkeit benötigen", need_attention_questions_path, class: 'primary' %></li>
+    <li><%= link_to "Meine Reviews", user_reviews_path(current_user), class: '' %></li>
+  </ul>
 
-Verschiedenste Fragen-Filter:
-<% Review.get_filters.each do |f| %>
-  <% next if Review.filter(f)[:hide_in_menu] %>
-  <%= link_to Review.filter(f)[:link_title], review_filter_path(f) %> |
-<% end %>
+  <ul>
+    <li>Filtern:</li>
+    <% Review.get_filters.each do |f| %>
+      <% next if Review.filter(f)[:hide_in_menu] %>
+      <li><%= link_to Review.filter(f)[:link_title], review_filter_path(f) %></li>
+    <% end %>
+  </ul>
+</div>

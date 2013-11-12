@@ -1,5 +1,6 @@
+<%= render "menu"  %>
+
 <div>
-  <%= render "menu"  %><br/><br/>
   <h3><%=@title%></h3>
   <p><%=@text%></p>
   <%= render "generic_question_list", questions: @questions, filter: @filter %>

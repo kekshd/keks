@@ -1,7 +1,13 @@
 .submenu {
   margin-top: -1px;
   border-top: 1px solid #077DB3;
-  padding: 0px 10px;
+
+  padding: 0 20px 10px 20px;
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
 
   li {
     display: inline-block;
@@ -11,5 +17,19 @@
       font-weight: bold;
 
     }
+
+    &:first-child {
+      padding-left: 0;
+      font-weight: bold;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
   }
+}
+
+
+ul.submenu {
+  padding: 0 20px;
 }
