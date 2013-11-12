@@ -6,5 +6,7 @@
  *= require magnific-popup
  *= require popups
  *= require loading
+ *= require pagination
  *= require submenu
+ *= require search
  */

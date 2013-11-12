@@ -3,7 +3,7 @@
 class QuestionsController < ApplicationController
   before_filter :require_admin, :except => [:star, :unstar, :perma]
   before_filter :signed_in_user, :only => [:star, :unstar]
-  before_filter :find_question, except: [:create, :overwrite_reviews, :show, :new, :index, :single_parent_select]
+  before_filter :find_question, except: [:create, :overwrite_reviews, :show, :new, :index, :single_parent_select, :search]
 
   def copy
     render partial: 'copy'
@@ -61,6 +61,22 @@ class QuestionsController < ApplicationController
     ActiveRecord::lax_includes do
       @questions = Question.includes(parent: :question).all
     end
+  end
+
+  def search
+    @page = page = [params[:page].to_i, 1].max
+    @search = Question.search do
+      fulltext(params[:query]) do
+        highlight :ident, :text, :answers, :reviews, :hints, :parent
+        query_phrase_slop 2
+        boost_fields ident: 2.0
+        boost_fields text: 1.5
+        boost_fields answers: 1.1
+        phrase_slop 2
+      end
+      paginate page: page, per_page: 15
+    end
+    @questions = @search.results
   end
 
   def new

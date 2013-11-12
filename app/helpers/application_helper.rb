@@ -196,6 +196,31 @@ module ApplicationHelper
     end
   end
 
+  # for the given search hit, it returns the the field with all matches
+  # highlighted. Optionally may specify to include whole stored text.
+  # Via https://github.com/sunspot/sunspot/issues/111
+  def search_highlight(search_hit, field, everything = false)
+    phrases = []
+    snippets = []
+
+    search_hit.highlights(field).each do |highlight|
+      phrases << highlight.instance_eval { @highlight }.scan(/@@@hl@@@([^@]+)@@@endhl@@@/)
+      snippets << highlight.format { |w| w } unless everything
+    end
+
+    text = everything ? search_hit.stored(field).first : snippets.flatten.join
+
+    highlight text, phrases.flatten
+  end
+
+  def search_snippet(search_hit, field, everything = false)
+    t = search_highlight(search_hit, field, everything)
+    return "" if t.blank?
+    t = safe_join([content_tag(:span, field.to_s.humanize), t])
+    content_tag(:div, t)
+  end
+
+
 
   private
 

@@ -5,6 +5,7 @@ gem 'sqlite3',              '1.3.7'
 gem 'thin',                 '1.5.0'
 gem 'active_enum',          '0.9.12'
 gem 'nokogiri'
+gem 'will_paginate'
 
 # nested eager loading through polymorphic associations
 gem 'activerecord_lax_includes', :git => 'https://github.com/unixcharles/active-record-lax-includes.git'
@@ -18,6 +19,10 @@ gem 'lazy_high_charts',     '1.4.0'
 
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby',          '3.0.1'
+
+# searching
+gem 'sunspot_rails'
+gem 'sunspot_solr',                       require: false
 
 group :development do
   gem 'pry-rails'
@@ -39,6 +44,8 @@ group :development do
 
   # not sure why this is required in development mode
   gem 'parallel_tests'
+
+  gem 'progress_bar'
 end
 
 group :test do

@@ -1,0 +1,44 @@
+ <% provide(:title, "Fragen suchen") %>
+
+<%= render "admin/action_menu" %>
+
+<div>
+
+  <h2>Fragen: Suchen</h2>
+
+  <%= form_tag search_questions_path, method: :get, class: "search", autocomplete: "off", data: { ajax: 1, "extract-selector" => "#wrapper", "target-selector" => "#results", "update-url" => 1 } do %>
+    <ul class="button-group">
+      <li><%= text_field_tag :query, params[:query], placeholder: %|Suchbegriffe| %></li>
+      <li><%= submit_tag "Suchen", name: nil, class: "button primary" %></li>
+      <li><%= link_to "Alle Fragen", search_questions_path, class: "button" %></li>
+      <li><%= link_to "gigantische Liste", questions_path, class: "button", confirm: "Dies wird alle Fragen am Stück auflisten. Das ist langsam. Fortfahren?" %></li>
+    </ul>
+  <% end %>
+
+  <div id="results" class="tex2jax_ignore"><div id="wrapper">
+    <div class="pagination">
+      <div class="info"><%= page_entries_info @questions %></div>
+      <%= will_paginate @questions, container: false, params: { query: params[:query] } %>
+    </div>
+
+    <ul>
+      <% @search.hits.each do |hit| %>
+        <li>
+          <%=link_to search_highlight(hit, :ident, true), question_path(hit.primary_key) %><br/>
+          <%=
+            snip = [:text, :answers, :hints, :reviews, :parent].map do |f|
+              search_snippet(hit, f)
+            end.join
+            raw snip.blank? ? search_snippet(hit, :text, true) : snip
+          %>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="pagination">
+      <%= will_paginate @questions, container: false, params: { query: params[:query] } %>
+      <div class="info"><%= page_entries_info @questions %></div>
+    </div>
+
+  </div></div>
+</div>

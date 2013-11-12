@@ -52,6 +52,8 @@ Keks::Application.routes.draw do
       match "review", to: "reviews#save", as: "review_save", via: :post # new reviews
       match "copy", to: "questions#copy", as: "copy", via: :get
       match "copy_to", to: "questions#copy_to", as: "copy_to", via: :post
+
+      get :search, on: :collection
     end
 
     match "single_parent_select", to: "questions#single_parent_select", as: "single_parent_select", via: :get

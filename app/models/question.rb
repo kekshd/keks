@@ -28,6 +28,31 @@ class Question < ActiveRecord::Base
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true
 
+  searchable do
+    boolean :complete do complete? end
+    boolean :matrix_validate do matrix_validate? end
+
+    double :avg_time_taken
+    double :correct_ratio
+    double :skip_ratio
+
+    text :text,  stored: true
+    text :ident, stored: true
+    text :study_path do StudyPath[study_path] end
+
+    text :answers, stored: true do answers.map { |a| a.text } end
+    text :reviews, stored: true do reviews.map { |r| r.comment } end
+    text :hints, stored: true do hints.map { |h| h.text } end
+
+    text :parent, stored: true do
+      break "" unless parent
+      p = parent
+      r = p.text
+      r << " " + p.title if p.respond_to?(:title)
+      r << " " + p.ident if p.respond_to?(:ident)
+    end
+  end
+
   before_create do
     self.content_changed_at = Time.now
   end

@@ -1,0 +1,47 @@
+.pagination {
+  font-size: 0.9em;
+  color: #777;
+  width: auto;
+  display: inline-block;
+
+  span, a, em {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-style: normal;
+    padding: 4px;
+    text-decoration: none;
+    border:1px solid #eee;
+    border-radius: 5px;
+    outline: 0;
+    vertical-align: middle;
+    line-height: 20px;
+
+    &:hover {
+      box-shadow: 0 0 5px #ccc;
+      border: 1px solid #999;
+    }
+  }
+
+  .next_page, .previous_page {
+    width: 100px;
+  }
+
+  .current {
+    font-weight: bold;
+    color: #000;
+  }
+
+  .current, .disabled, .gap {
+    &:hover {
+      box-shadow: 0 0 0;
+      border:1px solid #eee;
+    }
+  }
+
+  .info {
+    margin: 10px 0;
+    text-align: center;
+  }
+}

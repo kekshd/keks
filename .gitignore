@@ -18,6 +18,11 @@
 /public/dot
 vendor/ruby
 
+solr/data
+solr/default/data
+solr/production
+solr/development
+solr/test
 
 config/initializers/git_revision.rb
 

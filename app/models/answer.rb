@@ -15,6 +15,10 @@ class Answer < ActiveRecord::Base
 
   has_and_belongs_to_many :categories
 
+
+  after_save { self.question.index! }
+  around_destroy { self.question.index! }
+
   before_save do
     Rails.cache.write(:answers_last_update, Time.now)
 
