@@ -10,7 +10,7 @@ class Review < ActiveRecord::Base
   serialize :votes
 
   after_save { self.question.index! }
-  around_destroy { self.question.index! }
+  after_destroy { self.question.index! }
 
   before_save do
     Rails.cache.write(:reviews_last_update, Time.now)

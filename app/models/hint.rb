@@ -10,7 +10,7 @@ class Hint < ActiveRecord::Base
   validates :sort_hint, numericality: true, allow_blank: true
 
   after_save { self.question.index! }
-  around_destroy { self.question.index! }
+  after_destroy { self.question.index! }
 
   before_save do
     Rails.cache.write("hints_last_update", Time.now)
