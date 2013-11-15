@@ -2,12 +2,13 @@
 
 <%= render "menu"  %>
 
-<div>
-  <% filter = Review.filter(params[:filter]) rescue nil %>
-  <% if filter %>
+<% filter = Review.filter(params[:filter]) rescue nil %>
+<% if filter %>
+  <div>
     <%=link_to "Nächste Frage (in „#{filter[:link_title]}“)", review_find_next_path(filter: params[:filter], next: params[:next] || "") %>
-  <% end %>
-</div>
+  </div>
+<% end %>
+
 
 <div>
   <h2>Frage <%=@question.ident%></h2>
