@@ -3,8 +3,32 @@
 <%= render "admin/action_menu" %>
 
 <div>
-
-  <h2>Fragenliste</h2>
-
-  <%= render "index_table" %>
+  Es werden nur Kategorien mit Fragen angezeigt. Eine aufgeklappte Kategorie enthält <em>nur direkte Fragen</em>, d.h. Subfragen werden nicht berücksichtigt. Stattdessen erscheinen diese unter „Subfragen oder Fragen ohne Elter“.
 </div>
+
+<div>
+  <h2>Subfragen oder Fragen ohne Elter</h2>
+  <div class="toggle search-content-urls" style="display: none">
+    <div data-content-url="<%=questions_path(category_id: "-1")%>">…lädt…</div>
+  </div>
+</div>
+
+
+<% @categories.group_by { |c| c.title.split(":").first }.each do |group_title, cats| %>
+<div>
+  <% if cats.size == 1 %>
+    <h2><%= cats.first.title %></h2>
+      <div class="toggle search-content-urls" style="display: none">
+        <div data-content-url="<%=questions_path(category_id: cats.first.id)%>">…lädt…</div>
+    </div>
+  <% else %>
+    <h2><%=group_title%></h2>
+    <% cats.each do |c| %>
+      <h3><%= c.title.split(":").last %></h3>
+      <div class="toggle search-content-urls" style="display: none">
+        <div data-content-url="<%=questions_path(category_id: c.id)%>">…lädt…</div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+<% end %>

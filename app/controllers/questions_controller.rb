@@ -59,7 +59,17 @@ class QuestionsController < ApplicationController
 
   def index
     ActiveRecord::lax_includes do
-      @questions = Question.includes(parent: :question).all
+      if params[:category_id] && params[:category_id].to_i >= 0
+        @questions = Question.where(parent_type: Category, parent_id: params[:category_id]).includes(parent: :question).all
+        return render partial: "index_table"
+      elsif params[:category_id] == "-1"
+        @questions = Question.where("parent_type = ? OR parent_id = ?", "Answer", nil).includes(parent: :question).all
+        return render partial: "index_table"
+      else
+        @categories = Category.order(:title).all
+        @categories.reject! { |c| c.questions.count == 0 }
+        return render :index
+      end
     end
   end
 
