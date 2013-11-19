@@ -19,14 +19,29 @@ describe QuestionsController do
     response.body.should have_content existing_question.id
   end
 
-  it "renders questions index for admins" do
-    sign_in admin
-    existing_question
-    a = existing_question.answers.sample
-    get :index
-    response.should render_template :index
-    expect(response.status).to eq(200)
-    expect(response.body).to include(existing_question.ident)
+  describe "#index" do
+    before do
+      sign_in admin
+      question_full
+    end
+
+    it "includes question category in main view" do
+      get :index
+      expect(response).to render_template :index
+      expect(response.status).to eq(200)
+      expect(response.body).to include(question_full.parent.title)
+    end
+
+    it "renders partial when given a category id" do
+      get :index, category_id: question_full.parent.id
+      # i.e. do not use full template
+      expect(response.body).not_to include("Kompetenzerweiterndes Kurzfragensystem")
+    end
+
+    it "includes question details in partial" do
+      get :index, category_id: question_full.parent.id
+      expect(response.body).to include(question_full.ident)
+    end
   end
 
   it "renders question details for admins" do
