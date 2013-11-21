@@ -14,6 +14,7 @@ class MainController < ApplicationController
   end
 
   def feedback
+    @text = params[:text]
     fresh_when(etag: etag)
   end
 

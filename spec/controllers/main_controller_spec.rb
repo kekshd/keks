@@ -12,9 +12,16 @@ describe MainController do
     expect(response).to render_template(:help)
   end
 
-  it "renders feedback page" do
-    get :feedback
-    expect(response).to render_template(:feedback)
+  describe "#feedback" do
+    it "uses feedback template" do
+      get :feedback
+      expect(response).to render_template(:feedback)
+    end
+
+    it "includes text given via params" do
+      get :feedback, text: "this is a test text"
+      expect(response.body).to include("this is a test text")
+    end
   end
 
   describe "#questions" do
