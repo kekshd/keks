@@ -102,11 +102,12 @@ class Review < ActiveRecord::Base
     good_but_needs_more_reviews: {
       title: "0 < |ok| < #{REVIEW_MIN_REQUIRED_REVIEWS} und ⌐ok = 0",
       link_title: "0 < |ok| < #{REVIEW_MIN_REQUIRED_REVIEWS} und ⌐ok = 0",
-      text: "Oder liebevoll: Fragen mit wenig Arbeit. Hier werden alle Fragen gelistet, die jemand als okay/richtig befunden hat. Trotzdem sollte nochmal jemand drüber schauen. Insgesamt benötigt eine Frage 3 „okay“ Reviews.",
+      text: "Oder liebevoll: Fragen mit wenig Arbeit. Hier werden alle Fragen gelistet, die jemand als okay/richtig befunden hat. Trotzdem sollte nochmal jemand drüber schauen. Insgesamt benötigt eine Frage #{REVIEW_MIN_REQUIRED_REVIEWS} „okay“ Reviews. Bereits freigeschaltete Fragen werden hier nicht mehr aufgelistet.",
       questions: lambda { |current_user|
         questions = Question.includes(:reviews, :parent).all
         questions.reject! do |q|
-          q.reviews.none? || \
+          q.released? || \
+            q.reviews.none? || \
             q.reviews.count >= REVIEW_MIN_REQUIRED_REVIEWS || \
             q.reviews.any? { |r| !r.okay? }
         end
