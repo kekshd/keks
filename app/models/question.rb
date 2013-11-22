@@ -82,6 +82,7 @@ class Question < ActiveRecord::Base
   include StatTools
 
   def get_parent_category
+    return nil if parent.nil?
     parent.is_a?(Category) ? parent : parent.get_parent_category
   end
 
@@ -93,7 +94,9 @@ class Question < ActiveRecord::Base
   end
 
   def get_root_categories
-    get_parent_category.get_root_categories
+    pc = get_parent_category
+    return [] if pc.nil?
+    pc.get_root_categories
   end
 
   def complete?

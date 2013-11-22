@@ -127,4 +127,26 @@ describe Question do
       expect(siblings_dot).to include("_hidden_siblings")
     end
   end
+
+  describe "#get_root_categories" do
+    it "returns empty array for questions without parent" do
+      q = FactoryGirl.build(:question, parent: nil)
+      expect(q.get_root_categories).to eql([])
+    end
+  end
+
+  describe "#get_parent_category" do
+    it "returns nil for questions without parent" do
+      q = FactoryGirl.build(:question, parent: nil)
+      expect(q.get_parent_category).to be_nil
+    end
+
+    it "returns direct parent if parent is a category" do
+      expect(question.get_parent_category).to eql(question.parent)
+    end
+
+    it "returns direct parent if parent is a category" do
+      expect(question.get_parent_category).to eql(question.parent)
+    end
+  end
 end
