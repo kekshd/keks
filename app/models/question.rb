@@ -164,7 +164,6 @@ class Question < ActiveRecord::Base
     d << %(HINT#{dot_id} [label="#{hintTexts}", shape=none];)
     d << "#{dot_id} -> HINT#{dot_id};"
     d << "{ rank=same; #{dot_id} HINT#{dot_id} };\n"
-    d
   end
 
   def dot_region(may_omit = false)
@@ -179,8 +178,6 @@ class Question < ActiveRecord::Base
     end
 
     d << dot_hints
-
-    d
   end
 
   private
@@ -201,8 +198,6 @@ class Question < ActiveRecord::Base
     d << dot_link_to(parent, parent.categories) if parent.respond_to?(:categories)
 
     d << dot_region_parent_of_parent
-
-    d
   end
 
   # renders dot that shows how our parent fits into the whole tree, i.e.
@@ -214,7 +209,6 @@ class Question < ActiveRecord::Base
     d = dot_link_from(parent.question, parent)
     other_subquests = parent.question.subquestions.where(["id <> ?", self.id])
     d << dot_link_to(parent.question, other_subquests)
-    d
   end
 
   # renders dot code for the siblings of this question. If may omit is
@@ -238,7 +232,6 @@ class Question < ActiveRecord::Base
     # question. Thus, only left-1 questions would be left.
     d << %(#{dot_id}_hidden_siblings [label="+#{remaining} weitere Fragen", shape=none];)
     d << %(#{parent.dot_id} -> #{dot_id}_hidden_siblings;\n)
-    d
   end
 
 
