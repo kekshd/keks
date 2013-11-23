@@ -50,7 +50,7 @@ describe Review do
     end
 
     it "finds good questions which need more reviews" do
-      okay = Review.where(okay: true).count
+      okay = Review.where(okay: true).reject { |r| r.question.released? }.size
       expect(get_questions(:good_but_needs_more_reviews).size).to eql(okay)
     end
 
