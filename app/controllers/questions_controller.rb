@@ -4,6 +4,7 @@ class QuestionsController < ApplicationController
   before_filter :require_admin, except: [:star, :unstar, :perma]
   before_filter :signed_in_user, only: [:star, :unstar]
   before_filter :find_question, only: [:copy, :copy_to, :star, :unstar, :edit, :show, :perma, :toggle_release, :update, :destroy]
+  before_filter :expires_now, only: [:star, :unstar]
 
 
   def copy
@@ -41,21 +42,17 @@ class QuestionsController < ApplicationController
   end
 
   def star
-    expires_now
-
     return render(json: "keine Frage") if !@question
     begin
       current_user.starred << @question
-    rescue; end unless current_user.starred.include?(@question)
-    render :json => current_user.starred.include?(@question)
+    rescue; end unless current_user.has_starred?(@question)
+    render :json => current_user.has_starred?(@question)
   end
 
   def unstar
-    expires_now
-
     return render(json: false) if !@question
     current_user.starred.delete(@question)
-    render :json => current_user.starred.include?(@question)
+    render :json => current_user.has_starred?(@question)
   end
 
   def index
