@@ -45,7 +45,7 @@ class Question < ActiveRecord::Base
     text :hints, stored: true do hints.map { |h| h.text } end
 
     text :parent, stored: true do
-      break "" unless parent
+      next "" unless parent
       p = parent
       r = p.text
       r << " " + p.title if p.respond_to?(:title)
