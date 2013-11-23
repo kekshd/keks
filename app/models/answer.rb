@@ -10,6 +10,7 @@ class Answer < ActiveRecord::Base
 
   # i.e. this answer has many questions and acts as parent to them
   has_many :questions, :as => :parent
+  attr_readonly :questions_count
 
   has_many :stats
 

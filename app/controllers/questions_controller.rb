@@ -59,8 +59,7 @@ class QuestionsController < ApplicationController
   end
 
   def index
-    @categories = Category.order(:title).all
-    @categories.reject! { |c| c.questions.count == 0 }
+    @categories = Category.with_questions.order(:title).all
   end
 
   def list_cat

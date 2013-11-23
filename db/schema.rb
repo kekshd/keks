@@ -11,14 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131103092928) do
+ActiveRecord::Schema.define(:version => 20131123142804) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
     t.boolean  "correct"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "question_id"
+    t.integer  "questions_count", :default => 0, :null => false
   end
 
   add_index "answers", ["question_id"], :name => "index_answers_on_question_id"
@@ -30,12 +31,13 @@ ActiveRecord::Schema.define(:version => 20131103092928) do
 
   create_table "categories", :force => true do |t|
     t.text     "text"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.string   "title"
     t.string   "ident"
     t.boolean  "is_root"
     t.boolean  "released"
+    t.integer  "questions_count", :default => 0, :null => false
   end
 
   create_table "hints", :force => true do |t|

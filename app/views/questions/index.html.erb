@@ -17,14 +17,14 @@
 <% @categories.group_by { |c| c.title.split(":").first }.each do |group_title, cats| %>
 <div>
   <% if cats.size == 1 %>
-    <h2><%= cats.first.title %></h2>
+    <h2><%= cats.first.title %> <small>(<%=cats.first.questions_count%> Fragen)</small></h2>
       <div class="toggle search-content-urls" style="display: none">
         <div data-content-url="<%=list_cat_questions_path(category_id: cats.first.id)%>">…lädt…</div>
     </div>
   <% else %>
     <h2><%=group_title%></h2>
     <% cats.each do |c| %>
-      <h3><%= c.title.split(":").last %></h3>
+      <h3><%= c.title.split(":").last %> <small>(<%=c.questions_count%> Fragen)</small></h3>
       <div class="toggle search-content-urls" style="display: none">
         <div data-content-url="<%=list_cat_questions_path(category_id: c.id)%>">…lädt…</div>
       </div>

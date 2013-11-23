@@ -8,8 +8,11 @@ class Category < ActiveRecord::Base
 
   # i.e. this category has many questions and acts as parent to them
   has_many :questions, :as => :parent
+  attr_readonly :questions_count
 
   has_and_belongs_to_many :answers
+
+  scope :with_questions, where("questions_count > 0")
 
   before_save do
     Rails.cache.write(:categories_last_update, Time.now)

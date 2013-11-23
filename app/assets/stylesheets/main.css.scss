@@ -164,6 +164,12 @@ h2 {
   margin: 10px 0;
 }
 
+h2, h3, h4, h5 {
+  small {
+    color: #888;
+  }
+}
+
 .chooser {
   margin: 0;
   padding: 0;

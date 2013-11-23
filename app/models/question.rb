@@ -26,7 +26,7 @@ class Question < ActiveRecord::Base
   has_many :stats, dependent: :delete_all, inverse_of: :question
 
   # i.e. this question has one parent, either Answer or Category
-  belongs_to :parent, :polymorphic => true
+  belongs_to :parent, polymorphic: true, counter_cache: true
 
   # returns all questions that have a parent category. If a categroy or
   # its id is given, only questions with that exact category are
