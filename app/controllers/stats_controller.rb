@@ -42,13 +42,9 @@ class StatsController < ApplicationController
     @key = params[:enrollment_key]
     return redirect_to admin_overview_path unless EnrollmentKeys.names.include?(@key)
 
-    @users = User.find(:all, :conditions => ["enrollment_keys LIKE ?", "%#{@key}%"])
-    @last_stats = Stat.where(user_id: @users.map(&:id)).newer_than(91.days.ago)
-
-    qstats = {}
-    time = Time.now
-
-    @questions = @users.map { |u| u.seen_questions }.flatten.uniq
+    @users = User.enrolled_in(@key)
+    @last_stats = Stat.where(user_id: @users.pluck(:id)).newer_than(91.days.ago)
+    @questions = @users.map(&:seen_questions).flatten.uniq
   end
 
   def category_report

@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
   attr_protected :admin
   attr_protected :enrollment_keys
 
+  scope :enrolled_in, lambda { |course| where(["enrollment_keys LIKE ?", "%#{course}%"]) }
 
   # http://stackoverflow.com/questions/7919584/rails-3-1-create-one-user-in-console-with-secure-password
 
