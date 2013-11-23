@@ -103,7 +103,7 @@ class StatsController < ApplicationController
   end
 
   def extract_questions_from_params
-    @questions = params[:questions].split("_").map(&:to_i).compact.uniq.sort rescue []
+    @questions = params[:questions].split("_").map(&:to_i).uniq.sort rescue []
     @questions = nil if @questions.empty? || @questions.all? { |id| id == 0 }
   end
 end
