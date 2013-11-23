@@ -43,7 +43,7 @@ class StatsController < ApplicationController
     return redirect_to admin_overview_path unless EnrollmentKeys.names.include?(@key)
 
     @users = User.find(:all, :conditions => ["enrollment_keys LIKE ?", "%#{@key}%"])
-    @last_stats = Stat.where(:user_id => @users.map(&:id).newer_than(91.days.ago)
+    @last_stats = Stat.where(user_id: @users.map(&:id)).newer_than(91.days.ago)
 
     qstats = {}
     time = Time.now
