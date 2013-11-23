@@ -28,6 +28,15 @@ class Question < ActiveRecord::Base
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, :polymorphic => true
 
+  # returns all questions that have a parent category. If a categroy or
+  # its id is given, only questions with that exact category are
+  # returned.
+  scope :with_parent_cat, (lambda do |cat = nil|
+    cond = { parent_type: "Category" }
+    cond[:parent_id] = cat.is_a?(Category) ? cat.id : cat if cat
+    { conditions: cond }
+  end)
+
   searchable do
     boolean :complete do complete? end
     boolean :matrix_validate do matrix_validate? end

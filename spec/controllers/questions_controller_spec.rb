@@ -31,15 +31,22 @@ describe QuestionsController do
       expect(response.status).to eq(200)
       expect(response.body).to include(question_full.parent.title)
     end
+  end
+
+  describe "#list_cat" do
+    before do
+      sign_in admin
+      question_full
+    end
 
     it "renders partial when given a category id" do
-      get :index, category_id: question_full.parent.id
+      get :list_cat, category_id: question_full.parent.id
       # i.e. do not use full template
       expect(response.body).not_to include("Kompetenzerweiterndes Kurzfragensystem")
     end
 
     it "includes question details in partial" do
-      get :index, category_id: question_full.parent.id
+      get :list_cat, category_id: question_full.parent.id
       expect(response.body).to include(question_full.ident)
     end
   end

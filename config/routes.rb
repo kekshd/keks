@@ -52,6 +52,7 @@ Keks::Application.routes.draw do
       match "review", to: "reviews#save", as: "review_save", via: :post # new reviews
       match "copy", to: "questions#copy", as: "copy", via: :get
       match "copy_to", to: "questions#copy_to", as: "copy_to", via: :post
+      get "list_cat/:category_id", to: "questions#list_cat", on: :collection, as: "list_cat"
 
       get :search, on: :collection
     end

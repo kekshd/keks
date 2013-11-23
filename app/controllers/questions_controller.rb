@@ -1,9 +1,10 @@
 # encoding: utf-8
 
 class QuestionsController < ApplicationController
-  before_filter :require_admin, :except => [:star, :unstar, :perma]
-  before_filter :signed_in_user, :only => [:star, :unstar]
-  before_filter :find_question, except: [:create, :overwrite_reviews, :show, :new, :index, :single_parent_select, :search]
+  before_filter :require_admin, except: [:star, :unstar, :perma]
+  before_filter :signed_in_user, only: [:star, :unstar]
+  before_filter :find_question, only: [:copy, :copy_to, :star, :unstar, :edit, :show, :perma, :toggle_release, :update, :destroy]
+
 
   def copy
     render partial: 'copy'
@@ -58,19 +59,22 @@ class QuestionsController < ApplicationController
   end
 
   def index
-    ActiveRecord::lax_includes do
-      if params[:category_id] && params[:category_id].to_i >= 0
-        @questions = Question.where(parent_type: Category, parent_id: params[:category_id]).includes(parent: :question).all
-        return render partial: "index_table"
-      elsif params[:category_id] == "-1"
-        @questions = Question.where("parent_type = ? OR parent_id = ?", "Answer", nil).includes(parent: :question).all
-        return render partial: "index_table"
-      else
-        @categories = Category.order(:title).all
-        @categories.reject! { |c| c.questions.count == 0 }
-        return render :index
-      end
+    @categories = Category.order(:title).all
+    @categories.reject! { |c| c.questions.count == 0 }
+  end
+
+  def list_cat
+    @questions = if params[:category_id] == "-1"
+      Question.where("parent_type = ? OR parent_id = ?", "Answer", nil)
+    else
+      Question.with_parent_cat(params[:category_id])
     end
+
+    ActiveRecord::lax_includes do
+      @questions = @questions.includes(parent: :question).all
+    end
+
+    render partial: "index_table"
   end
 
   def search
