@@ -43,23 +43,10 @@ class StatsController < ApplicationController
     return redirect_to admin_overview_path unless EnrollmentKeys.names.include?(@key)
 
     @users = User.find(:all, :conditions => ["enrollment_keys LIKE ?", "%#{@key}%"])
-    @last_stats = Stat.unscoped.where(:user_id => @users.map { |u| u.id }).where("created_at > ?", 91.days.ago)
+    @last_stats = Stat.where(:user_id => @users.map(&:id).newer_than(91.days.ago)
 
     qstats = {}
     time = Time.now
-
-    #~　@last_stats.each do |stat|
-      #~　next unless stat.question
-      #~　qid = stat.question_id
-      #~　qstats[qid] ||= { right: [0]*13, wrong: [0]*13, skipped: [0]*13}
-      #~　insert_stat_in_hash(stat, qstats[qid], time)
-    #~　end
-
-    #~　@h = render_graph
-    #~　qstats.each do |qid, data|
-      #~　percent_correct, percent_skipped = raw_to_percentage(data)
-      #~　@h.series(:name=> Question.find(qid).ident, :data => percent_correct)
-    #~　end
 
     @questions = @users.map { |u| u.seen_questions }.flatten.uniq
   end
@@ -69,20 +56,17 @@ class StatsController < ApplicationController
 
     groups = {}
 
-    Category.all.each do |c|
-      next unless c.is_root?
+    Category.is_root.with_questions.each do |c|
       root = c.title.split(":")[0]
       groups[root] ||= []
-      groups[root] += c.questions.map { |q| q.id }
+      groups[root] += c.questions.map(&:id)
     end
 
     @keys = {}
     groups.each do |key, questions|
-      next if questions.empty?
-
-      all = Stat.unscoped.where(:question_id => questions).where("created_at > ?", @range.days.ago).count
-      unregistered = Stat.unscoped.where(:user_id => -1, :question_id => questions).where("created_at > ?", @range.days.ago).count
-
+      all, unregistered = *[Stat, Stat.anonymous].map do |s|
+        s.where(question_id: questions).newer_than(@range.days.ago).count
+      end
 
       @keys[key] = {all: all, registered: all - unregistered, unregistered: unregistered, questions: questions}
     end
@@ -96,7 +80,7 @@ class StatsController < ApplicationController
     cache = Rails.cache.fetch(key)
     return (@g_quests, @g_users = *cache) if cache
 
-    stats = Stat.unscoped.where("created_at > ?", @range.days.ago)
+    stats = Stat.newer_than(@range.days.ago)
     stats = stats.where(question_id: @questions) if @questions
 
     quests = stats.group("date(created_at)").count

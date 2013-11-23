@@ -2,7 +2,7 @@
 
 <div>Diese Seite ist für das Review von Fragen gedacht. Fragen die noch nicht fertig sind oder noch nicht freigegeben wurden sind mit einem „UNFERTIG“ versehen. Die Seite ist für Admins und Reviewer (wenn sie den Link kennen) einsehbar.</div>
 
-<% Category.with_questions.where(is_root: true).includes(:questions).all.each do |c| %>
+<% Category.with_questions.is_root.includes(:questions).all.each do |c| %>
   <div>
     <h2><%= c.title %> <small>(<%=c.questions_count%> Fragen)</small></h2>
     <div class="toggle search-content-urls" style="display: none">

@@ -1,6 +1,9 @@
 class Stat < ActiveRecord::Base
   default_scope where("stats.created_at > ?", 30.days.ago)
 
+  scope :newer_than, lambda { |date| unscoped.where("created_at > ?", date) }
+  scope :anonymous, where(user_id: -1)
+
   attr_accessible :selected_answers, :question_id, :user_id, :correct, :skipped, :time_taken
 
   class StringSplitter

@@ -13,13 +13,11 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :answers
 
   scope :with_questions, where("questions_count > 0")
+  scope :is_root, where(is_root: true)
+  scope :root_categories, where(is_root: true, released: true)
 
   before_save do
     Rails.cache.write(:categories_last_update, Time.now)
-  end
-
-  def Category.root_categories
-    Category.where(is_root: true, released: true)
   end
 
   def get_root_categories

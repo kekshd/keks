@@ -23,7 +23,7 @@
     <%= f.label :answers, "Eltern-Elem." %>
 
     <%
-      root_cats =  Category.where(is_root: true)
+      root_cats =  Category.is_root
       # extends the answer table to include the question ident and parent
       # category ID, if available.
       answers = Answer.find_by_sql("SELECT a.id aid, q.ident qident, c.id cid FROM answers a LEFT JOIN questions q ON a.question_id = q.id LEFT JOIN categories c ON q.parent_type = 'Category' AND q.parent_id = c.id")
