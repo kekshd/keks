@@ -4,7 +4,14 @@ class CategoriesController < ApplicationController
   before_filter :require_admin
 
   def index
-    @categories = Category.includes(:questions => [:answers, :reviews]).all
+    @categories = Category.with_questions.select([:id, :title])
+    @empty = Category.without_questions
+  end
+
+  def index_details
+    ids = (params[:category_ids] || "").split(",")
+    cats = Category.where(id: ids).includes(:answers, :questions => [:parent, :answers]).all
+    render partial: "index_details", locals: { cats: cats }
   end
 
   def new

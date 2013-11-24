@@ -59,7 +59,9 @@ Keks::Application.routes.draw do
 
     match "single_parent_select", to: "questions#single_parent_select", as: "single_parent_select", via: :get
 
-    resources :categories
+    resources :categories do
+      get "index_details/:category_ids", to: "categories#index_details", on: :collection, as: "index_details"
+    end
     match "categories/:id/release", to: "categories#release", :as => "release_category", via: :get
     match "suspicious_assocations", to: "categories#suspicious_associations", :as => "suspicious_associations", via: :get
     match "category_report", to: "stats#category_report", :as => "stat_category_report", via: :get

@@ -1,0 +1,40 @@
+<% cats.each do |c| %>
+  <div class="alternating <%=cycle("odd", "even")%>">
+    <h3>
+      <%=link_to "#{c.title} (#{c.ident})", c %>
+      <small>
+        <%=c.released? ? "freigegeben" : "gesperrt" %>
+        <%=trace_to_root_formatter c.trace_to_root(true)%>
+      </small>
+    </h3>
+
+    <div class="button-group">
+      <%= link_to "Details anzeigen", category_path(c), class: "button" %>
+      <%= link_to "Bearbeiten", edit_category_path(c), class: "button" %>
+      <%= link_to "Neue Frage in #{c.ident}", new_question_path(parent: "Category_#{c.id}"), class: "button" %>
+    </div>
+    <br/><br/>
+
+    <div class="columnize">
+      <% if c.answers.any? %>
+        <b>Antworten, die auf diese Kategorie zeigen:</b><br/>
+        <% c.answers.each do |a| %>
+          <%=link_to a.ident, [a.question, a] %>
+        <% end %>
+        <br/><br/>
+      <% end %>
+
+      <% c.questions.group_by(&:complete?).each do |complete, qs| %>
+        <b><%=complete ? "Freigeschaltete Fragen" : "Unfertige Fragen"%>:</b><br/>
+        <% qs.each do |q| %>
+          <%
+            cls = complete ? "" : %|class="strike"|
+            url = "#{ENV['RAILS_RELATIVE_URL_ROOT']}/admins/questions/#{q.id}"
+          %>
+          <%# not using helpers because they are slow and there are a lot of links %>
+          <a href="<%=url%>" title="<%=q.ident%>" <%=cls%>><%=q.ident%></a>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

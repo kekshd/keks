@@ -493,3 +493,28 @@ hr {
   display: inline-block;
   vertical-align: top;
 }
+
+.columnize {
+  -moz-columns: auto 18em;
+  -webkit-columns: auto 18em;
+  columns: auto 18em;
+
+  a {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 18em;
+    display: inline-block;
+  }
+
+  b {
+    display: inline-block;
+    width: 18em;
+  }
+}
+
+.alternating.even {
+  background: #efefef;
+  margin: 20px -20px;
+  padding: 20px;
+}

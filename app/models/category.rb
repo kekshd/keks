@@ -13,6 +13,7 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :answers
 
   scope :with_questions, where("questions_count > 0")
+  scope :without_questions, where(questions_count: 0)
   scope :is_root, where(is_root: true)
   scope :root_categories, where(is_root: true, released: true)
 
