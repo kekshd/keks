@@ -28,7 +28,7 @@
         <b><%=complete ? "Freigeschaltete Fragen" : "Unfertige Fragen"%>:</b><br/>
         <% qs.each do |q| %>
           <%
-            cls = complete ? "" : %|class="strike"|
+            cls = complete ? "" : %|class="strike"|.html_safe
             url = "#{ENV['RAILS_RELATIVE_URL_ROOT']}/admins/questions/#{q.id}"
           %>
           <%# not using helpers because they are slow and there are a lot of links %>
