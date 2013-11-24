@@ -236,10 +236,7 @@ class Question < ActiveRecord::Base
 
 
   def is_complete_helper
-    key = ["question_complete_helper"]
-    key << last_admin_or_reviewer_change
-    key << id
-    key = key.join("__")
+    key = "question_complete_helper__#{last_admin_or_reviewer_change}__#{id}"
 
     Rails.cache.fetch(key) {
       is_complete_helper_real
