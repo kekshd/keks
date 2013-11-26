@@ -6,7 +6,7 @@ class Answer < ActiveRecord::Base
   validates :text, :uniqueness => { :scope => :question_id,
     :message => "Es gibt bereits eine Antwort mit genau dem gleichen Text zu dieser Frage." }
 
-  belongs_to :question, inverse_of: :answers, touch: :content_changed_at
+  belongs_to :question, inverse_of: :answers, touch: :content_changed_at, counter_cache: true
 
   # i.e. this answer has many questions and acts as parent to them
   has_many :questions, :as => :parent

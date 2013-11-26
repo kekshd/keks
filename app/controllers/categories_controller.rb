@@ -10,7 +10,7 @@ class CategoriesController < ApplicationController
 
   def index_details
     ids = (params[:category_ids] || "").split(",")
-    cats = Category.where(id: ids).includes(:answers, :questions => [:parent, :answers]).all
+    cats = Category.where(id: ids).includes(:answers, :questions => [:parent]).all
     render partial: "index_details", locals: { cats: cats }
   end
 
