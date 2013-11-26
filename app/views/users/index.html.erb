@@ -2,8 +2,9 @@
 
 <%= render "admin/action_menu" %>
 
+<% cache("user_index_#{User.last_update}") do %>
 <div>
-  <h2>Herrscher</h2>
+  <h2>Admins und Reviewer</h2>
   <table class="tablesorter" id="power-index">
     <thead><tr><th>Name</th><th>Macht</th><th># Reviews</th><th>Aktion</th></tr></thead>
     <tbody><% @admins.each do |u| %>
@@ -11,7 +12,7 @@
         <td><%=u.nick%></td>
         <td><%=u.admin? ? "Admin" :""%> <%=u.reviewer? ? "Reviewer" :""%></td>
         <td>
-          <%=u.reviews.count%>
+          <%=@reviews_count[u.id] || 0%>
           (<%=link_to "anzeigen", user_reviews_path(u)%>)
         </td>
         <td>
@@ -24,20 +25,22 @@
 </div>
 
 <div>
-  <h2>Günstlinge</h2>
+  <h2>Normale Nutzer</h2>
 
   <table class="tablesorter" id="user-index">
-    <thead><tr><th>Name</th><!--<th># Fragen</th><th>Studiengang</th>--><th>Aktion</th></tr></thead>
+    <thead><tr><th>Name</th><th>Studiengang</th><th>Aktion</th></tr></thead>
+    <% url_prefix = "#{ENV['RAILS_RELATIVE_URL_ROOT']}/admin/toggle" %>
     <tbody><% @users.each do |u| %>
       <tr>
         <td><%=u.nick%></td>
-        <!--<td><%=@stat_counts[u.id] || 0%></td>
-        <td><%=StudyPath[u.study_path]%></td>-->
+        <td><%=StudyPath[u.study_path]%></td>
         <td>
-          <%=link_to "zum Reviewer machen", user_toggle_reviewer_path(u.id), method: :put %>
-          <%=link_to "zum Admin machen", user_toggle_admin_path(u.id), method: :put %>
+          <%# not using helpers because they are about three times slower %>
+          <a rel="nofollow" data-method="put" href="<%="#{url_prefix}_reviewer/#{u.id}"%>">zum Reviewer machen</a>
+          <a rel="nofollow" data-method="put" href="<%="#{url_prefix}_admin/#{u.id}"%>">zum Admin machen</a>
         </td>
       </tr>
     <% end %></tbody>
   </table>
 </div>
+<% end %>

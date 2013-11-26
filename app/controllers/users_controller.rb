@@ -14,10 +14,11 @@ class UsersController < ApplicationController
 
 
   def index
-    @users = User.where(admin: false, reviewer: false)
-    @stat_counts = Stat.group(:user_id).count
+    fresh_when(last_modified: User.last_update)
 
+    @users = User.where(admin: false, reviewer: false)
     @admins = User.where('admin=? OR reviewer=?', true, true)
+    @reviews_count = Review.group(:user_id).count
   end
 
   def reviews

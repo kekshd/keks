@@ -37,8 +37,17 @@ class User < ActiveRecord::Base
 
   before_save { mail.downcase! }
   before_save :create_remember_token
+  before_save do
+    Rails.cache.write(:users_last_update, Time.now)
+  end
+
 
   attr_accessor :updating_password
+
+  def self.last_update
+    Rails.cache.fetch(:users_last_update) { User.maximum(:updated_at) }
+  end
+
 
   # returns true if the given question or question id has been starred
   # by the user. It avoids joining the question table for speedups, so
