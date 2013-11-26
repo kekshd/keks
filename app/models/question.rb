@@ -254,7 +254,10 @@ class Question < ActiveRecord::Base
   def is_complete_helper_real
     return false, "nicht freigegeben" if !released?
     return false, "keine Antworten" if answers.size == 0
-    return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && answers.where(correct: false).any?
+    # note: matrix_validate? is false if there is more than one answers.
+    # Thus it’s enough to ensure that the first answer is correct rather
+    # than all of them. This avoids an additional database query.
+    return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && !answers.first.correct?
     return false, "Reviewer sagt „nicht okay“" if has_bad_reviews?
     return false, "Elter nicht freigegeben" unless parent_released?
     return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat." unless study_path_reachable?
