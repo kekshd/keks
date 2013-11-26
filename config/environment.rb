@@ -9,7 +9,7 @@ def last_admin_or_reviewer_change
     :reviews_last_update,
     :hints_last_update
   )
-  t.values.max
+  t.values.compact.max
 end
 
 
