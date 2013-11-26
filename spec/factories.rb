@@ -76,6 +76,7 @@ FactoryGirl.define do
       after(:create) do |question|
         FactoryGirl.create_list(:answer_wrong, 2, question: question)
         FactoryGirl.create_list(:answer_correct, 1, question: question)
+        question.reload
       end
     end
 
@@ -99,6 +100,7 @@ FactoryGirl.define do
     factory :question_matrix do
       after(:create) do |question|
         FactoryGirl.create_list(:answer_matrix, 1, question: question)
+        question.reload
       end
     end
 
