@@ -149,4 +149,15 @@ describe Question do
       expect(question.get_parent_category).to eql(question.parent)
     end
   end
+
+  describe "#has_bad_reviews?" do
+    it "matches traditional request" do
+      expect(question.has_bad_reviews?).to eql(question.reviews.where(okay: false).any?)
+    end
+
+    it "matches traditional request after adding a review" do
+      FactoryGirl.create(:review, question: question)
+      expect(question.has_bad_reviews?).to eql(question.reviews.where(okay: false).any?)
+    end
+  end
 end

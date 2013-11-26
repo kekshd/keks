@@ -180,6 +180,14 @@ class Question < ActiveRecord::Base
     d << dot_hints
   end
 
+  def has_bad_reviews?
+    key = "quests_with_bad_reviews__#{Review.last_update}"
+    q_with_bad_reviews = Rails.cache.fetch(key) do
+      Review.where(okay: false).pluck(:question_id)
+    end
+    q_with_bad_reviews.include?(id)
+  end
+
   private
 
   def dot_region_parent(may_omit)
@@ -247,7 +255,7 @@ class Question < ActiveRecord::Base
     return false, "nicht freigegeben" if !released?
     return false, "keine Antworten" if answers.size == 0
     return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && answers.where(correct: false).any?
-    return false, "Reviewer sagt „nicht okay“" if reviews.where(okay: false).any?
+    return false, "Reviewer sagt „nicht okay“" if has_bad_reviews?
     return false, "Elter nicht freigegeben" unless parent_released?
     return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat." unless study_path_reachable?
     return true, ""

@@ -16,6 +16,10 @@ class Review < ActiveRecord::Base
     Rails.cache.write(:reviews_last_update, Time.now)
   end
 
+  def self.last_update
+    Rails.cache.fetch(:reviews_last_update) { Review.maximum(:updated_at) }
+  end
+
   def self.serialized_attr_accessor(*args)
     args.each do |method_name|
       eval "
