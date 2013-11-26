@@ -24,4 +24,8 @@ class ApplicationController < ActionController::Base
       "font-src     'self' #{fontFileURL}"
     ].join("; ")
   end
+
+  def def_etag
+    fresh_when(etag: etag)
+  end
 end

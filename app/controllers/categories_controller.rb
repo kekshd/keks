@@ -2,6 +2,7 @@
 
 class CategoriesController < ApplicationController
   before_filter :require_admin
+  before_filter :def_etag, only: [:index, :index_details, :new, :show, :edit, :suspicious_associations]
 
   def index
     @categories = Category.with_questions.select([:id, :title])

@@ -14,7 +14,7 @@ class UsersController < ApplicationController
 
 
   def index
-    fresh_when(last_modified: User.last_update)
+    return unless stale?(last_modified: User.last_update)
 
     @users = User.where(admin: false, reviewer: false)
     @admins = User.where('admin=? OR reviewer=?', true, true)

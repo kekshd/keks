@@ -1,21 +1,21 @@
 # encoding: utf-8
 
 class MainController < ApplicationController
+  before_filter :def_etag, only: [:hitme, :help, :overview]
+
   def overview
     return redirect_to main_hitme_url + '#hide-options' if signed_in?
   end
 
   def hitme
-    fresh_when(etag: etag)
   end
 
   def help
-    fresh_when(etag: etag)
   end
 
   def feedback
     @text = params[:text]
-    fresh_when(etag: etag)
+    fresh_when(etag: etag(@text))
   end
 
   def feedback_send

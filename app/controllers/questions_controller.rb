@@ -6,9 +6,10 @@ class QuestionsController < ApplicationController
   before_filter :find_question, only: [:copy, :copy_to, :star, :unstar, :edit, :show, :perma, :toggle_release, :update, :destroy]
   before_filter :expires_now, only: [:star, :unstar]
 
+  before_filter :def_etag, only: [:index, :list_cat, :perma, :edit, :show]
 
   def copy
-    render partial: 'copy'
+    render partial: 'copy' if stale?(etag: etag)
   end
 
   def copy_to
@@ -75,6 +76,9 @@ class QuestionsController < ApplicationController
 
   def search
     @page = page = [params[:page].to_i, 1].max
+
+    return unless stale?(etag: etag("#{@page}__#{params[:query]}"))
+
     @search = Question.search do
       fulltext(params[:query]) do
         highlight :ident, :text, :answers, :reviews, :hints, :parent
