@@ -43,6 +43,8 @@ module SessionsHelper
   end
 
   def sign_out
+    # regenerates remember token, logging out of all sessions
+    current_user.save!
     current_user = nil
     cookies.delete(:remember_token)
   end
