@@ -9,6 +9,16 @@ describe "Authentication" do
 
   subject { page }
 
+  describe "sign out" do
+    before { sign_in user, true }
+
+    it "generates new remember me token" do
+      expect {
+        delete signout_path
+      }.to change { user.reload; user.remember_token }
+    end
+  end
+
   describe "signin page" do
     before { visit signin_path }
 
