@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'yaml'
 YAML::ENGINE.yamler = 'psych'
 
 # Set up gems listed in the Gemfile.
