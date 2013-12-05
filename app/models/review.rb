@@ -96,9 +96,11 @@ class Review < ActiveRecord::Base
       link_title: "Fragen ohne Reviews",
       text: "Folgende Fragen haben genau null Reviews.",
       questions: lambda { |current_user|
-        questions = Question.includes(:reviews, :parent).all
-        questions.reject! { |q| q.reviews.any? }
-        return questions
+        ActiveRecord::lax_includes do
+          with_review = Review.group(:question_id).pluck(:question_id)
+          questions = Question.where(["id NOT IN (?)", with_review]).includes(parent: :question).all
+          return questions
+        end
       }
     },
 
