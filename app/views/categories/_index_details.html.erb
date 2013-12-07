@@ -29,7 +29,7 @@
         <% qs.each do |q| %>
           <%
             cls = complete ? "" : %|class="strike"|.html_safe
-            url = "#{ENV['RAILS_RELATIVE_URL_ROOT']}/admins/questions/#{q.id}"
+            url = "#{ENV['RAILS_RELATIVE_URL_ROOT']}/admin/questions/#{q.id}"
           %>
           <%# not using helpers because they are slow and there are a lot of links %>
           <a href="<%=url%>" title="<%=q.ident%>" <%=cls%>><%=q.ident%></a>
