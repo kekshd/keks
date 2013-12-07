@@ -64,8 +64,8 @@ class Question < ActiveRecord::Base
 
   before_save do
     Rails.cache.write(:questions_last_update, Time.now)
-    up = parent_type_changed? || parent_id_changed? || text_changed?
-    up ||= study_path_changed? || difficulty_changed?
+    important_fields = [:parent_type, :parent_id, :text, :study_path, :difficulty]
+    up = important_fields.any? { |f| send(f) }
     self.content_changed_at = Time.now if up || new_record?
   end
 
