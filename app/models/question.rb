@@ -89,13 +89,6 @@ class Question < ActiveRecord::Base
     answers.map { |a| a.categories }.flatten.uniq
   end
 
-  def correct_ratio_user(user)
-    tmp = stats.where(:user_id => user.id, :skipped => false).group(:correct).count
-    correct = tmp[true] || 0
-    all = (tmp[false] || 0) + correct
-    all > 0 ? correct/all.to_f : 0
-  end
-
   include StatTools
 
   def get_parent_category
