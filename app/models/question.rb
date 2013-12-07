@@ -46,20 +46,12 @@ class Question < ActiveRecord::Base
   end
 
   searchable do
-    boolean :complete do complete? end
-    boolean :matrix_validate do matrix_validate? end
-
-    double :avg_time_taken
-    double :correct_ratio
-    double :skip_ratio
-
     text :text,  stored: true
     text :ident, stored: true
-    text :study_path do StudyPath[study_path] end
 
-    text :answers, stored: true do answers.map { |a| a.text } end
-    text :reviews, stored: true do reviews.map { |r| r.comment } end
-    text :hints, stored: true do hints.map { |h| h.text } end
+    text :answers, stored: true do answers.map(&:text) end
+    text :reviews, stored: true do reviews.map(&:comment) end
+    text :hints,   stored: true do hints.map(&:text) end
 
     text :parent, stored: true do
       next "" unless parent
