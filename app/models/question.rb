@@ -37,6 +37,14 @@ class Question < ActiveRecord::Base
     { conditions: cond }
   end)
 
+  scope :siblings, (lambda do |quest|
+    where(parent_type: quest.parent_type, parent_id: quest.parent_id).where(["id <> ?", quest.id])
+  end)
+
+  def siblings
+    Question.siblings(self)
+  end
+
   searchable do
     boolean :complete do complete? end
     boolean :matrix_validate do matrix_validate? end
@@ -211,12 +219,13 @@ class Question < ActiveRecord::Base
   # renders dot that shows how our parent fits into the whole tree, i.e.
   # it renders our parent’s parents.
   def dot_region_parent_of_parent
-    return dot_link_from(parent.answers, parent) if parent.is_a?(Category)
-    return "" unless parent.is_a?(Answer)
-
-    d = dot_link_from(parent.question, parent)
-    other_subquests = parent.question.subquestions.where(["id <> ?", self.id])
-    d << dot_link_to(parent.question, other_subquests)
+    case parent
+    when Category
+      dot_link_from(parent.answers, parent)
+    when Answer
+      d = dot_link_from(parent.question, parent)
+      d << dot_link_to(parent.question, siblings)
+    end
   end
 
   # renders dot code for the siblings of this question. If may omit is
@@ -226,10 +235,7 @@ class Question < ActiveRecord::Base
     return "" unless parent.respond_to?(:questions)
 
     limit = may_omit ? 6 : -1
-    qs = parent.questions
-      .where(["id <> ?", self.id])
-      .includes(:answers, :parent)
-      .limit(limit).to_a
+    qs = siblings.includes(:answers, :parent).limit(limit).to_a
 
     d = dot_link_to(parent, qs)
     remaining = parent.questions.size - limit - 1
