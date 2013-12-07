@@ -17,12 +17,15 @@ class Category < ActiveRecord::Base
   scope :is_root, where(is_root: true)
   scope :root_categories, where(is_root: true, released: true)
 
+  include DotTools
+  include TraversalTools
+
   before_save do
     Rails.cache.write(:categories_last_update, Time.now)
   end
 
   def get_root_categories
-    return [self] if self.is_root?
+    return [self] if is_root?
     parent_cats = answers.includes(:question).map { |a| a.get_parent_category }.uniq
     parent_cats.map { |c| c.get_root_categories }.flatten.uniq
   end
@@ -48,8 +51,6 @@ class Category < ActiveRecord::Base
     s << "\0close\0"
     s
   end
-
-  include DotTools
 
   def dot(active = false)
     id = ident.gsub('"', '')

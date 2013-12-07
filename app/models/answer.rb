@@ -7,6 +7,7 @@ class Answer < ActiveRecord::Base
     :message => "Es gibt bereits eine Antwort mit genau dem gleichen Text zu dieser Frage." }
 
   belongs_to :question, inverse_of: :answers, touch: :content_changed_at, counter_cache: true
+  alias_method :parent, :question
 
   # i.e. this answer has many questions and acts as parent to them
   has_many :questions, :as => :parent
@@ -27,6 +28,8 @@ class Answer < ActiveRecord::Base
     self.question.update_attribute('content_changed_at', Time.now) if up
   end
 
+  include TraversalTools
+
   def check_ratio
     return -1 if question.matrix_validate?
     all = question.stats.pluck(:selected_answers).flatten
@@ -34,19 +37,9 @@ class Answer < ActiveRecord::Base
     return 1-me.size.to_f/all.size.to_f
   end
 
-  def get_parent_category
-    return self.question.get_parent_category
-  end
 
   def get_all_subquestions
     questions + categories.map { |c| c.questions }.flatten
-  end
-
-  def trace_to_root(first = false)
-    s = ""
-    s << " ← A:#{id}" unless first
-    s << question.trace_to_root
-    s
   end
 
   def released?

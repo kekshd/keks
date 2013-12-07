@@ -28,6 +28,10 @@ class Question < ActiveRecord::Base
   # i.e. this question has one parent, either Answer or Category
   belongs_to :parent, polymorphic: true, counter_cache: true
 
+  include DotTools
+  include StatTools
+  include TraversalTools
+
   # returns all questions that have a parent category. If a categroy or
   # its id is given, only questions with that exact category are
   # returned.
@@ -77,23 +81,6 @@ class Question < ActiveRecord::Base
     answers.map(&:categories).flatten.uniq
   end
 
-  include StatTools
-
-  def get_parent_category
-    return nil if parent.nil?
-    parent.is_a?(Category) ? parent : parent.get_parent_category
-  end
-
-  def trace_to_root(first = false)
-    s = ""
-    s << " ← Q:#{ident}" unless first
-    s << (parent ? parent.trace_to_root : "[[no parent]]")
-  end
-
-  def get_root_categories
-    get_parent_category.get_root_categories rescue []
-  end
-
   def complete?
     is_complete_helper[0]
   end
@@ -122,9 +109,6 @@ class Question < ActiveRecord::Base
   def parent_html_ref
     "#{parent_type}_#{parent_id}"
   end
-
-
-  include DotTools
 
   def dot(active = false)
     id = ident.gsub('"', '')
