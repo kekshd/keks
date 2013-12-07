@@ -62,15 +62,11 @@ class Question < ActiveRecord::Base
     end
   end
 
-  before_create do
-    self.content_changed_at = Time.now
-  end
-
   before_save do
     Rails.cache.write(:questions_last_update, Time.now)
     up = parent_type_changed? || parent_id_changed? || text_changed?
     up ||= study_path_changed? || difficulty_changed?
-    self.content_changed_at = Time.now if up
+    self.content_changed_at = Time.now if up || new_record?
   end
 
   def subquestions
