@@ -3,6 +3,7 @@
 class StatsController < ApplicationController
   before_filter :require_admin, except: :new
   before_filter :get_question, only: :new
+  before_filter :extract_range_from_params, only: [:category_report, :activity_report]
 
   def new
     [:question_id, :skipped, :correct, :time_taken].each do |p|
@@ -38,18 +39,16 @@ class StatsController < ApplicationController
   end
 
   include StatsHelper
+
+  before_filter :require_valid_enrollment_key, only: :report
   def report
     @key = params[:enrollment_key]
-    return redirect_to admin_overview_path unless EnrollmentKeys.names.include?(@key)
-
     @users = User.enrolled_in(@key)
     @last_stats = Stat.where(user_id: @users.pluck(:id)).newer_than(91.days.ago)
     @questions = @users.map(&:seen_questions).flatten.uniq
   end
 
   def category_report
-    extract_range_from_params
-
     groups = {}
 
     Category.is_root.with_questions.each do |c|
@@ -69,7 +68,6 @@ class StatsController < ApplicationController
   end
 
   def activity_report
-    extract_range_from_params
     extract_questions_from_params
 
     key = "activity_report__#{@range}__#{(@questions || []).join("_")}"

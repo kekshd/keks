@@ -50,21 +50,21 @@ describe UsersController do
       expect(response).to render_template(:new)
     end
 
-    it "re-renders edit page when enrolling with unknown key" do
+    it "redirects_to edit page when enrolling with unknown key" do
       sign_in user
       ek = EnrollmentKeys.names.first + "derp"
       post :enroll, id: user.id, enrollment_key: ek
       expect(flash[:error]).not_to be_nil
-      expect(response).to render_template(:edit)
+      expect(response).to redirect_to edit_user_path(user)
       user.reload
       expect(user.enrollment_keys).to be_nil
     end
 
-    it "re-renders edit page when enrolling with empty key" do
+    it "redirects to edit page when enrolling with empty key" do
       sign_in user
       post :enroll, id: user.id
       expect(flash[:error]).not_to be_nil
-      expect(response).to render_template(:edit)
+      expect(response).to redirect_to edit_user_path(user)
       user.reload
       expect(user.enrollment_keys).to be_nil
     end

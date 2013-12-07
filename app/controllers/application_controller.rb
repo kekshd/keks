@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   include LatexHelper
   include DotHelper
   include JsonHelper
+  include EnrollmentKeyHelper
 
   before_filter :set_csp
 

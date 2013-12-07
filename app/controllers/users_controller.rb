@@ -68,14 +68,11 @@ class UsersController < ApplicationController
     chart
   end
 
+  before_filter :require_valid_enrollment_key, only: :enroll
   def enroll
-    key = (params[:enrollment_key] || '').gsub(/[^a-z0-9]/i, "")
-    if key.blank?
-      flash[:error] = "Kein Einschreibeschlüssel angegeben."
-    elsif @user.enrollment_keys && @user.enrollment_keys.split.include?(key)
+    key = params[:enrollment_key]
+    if @user.enrollment_keys && @user.enrollment_keys.split.include?(key)
       flash[:warning] = "In diese Veranstaltung bist Du schon eingeschrieben."
-    elsif !EnrollmentKeys.names.include?(key)
-      flash[:error] = "Dieser Einschreibeschlüssel ist unbekannt. Die Groß-/Kleinschreibung zählt."
     else
       @user.enrollment_keys = "#{@user.enrollment_keys} #{key}".strip
       if @user.save
