@@ -60,10 +60,6 @@ class Category < ActiveRecord::Base
     %(#{dot_id} [label="#{txt}" #{bg}, shape=#{is_root? ? 'house' : 'folder'}];\n)
   end
 
-  def dot_id
-    'c' + dot_clean(ident)
-  end
-
   def dot_region
     d = dot(true)
     questions.each do |q|

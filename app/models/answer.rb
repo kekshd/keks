@@ -68,8 +68,4 @@ class Answer < ActiveRecord::Base
     txt = 'A: ' + id.to_s
     %(#{dot_id} [label="#{txt}", shape=hexagon, color=#{correct? ? 'green' : 'red'}];\n)
   end
-
-  def dot_id
-    'a' + id.to_s + question.dot_id
-  end
 end

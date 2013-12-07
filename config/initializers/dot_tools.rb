@@ -38,6 +38,10 @@ module DotTools
     arr.flatten.compact.map { |a| a.dot }.join("  ")
   end
 
+  def dot_id
+    self.class.name + id.to_s
+  end
+
   private
   def need_iter?(obj)
     obj.is_a?(Array) or obj.is_a?(ActiveRecord::Relation)

@@ -27,7 +27,5 @@ class Hint < ActiveRecord::Base
     'H: ' + text.gsub(/["\\]/, '')[0..15]
   end
 
-  def dot_id
-    'h' + text.gsub(/[^a-z0-9_]/i, '')
-  end
+  include DotTools
 end

@@ -137,10 +137,6 @@ class Question < ActiveRecord::Base
     %(#{dot_id} [label="#{txt}"#{bg}, shape=box];\n)
   end
 
-  def dot_id
-    'q' + dot_clean(ident)
-  end
-
   def dot_hints
     return '' if hints.none?
 
