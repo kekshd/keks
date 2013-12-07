@@ -52,9 +52,8 @@ class StatsController < ApplicationController
     groups = {}
 
     Category.is_root.with_questions.each do |c|
-      root = c.title.split(":")[0]
-      groups[root] ||= []
-      groups[root] += c.questions.map(&:id)
+      groups[c.title_split] ||= []
+      groups[c.title_split] += c.questions.map(&:id)
     end
 
     @keys = {}
