@@ -86,7 +86,7 @@ class Question < ActiveRecord::Base
   end
 
   def subcategories
-    answers.map { |a| a.categories }.flatten.uniq
+    answers.map(&:categories).flatten.uniq
   end
 
   include StatTools
@@ -158,7 +158,7 @@ class Question < ActiveRecord::Base
   def dot_hints
     return '' if hints.none?
 
-    hintTexts = hints.map { |h| h.dot_text }.join("\\n")
+    hintTexts = hints.map(&:dot_text).join("\\n")
 
     d = ""
     d << %(HINT#{dot_id} [label="#{hintTexts}", shape=none];)
