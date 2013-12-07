@@ -15,6 +15,8 @@ class CategoriesController < ApplicationController
     render partial: "index_details", locals: { cats: cats }
   end
 
+  include DefaultActionsHelper
+
   def new
     @category = Category.new
     @answer = (Answer.find(params['parent']) rescue nil) if params['parent']
@@ -23,16 +25,6 @@ class CategoriesController < ApplicationController
 
   def show
     @category = Category.find(params[:id])
-  end
-
-  def create
-    @category = Category.new(params[:category])
-    if @category.save
-      flash[:success] = "Kategorie angelegt"
-      redirect_to @category
-    else
-      render 'new'
-    end
   end
 
   def release
@@ -52,35 +44,6 @@ class CategoriesController < ApplicationController
     redirect_to @category
   end
 
-
-  def edit
-    @category = Category.find(params[:id]) rescue nil
-    unless @category
-      flash[:warning] = "Diese Kategorie gibt es nicht. Wurde sie zwischenzeitlich evtl. gelöscht?"
-      return redirect_to categories_path
-    end
-  end
-
-  def update
-    @category = Category.find(params[:id])
-    if @category.update_attributes(params[:category])
-      flash[:success] = "Kategorie aktualisiert"
-      redirect_to @category
-    else
-      render 'edit'
-    end
-  end
-
-
-  def destroy
-    @category = Category.find(params[:id])
-    if @category.destroy
-      flash[:success] = "Kategorie gelöscht"
-    else
-      flash[:error] = "Konnte Kategorie nicht löschen. Details vermutlich in den Logs."
-    end
-    redirect_to categories_path
-  end
 
   def suspicious_associations
     # fcategories and all associated answers (ignoring subquests)
