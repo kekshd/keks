@@ -100,7 +100,6 @@ class Question < ActiveRecord::Base
     s = ""
     s << " ← Q:#{ident}" unless first
     s << (parent ? parent.trace_to_root : "[[no parent]]")
-    s
   end
 
   def get_root_categories
@@ -258,7 +257,7 @@ class Question < ActiveRecord::Base
     # than all of them. This avoids an additional database query.
     return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && !answers.first.correct?
     return false, "Reviewer sagt „nicht okay“" if has_bad_reviews?
-    return false, "Elter nicht freigegeben" unless parent_released?
+    return false, "Elter nicht freigegeben" if parent && !parent.released?
     return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat." unless study_path_reachable?
     return true, ""
   end
@@ -277,11 +276,5 @@ class Question < ActiveRecord::Base
     return true if parent_type != "Answer"
     psp = parent.question.study_path
     return psp == study_path || psp == 1
-  end
-
-  def parent_released?
-    return parent.question.released? if parent_type == "Answer"
-    return parent.released? if parent_type == "Category"
-    false # i.e. no parent
   end
 end
