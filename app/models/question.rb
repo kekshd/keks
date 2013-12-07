@@ -91,9 +91,7 @@ class Question < ActiveRecord::Base
   end
 
   def get_root_categories
-    pc = get_parent_category
-    return [] if pc.nil?
-    pc.get_root_categories
+    get_parent_category.get_root_categories rescue []
   end
 
   def complete?
