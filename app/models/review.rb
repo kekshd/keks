@@ -143,15 +143,17 @@ class Review < ActiveRecord::Base
       text: "Nachfolgende Fragen haben bisher zu wenig Reviews erhalten. Du hast diese Fragen noch nie reviewt.",
       hide_in_menu: true,
       questions: lambda { |current_user|
-        reviews = Review.where(user_id: current_user)
-        reviewed_question_ids = reviews.pluck(:question_id)
-
-        questions = Question.includes(:reviews, :parent).all
-        questions_need_review = questions.select do |q|
-          q.reviews.size < REVIEW_MIN_REQUIRED_REVIEWS \
-            and !reviewed_question_ids.include?(q.id)
-        end
-        return questions_need_review
+        already_reviewed  = Review.where(user_id: current_user).pluck(:question_id)
+        # starting with 'joins' is an in SQL check to skip all questions
+        # with enough reviews. Quite a bit faster though, due to having
+        # to allocate much less question objects
+        questions = Question.includes(:parent)
+          .where(["questions.id NOT IN (?)", already_reviewed])
+          .joins("LEFT OUTER JOIN reviews ON reviews.question_id = questions.id")
+          .group("questions.id")
+          .having("COUNT(reviews.id) < ?", REVIEW_MIN_REQUIRED_REVIEWS)
+          .all
+        return questions
       }
     },
 
