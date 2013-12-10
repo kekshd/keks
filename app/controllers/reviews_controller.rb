@@ -64,11 +64,15 @@ class ReviewsController < ApplicationController
   end
 
   def need_attention
-    @updated = Review.filter(:updated)
-    @updated[:questions] = @updated[:questions].call(current_user)
+    # admins do not get any lists with questions to review, so no need
+    # to calculate those.
+    if reviewer?
+      @updated = Review.filter(:updated)
+      @updated[:questions] = @updated[:questions].call(current_user)
 
-    @need_more_reviews = Review.filter(:need_more_reviews)
-    @need_more_reviews[:questions] = @need_more_reviews[:questions].call(current_user)
+      @need_more_reviews = Review.filter(:need_more_reviews)
+      @need_more_reviews[:questions] = @need_more_reviews[:questions].call(current_user)
+    end
   end
 
 
