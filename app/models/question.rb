@@ -208,11 +208,8 @@ class Question < ActiveRecord::Base
 
 
   def is_complete_helper
-    key = "question_complete_helper__#{last_admin_or_reviewer_change}__#{id}"
-
-    Rails.cache.fetch(key) {
-      is_complete_helper_real
-    }
+    key = generate_cache_key("question_#{id}")
+    Rails.cache.fetch(key) { is_complete_helper_real }
   end
 
   def is_complete_helper_real

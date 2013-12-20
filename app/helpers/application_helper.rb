@@ -1,6 +1,18 @@
 # encoding: utf-8
 
 module ApplicationHelper
+  def generate_cache_key(add = nil)
+    c = if defined?(caller_locations)
+      # Ruby 2.0+
+      caller_locations(1,1)[0].label
+    else
+      # Ruby 1.9
+      caller[0][/`([^']*)'/, 1]
+    end
+
+    [c, last_admin_or_reviewer_change, add].compact.join("__")
+  end
+
   def bool_to_symbol(bool)
     bool ? "✔" : "✘"
   end

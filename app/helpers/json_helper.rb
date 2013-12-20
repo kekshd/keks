@@ -3,10 +3,7 @@
 module JsonHelper
 
   def json_for_answer(a, max_depth)
-    key = ["json_for_answer"]
-    key << last_admin_or_reviewer_change
-    key << a.id
-    key = key.join("__")
+    key = generate_cache_key(a.id)
 
     cache = Rails.cache.read(key)
     return cache if cache
@@ -28,10 +25,7 @@ module JsonHelper
   end
 
   def json_for_question(q, max_depth = 5)
-    qkey = ["json_for_question"]
-    qkey << last_admin_or_reviewer_change
-    qkey << q.id
-    qkey = qkey.join("__")
+    qkey = generate_cache_key(q.id)
 
     cache = Rails.cache.read(qkey)
     if cache
@@ -47,10 +41,7 @@ module JsonHelper
     answers = []
 
     if max_depth > 0
-      key = ["question_deep_answers_resolve"]
-      key << last_admin_or_reviewer_change
-      key << q.id
-      key = key.join("__")
+      key = generate_cache_key("deep_resolve_#{q.id}")
 
       ans_qry = Rails.cache.fetch(key) {
         # the map forces rails to resolve
