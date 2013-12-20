@@ -1,6 +1,9 @@
 # encoding: utf-8
 
 class MainController < ApplicationController
+  include MainHelper
+  include RandomSelectionHelper
+
   before_filter :def_etag, only: [:hitme, :help, :overview]
 
   def overview
@@ -43,74 +46,6 @@ class MainController < ApplicationController
     render json: [json_for_question(Question.find(params[:id]))]
   end
 
-  def questions
-    # never cache this resource to ensure users get random questions
-    expires_now
-
-    time = Time.now
-
-    cats = if params[:categories]
-      params[:categories].split("_").map { |c| c.to_i }
-    else
-      Category.root_categories.pluck(:id)
-    end
-
-    return render :json => {error: "No categories given"} if cats.empty?
-
-    cnt = params[:count].to_i
-    return render :json => {error: "No count given"} if cnt <= 0 || cnt > 100
-
-    diff = difficulties_from_param
-    sp = study_path_ids_from_param
-
-    question_ids = Question.where(
-      :parent_type => "Category",
-      :parent_id => cats,
-      :difficulty => diff,
-      :released => true,
-      :study_path => sp)
-      .pluck(:id)
-
-    ## comment in to only show matrix-questions
-    #qs.reject!{ |q| !q.matrix_validate? }
-
-    logger.info "### get question ids: #{(Time.now - time)*1000}ms"
-    time = Time.now
-
-
-    qs = get_question_sample(question_ids, cnt)
-
-    logger.info "### find sample: #{(Time.now - time)*1000}ms"
-    time = Time.now
-
-    json = qs.map.with_index do |q, idx|
-      # maximum depth of 5 questions. However, avoid going to deep for
-      # later questions. For example, the last question never will
-      # present a subquestion, regardless if it has one. Therefore, no
-      # need to query for them.
-      c = cnt - idx - 1
-      tmp = json_for_question(q, c < 5 ? c : 5)
-
-      # assert the generated data looks reasonable, otherwise skip it
-      unless tmp.is_a?(Hash)
-        msg = "JSON for Question #{q.id} returned an array when it should be a Hash\n\n#{PP.pp(q, "")}"
-        if Rails.env.production?
-          logger.error msg
-          next
-        else
-          raise msg
-        end
-      end
-
-      tmp
-    end
-
-    render json: json
-
-    logger.info "### resolve: #{(Time.now - time)*1000}ms"
-    time = Time.now
-  end
-
   def random_xkcd
     url = nil
     err = nil
@@ -148,5 +83,61 @@ class MainController < ApplicationController
       # TODO: this will be cached and there are no sweepers to remove it
       render :text => "Der XKCD Server ist gerade nicht erreichbar. Sorry. Details: (specific) #{e.message}"
     end
+  end
+
+
+  def questions
+    expires_now
+    get_categories
+    get_count
+
+    question_ids = Question.where(
+      :parent_type => "Category",
+      :parent_id => @cats,
+      :difficulty => difficulties_from_param,
+      :released => true,
+      :study_path => study_path_ids_from_param)
+      .pluck(:id)
+
+    qs = select_random(question_ids, @cnt)
+
+    json = qs.map.with_index do |q, idx|
+      # maximum depth of 5 questions. However, avoid going to deep for
+      # later questions. For example, the last question never will
+      # present a subquestion, regardless if it has one. Therefore, no
+      # need to query for them.
+      c = @cnt - idx - 1
+      tmp = json_for_question(q, [c, 5].min)
+
+      # assert the generated data looks reasonable, otherwise skip it
+      unless tmp.is_a?(Hash)
+        raise <<-ERR
+          JSON for Question #{q.id} returned an array when it should be a Hash
+
+          #{PP.pp(q, "")}
+          ERR
+      end
+
+      tmp
+    end
+
+    render json: json
+  end
+
+  private
+  def get_categories
+    @cats = if params[:categories]
+      params[:categories].split("_").map(&:to_i)
+    else
+      Category.root_categories.pluck(:id)
+    end
+
+    render :json => {error: "No categories given"} if @cats.empty?
+  end
+
+  def get_count
+    @cnt = params[:count].to_i
+
+    render :json => {error: "No count given"} if @cnt <= 0 || @cnt > 100
   end
 end

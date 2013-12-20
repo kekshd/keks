@@ -49,27 +49,6 @@ module ApplicationHelper
     super(options, response_status)
   end
 
-
-  def study_path_ids_from_param
-    sp = params[:study_path]
-    return [1] if !sp
-
-    unless StudyPath.ids.include?(sp.to_i)
-      logger.warn "Tried to access invalid study path id: #{sp}"
-      return [1]
-    end
-
-    [1, sp.to_i].uniq
-  end
-
-  def difficulties_from_param
-    diff = params[:difficulty].split("_").map(&:to_i) rescue []
-    diff.reject! { |d| !Difficulty.ids.include?(d) }
-    return diff if diff.any?
-
-    return Difficulty.ids
-  end
-
   def reject_unsuitable_questions!(qs)
     diff = difficulties_from_param
     sp = study_path_ids_from_param
@@ -78,95 +57,14 @@ module ApplicationHelper
     end
   end
 
-  # The completeness check is rather expensive. The idea is to request
-  # more questions than required and exclude them later if they are
-  # found to be incomplete. The trade off made is that we might be a
-  # few questions short in some cases, but are faster on average. By
-  # default 5 questions are presented each run, thus the default factor
-  # of 1.6 loads three additional questions. If this value is too low,
-  # a warning will logged (grep for INCREASE_FACTOR).
-  INCREASE_FACTOR = 1.6
 
-  # retrieves cnt questions out of the given set. The set may contain
-  # incomplete questions, which are never returned though. May return
-  # less questions than requested. If the user is logged in, it will
-  # prefer questions not yet answered or answered incorrectly often.
-  def get_question_sample(question_ids, cnt)
-    if signed_in?
-      logger.debug "### roulette selection"
-      # select questions depending on how often they were answered
-      # correctly.
-      big_sample = roulette(question_ids, current_user, cnt)
-    else
-      logger.debug "### uniform selection"
-      big_sample = question_ids.sample(cnt*INCREASE_FACTOR)
-    end
-
-    # resolve IDs into questions. Eager load most things required for
-    # complete-check and presentation. The complete check is cached
-    # after first run. Measurements show there is no downside to
-    # including :reviews and :parent, even if they are not required.
-    big_sample = Question.where(id: big_sample)
-                  .includes(:answers, :reviews, :parent, :hints)
-
-    samp = []
-    big_sample.each do |s|
-      samp << s if s.complete?
-      # avoid completeness check if we have enough questions already
-      break if samp.size == cnt
-    end
-
-    # warn if it’s possible that user desire could have been fulfilled.
-    # If there are a lot of incomplete questions this may not be true,
-    # so only increase INCREASE_FACTOR if you get this warning often and
-    # if you question corpus is large enough.
-    if samp.size < cnt && question_ids.size > cnt
-      logger.warn "Got less questions than requested. Try increasing INCREASE_FACTOR."
-      logger.warn "Available: #{question_ids*", "}"
-      logger.warn "Selected: #{samp*", "}"
-    end
-
-    #~ dbgsamp = samp.map { |s| s.id }.join('  ')
-    #~ dbgqs = qs.map { |s| s.id }.join('  ')
-    #~ logger.debug "RANDOM DEBUG: cnt=#{cnt} samp=#{dbgsamp} quests=#{dbgqs}  signed_in=#{signed_in?}"
-
-    samp
-  end
-
-
-  # roulette wheel selection for questions, depending on correct answer
-  # ratio by user. Implementation by Jakub Hampl. Returns array of
-  # question_ids.
-  # http://stackoverflow.com/a/5243844/1684530
-  def roulette(question_ids, user, n)
-    probs = wrong_ratio_for(question_ids, user)
-
-    selected = []
-    (n*INCREASE_FACTOR).to_i.times do
-      break if probs.empty?
-      break if selected.size == n
-
-      r, inc = rand * probs.sum, 0
-      question_ids.each_index do |i|
-        if r < (inc += probs[i])
-          selected << question_ids[i]
-          # make selection not pick sample twice
-          question_ids.delete_at i
-          probs.delete_at i
-          break
-        end
-      end
-    end
-
-    return selected
-  end
 
   def get_subquestion_for_answer(a, max_depth)
     sq = max_depth > 0 ? a.get_all_subquestions : []
     reject_unsuitable_questions!(sq)
 
     if sq.size > 0
-      sq = get_question_sample(sq, 1)
+      sq = select_random(sq, 1)
       sq = json_for_question(sq.first, max_depth - 1)
     else
       sq = nil

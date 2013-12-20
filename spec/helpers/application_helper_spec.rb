@@ -19,12 +19,6 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#study_path_ids_from_param" do
-    it "ignores invalid study_path ids" do
-      helper.stub!(:params).and_return { {study_path: 1293234732947329423} }
-      expect(helper.study_path_ids_from_param).to eql([1])
-    end
-  end
 
   describe "#get_subquestion_for_answer" do
     it "includes valid subquestion" do
