@@ -1,16 +1,8 @@
 # encoding: utf-8
 
 module ApplicationHelper
-  def generate_cache_key(add = nil)
-    c = if defined?(caller_locations)
-      # Ruby 2.0+
-      caller_locations(1,1)[0].label
-    else
-      # Ruby 1.9
-      caller[0][/`([^']*)'/, 1]
-    end
-
-    [c, last_admin_or_reviewer_change, add].compact.join("__")
+  def param_to_int_arr(ident)
+    params[ident].split("_").map(&:to_i) rescue []
   end
 
   def bool_to_symbol(bool)
@@ -59,29 +51,6 @@ module ApplicationHelper
     end
 
     super(options, response_status)
-  end
-
-  def reject_unsuitable_questions!(qs)
-    diff = difficulties_from_param
-    sp = study_path_ids_from_param
-    qs.reject! do |q|
-      !diff.include?(q.difficulty) || !sp.include?(q.study_path) || !q.complete?
-    end
-  end
-
-
-
-  def get_subquestion_for_answer(a, max_depth)
-    sq = max_depth > 0 ? a.get_all_subquestions : []
-    reject_unsuitable_questions!(sq)
-
-    if sq.size > 0
-      sq = select_random(sq, 1)
-      sq = json_for_question(sq.first, max_depth - 1)
-    else
-      sq = nil
-    end
-    sq
   end
 
   def etag(text = nil)

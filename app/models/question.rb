@@ -221,23 +221,7 @@ class Question < ActiveRecord::Base
     return false, "Matrix-Fragen müssen genau eine Antwort haben, welche richtig sein muss" if matrix_validate? && !answers.first.correct?
     return false, "Reviewer sagt „nicht okay“" if has_bad_reviews?
     return false, "Elter nicht freigegeben" if parent && !parent.released?
-    return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat." unless study_path_reachable?
+    return false, "Unerreichbar, da das Elter eine andere Zielgruppe als diese Frage hat." unless QuestionReachability.new(self).any_reachable?
     return true, ""
-  end
-
-  # returns false if the direct parent element has an incompatible study
-  # path to ours. I.e. returns false if this question is unreachable due
-  # to study path mismatches.
-  def study_path_reachable?
-    # skip checks if this question is valid for all study paths
-    return true if study_path == 1
-    # categories don’t have a study path. If the category is not a root
-    # one, it is be possible to create unreachable questions like this:
-    # RootCat → Q w/ study path 1 → Cat → Q w/ study path 2
-    # This isn’t checked as a speed trade off: it would require tracing
-    # every possible way to root and checking each for study paths.
-    return true if parent_type != "Answer"
-    psp = parent.question.study_path
-    return psp == study_path || psp == 1
   end
 end

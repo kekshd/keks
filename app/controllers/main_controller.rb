@@ -88,25 +88,24 @@ class MainController < ApplicationController
 
   def questions
     expires_now
-    get_categories
-    get_count
+    parse_params
 
     question_ids = Question.where(
-      :parent_type => "Category",
-      :parent_id => @cats,
-      :difficulty => difficulties_from_param,
-      :released => true,
-      :study_path => study_path_ids_from_param)
-      .pluck(:id)
+      parent_type: "Category",
+      parent_id:   params[:categories],
+      difficulty:  params[:difficulty],
+      released:    true,
+      study_path:  params[:study_path]
+    ).pluck(:id)
 
-    qs = select_random(question_ids, @cnt)
+    qs = select_random(question_ids, params[:count])
 
     json = qs.map.with_index do |q, idx|
       # maximum depth of 5 questions. However, avoid going to deep for
       # later questions. For example, the last question never will
       # present a subquestion, regardless if it has one. Therefore, no
       # need to query for them.
-      c = @cnt - idx - 1
+      c = params[:count] - idx - 1
       tmp = json_for_question(q, [c, 5].min)
 
       # assert the generated data looks reasonable, otherwise skip it
@@ -124,20 +123,4 @@ class MainController < ApplicationController
     render json: json
   end
 
-  private
-  def get_categories
-    @cats = if params[:categories]
-      params[:categories].split("_").map(&:to_i)
-    else
-      Category.root_categories.pluck(:id)
-    end
-
-    render :json => {error: "No categories given"} if @cats.empty?
-  end
-
-  def get_count
-    @cnt = params[:count].to_i
-
-    render :json => {error: "No count given"} if @cnt <= 0 || @cnt > 100
-  end
 end
