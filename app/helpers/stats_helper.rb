@@ -23,13 +23,18 @@ module StatsHelper
 
   def insert_stat_in_hash(stat, hash, time = Time.now)
     # group by running week
-    weeks_ago = (((time - stat.created_at) / 1.day) % 7).to_i
+    weeks_ago = weeks_ago(stat.created_at, time)
     return if hash[:right][weeks_ago].nil?
-    hash[:skipped][weeks_ago] += 1 if stat.skipped?
-    hash[:right][weeks_ago] += 1 if !stat.skipped? && stat.correct
-    hash[:wrong][weeks_ago] += 1 if !stat.skipped? && !stat.correct
+    if stat.skipped?
+      hash[:skipped][weeks_ago] += 1
+    else
+      hash[stat.correct ? :right : :wrong][weeks_ago] += 1
+    end
   end
 
+  def weeks_ago(time, from = Time.now)
+    (((from - time) / 1.day) % 7).to_i
+  end
 
   def render_graph
     LazyHighCharts::HighChart.new('graph') do |f|
@@ -48,11 +53,7 @@ module StatsHelper
     end
 
     ago = range.days.ago
-
-    # extract values in order and fill in missing dates
-    values = ago.to_date.upto(Date.today).map do |x|
-      date_to_count_hash[x.to_s] || 0
-    end
+    values = fill_missing(date_to_count_hash, 0, ago.to_date, Date.today)
 
     @h = LazyHighCharts::HighChart.new('graph') do |f|
       graph_defaults(f)
@@ -65,6 +66,10 @@ module StatsHelper
   end
 
   private
+
+  def fill_missing(hash, fill, from, to)
+    from.upto(to).map { |e| hash[e.to_s] || fill }
+  end
 
   def graph_defaults(graph)
     graph.options[:chart][:defaultSeriesType] = "line"
