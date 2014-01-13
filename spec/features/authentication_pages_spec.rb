@@ -55,7 +55,7 @@ describe "Authentication" do
       it { should have_link('Ausloggen', href: signout_path) }
       it "has set remember cookie" do
         expect(page.driver.cookies.find("remember_token").to_s).to \
-          include(user.remember_token, "2033")
+          include(user.remember_token, (Time.now.year+20).to_s)
       end
     end
 
