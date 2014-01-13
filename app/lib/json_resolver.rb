@@ -73,7 +73,7 @@ class JsonResolver
   end
 
   def add_matrix_validate
-    @qjson.merge!({ matrix: 1, matrix_solution: q.matrix_solution }) if @q.matrix_validate?
+    @qjson.merge!({ matrix: 1, matrix_solution: @q.matrix_solution }) if @q.matrix_validate?
   end
 
   def add_starred

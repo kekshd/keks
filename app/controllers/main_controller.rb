@@ -44,7 +44,7 @@ class MainController < ApplicationController
   # question given
   def single_question
     q = Question.find(params[:id])
-    render json: [JsonResolver.new(q, 0)]
+    render json: [JsonResolver.new(q, 0).resolve]
   end
 
   def random_xkcd
