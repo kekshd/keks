@@ -52,8 +52,9 @@ class StatsController < ApplicationController
     groups = {}
 
     Category.is_root.with_questions.each do |c|
-      groups[c.title_split] ||= []
-      groups[c.title_split] += c.questions.map(&:id)
+      t = c.title_split.reject { |t| t.blank? }.first
+      groups[t] ||= []
+      groups[t] += c.questions.pluck(:id)
     end
 
     @keys = {}
