@@ -31,14 +31,6 @@ describe MainController do
       expect { JSON.parse(response.body) }.not_to raise_error
       expect(JSON.parse(response.body)).to be_a(Array)
     end
-
-    it "raises when given invalid data" do
-      FactoryGirl.create(:category_with_questions)
-      expect {
-        controller.stub!(:json_for_question).and_return(["borken"])
-        get :questions, count: 5
-      }.to raise_error
-    end
   end
 
   describe "#specific_xkcd" do

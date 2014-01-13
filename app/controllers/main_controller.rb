@@ -43,7 +43,8 @@ class MainController < ApplicationController
   # renders json suitable for the hitme page containing only a single
   # question given
   def single_question
-    render json: [json_for_question(Question.find(params[:id]))]
+    q = Question.find(params[:id])
+    render json: [JsonResolver.new(q, 0)]
   end
 
   def random_xkcd
@@ -99,28 +100,6 @@ class MainController < ApplicationController
     ).pluck(:id)
 
     qs = select_random(question_ids, params[:count])
-
-    json = qs.map.with_index do |q, idx|
-      # maximum depth of 5 questions. However, avoid going to deep for
-      # later questions. For example, the last question never will
-      # present a subquestion, regardless if it has one. Therefore, no
-      # need to query for them.
-      c = params[:count] - idx - 1
-      tmp = json_for_question(q, [c, 5].min)
-
-      # assert the generated data looks reasonable, otherwise skip it
-      unless tmp.is_a?(Hash)
-        raise <<-ERR
-          JSON for Question #{q.id} returned an array when it should be a Hash
-
-          #{PP.pp(q, "")}
-          ERR
-      end
-
-      tmp
-    end
-
-    render json: json
+    render json: JsonResolver.resolve_efficiently(qs, params[:count], current_user)
   end
-
 end

@@ -31,6 +31,7 @@ class Question < ActiveRecord::Base
   include DotTools
   include StatTools
   include TraversalTools
+  include CacheTools
 
   # returns all questions that have a parent category. If a categroy or
   # its id is given, only questions with that exact category are

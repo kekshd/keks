@@ -7,8 +7,8 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include LatexHelper
   include DotHelper
-  include JsonHelper
   include EnrollmentKeyHelper
+  include CacheTools
 
   before_filter :set_csp
 

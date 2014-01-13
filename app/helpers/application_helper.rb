@@ -53,18 +53,6 @@ module ApplicationHelper
     super(options, response_status)
   end
 
-  def etag(text = nil)
-    # always bust browser cache in development mode so pages that can be
-    # cached indefinitely in production mode get auto-reload support
-    return Time.now.to_s if Rails.env.development?
-    tag = []
-    tag << GIT_REVISION if defined?(GIT_REVISION)
-    tag << current_user.id if current_user
-    tag << last_admin_or_reviewer_change
-    tag << text unless text.blank?
-    tag.join("_")
-  end
-
   # retrieves question from URL parameters for all nested resources.
   # Usage: before_filter :get_question
   def get_question(redirect_on_error = questions_path)
