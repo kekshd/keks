@@ -56,7 +56,7 @@ class JsonResolver
     @qjson = {
       answers:   answers,
       id:        @q.id,
-      html:      @q.text
+      html:      add_newlines(@q.text)
     }
 
     # only include these, if they evaluate to true to save bandwidth
@@ -108,7 +108,7 @@ class JsonResolver
     ajson = {
       correct: a.correct? ? 1 : 0,
       id: a.id,
-      html: a.text#render_tex(a.text, false)
+      html: add_newlines(a.text)
     }
 
     subq = get_subquestion_for_answer(a)
@@ -155,5 +155,9 @@ class JsonResolver
 
   def qkey
     generate_cache_key(@q.id)
+  end
+
+  def add_newlines(content)
+    content.gsub(/(\r\n){2,}|\n{2,}|\r{2,}/, '<br/><br/>')
   end
 end
