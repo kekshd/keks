@@ -356,7 +356,8 @@ H.Hitme.prototype = {
 
       if(quest.matrix) {
         var m = parseMatrix(answerChooser.find("textarea").val());
-        correct = window.currentQuestion.matrix_solution === m;
+        var solution = window.currentQuestion.matrix_solution;
+        correct = solution.toLowerCase() === m.toLowerCase();
         s.set_answers([m]);
 
       } else {
