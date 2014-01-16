@@ -71,10 +71,11 @@ class StatsController < ApplicationController
     extract_questions_from_params
 
     key = "activity_report__#{@range}__#{(@questions || []).join("_")}"
+
     cache = Rails.cache.fetch(key)
     return (@g_quests, @g_users = *cache) if cache
 
-    stats = Stat.newer_than(@range.days.ago)
+    stats = Stat.unscoped.newer_than(@range.days.ago)
     stats = stats.where(question_id: @questions) if @questions
 
     quests = stats.group("date(created_at)").count
