@@ -15,7 +15,6 @@ module LatexHelper
     return '' if mixed.blank?
     mixed = ERB::Util.h(mixed)
 
-    mixed.gsub!('§', '')
     mixed.gsub!(/(\r\n){2,}|\n{2,}|\r{2,}/, '<br/><br/>')
     mixed = mixed.html_safe
 
