@@ -523,7 +523,7 @@ H.Hitme.prototype = {
 
     var code = '<div style="display:none;" class="box hideMeOnMore">'
       + '<h3>Fertig!</h3>'
-      + '<p>Du hast den aktuellen Block abgeschlossen. Insgesamt hast Du '+sum+' Fragen beantwortet und davon '+this.answersGiven.fail.length+' falsch. Scrolle nach oben um jeweils die Antworten für die Fragen zu sehen.</p>'
+      + '<p>Du hast den aktuellen Block abgeschlossen. Insgesamt hast Du '+sum+' Fragen beantwortet und davon '+this.answersGiven.correct.length+' richtig. Scrolle nach oben um jeweils die Antworten für die Fragen zu sehen.</p>'
       + '<div class="button-group">'
       + '<a onclick="window.currentHitme.giveMore();" class="button big">Gib mir nochmal '+$('#quantity').val()+'!</a>'
       + '<a href="'+Routes.main_hitme_path()+'" class="button big">Einstellungen ändern</a>'
