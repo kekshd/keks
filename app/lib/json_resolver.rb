@@ -130,7 +130,7 @@ class JsonResolver
 
     return nil if sq.size == 0
 
-    sq = select_random(sq, 1)
+    sq = sq.sample
     JsonResolver(sq.first, @max_depth - 1).resolve
   end
 
