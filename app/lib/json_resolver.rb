@@ -131,7 +131,7 @@ class JsonResolver
     return nil if sq.size == 0
 
     sq = sq.sample
-    JsonResolver(sq.first, @max_depth - 1).resolve
+    JsonResolver(sq, @max_depth - 1).resolve
   end
 
 
