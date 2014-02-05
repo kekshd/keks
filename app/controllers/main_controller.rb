@@ -87,9 +87,9 @@ class MainController < ApplicationController
   end
 
 
+  before_filter :parse_params, only: :questions
   def questions
     expires_now
-    parse_params
 
     question_ids = Question.where(
       parent_type: "Category",

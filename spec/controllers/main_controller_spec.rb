@@ -31,6 +31,14 @@ describe MainController do
       expect { JSON.parse(response.body) }.not_to raise_error
       expect(JSON.parse(response.body)).to be_a(Array)
     end
+
+    it "works with subquestions" do
+      FactoryGirl.create(:question_parent_category_subs)
+      cat = Category.all.detect { |c| c.questions.any? { |q| q.subquestions.any? } }
+      get :questions, count: 15, categories: cat.id
+      expect { JSON.parse(response.body) }.not_to raise_error
+      expect(JSON.parse(response.body)).to be_a(Array)
+    end
   end
 
   describe "#specific_xkcd" do
