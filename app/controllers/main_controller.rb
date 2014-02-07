@@ -51,8 +51,10 @@ class MainController < ApplicationController
     url = nil
     err = nil
     begin
-      open("http://dynamic.xkcd.com/random/comic/", redirect: false) do
-        url = resp.base_uri
+      Timeout::timeout(2) do
+        open("http://dynamic.xkcd.com/random/comic/", redirect: false) do
+          url = resp.base_uri
+        end
       end
     rescue OpenURI::HTTPRedirect => rdr
       url = rdr.uri.to_s
