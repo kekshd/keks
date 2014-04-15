@@ -17,7 +17,7 @@ function configureMathJax() {
 
     tex2jax: {
       inlineMath: [['$','$'], ['\\(','\\)']],
-      skipTags: ["script","noscript","style","textarea","pre","code","img"],
+      skipTags: ["script","noscript","style","textarea","pre","code","img","select"],
       processClass: "tex",
     },
 

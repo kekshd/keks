@@ -19,8 +19,24 @@
   <%= f.label :is_root %>
   <%= f.check_box :is_root, onclick: "$('#parent-selector-wrapper')[this.checked ? 'hide' : 'show']();" %>
 
-  <div id="parent-selector-wrapper" class="clear">
+  <div id="parent-selector-wrapper" class="clear tex2jax_ignore" style="display: <%=@category.is_root? ? :none : :block%>;">
     <%= f.label :answers, "Eltern-Elem." %>
+
+    <style scoped>
+      @import url("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/flick/jquery-ui.min.css");
+      .ui-widget{
+        font-size:12px;
+        line-height: 15px;
+      }
+      div.option-element:hover {
+        color: #fff;
+        background: #137DEB;
+      }
+      select { /* hide select box initially, unless scripts are disabled */
+        display: none;
+      }
+    </style>
+    <noscript><style scoped>select { display: block; }</style></noscript>
 
     <%
       root_cats =  Category.is_root
@@ -36,7 +52,7 @@
       end
     %>
 
-    <select id="category_answer_ids" multiple="multiple" name="category[answer_ids][]" style="width: 80%; height: 400px">
+    <select id="category_answer_ids" multiple="multiple" name="category[answer_ids][]" style="width: 900px; height: 400px">
       <% root_cats.each do |rc| %>
         <optgroup label="<%=rc.title%>">
           <%=
@@ -54,30 +70,11 @@
       <% end %>
     </select>
 
-    <style scoped>
-      @import url("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/flick/jquery-ui.min.css");
-      .ui-widget{
-        font-size:12px;
-        line-height: 15px;
-      }
-      .uix-search {
-        height: 20px;
-      }
-    </style>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <%= javascript_include_tag "jquery.uix.multiselect.min" %>
+    <%= javascript_include_tag "jquery.uix.multiselect" %>
 
     <script>
-      $('#category_answer_ids').multiselect({ height: '400px'});
-      $(document).ready(function() {
-        $(".group-element-collapsable").click(function() {
-          $(this).find(".collapse-handle").click();
-        }).trigger("click");
-      });
-
-      if(<%=@category.is_root?%>) { // need to wait for multiselect init
-        $('#parent-selector-wrapper').hide();
-      }
+      $('#category_answer_ids').multiselect();
     </script>
     <br class="clear"/>
     <span>Welche Antworten sollen auf auf diese Kategorie verweisen?</span>
