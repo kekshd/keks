@@ -97,6 +97,27 @@ describe CategoriesController do
     end
   end
 
+  describe "#create with parent answers" do
+    before(:each) do
+      post :create, category: {
+        title: 'title',
+        ident: 'le id',
+        is_root: '0',
+        answer_ids: [answer.id.to_s]
+      }
+      @cat = Category.find { |c| c.ident == "le id" }
+    end
+
+    it 'reports success' do
+      expect(flash[:success]).not_to be_nil
+    end
+
+    it 'has the given answers as parents' do
+      expect(@cat.answers.map(&:id)).to include(answer.id)
+      expect(@cat.answers.size).to eql(1)
+    end
+  end
+
   describe "#update" do
     before(:each) do
       post :update, id: category.id, category: {
@@ -115,6 +136,22 @@ describe CategoriesController do
 
     it "returns to category" do
       expect(response).to redirect_to category_path(category.id)
+    end
+  end
+
+  describe "#update with parent answers" do
+    before(:each) do
+      post :update, id: category.id, category: {
+        title: "new title",
+        is_root: '0',
+        answer_ids: [answer.id.to_s]
+      }
+      category.reload
+    end
+
+    it 'has the given answers as parents' do
+      expect(category.answers.map(&:id)).to include(answer.id)
+      expect(category.answers.size).to eql(1)
     end
   end
 
