@@ -50,7 +50,9 @@
             showDefaultGroupHeader: false, // show the default option group header (default: false)
             showEmptyGroups: false,        // always display option groups even if empty (default: false)
             splitRatio: 0.55,              // % of the left list's width of the widget total width (default 0.55)
-            selectAll: 'both'              // 'available', 'selected', 'both', 'none' - Whether or not to display a select or deselect all icon (default: 'both')
+            selectAll: 'both',             // 'available', 'selected', 'both', 'none' - Whether or not to display a select or deselect all icon (default: 'both')
+            height: 400,
+            width: 900
         },
 
         _create: function() {
@@ -187,37 +189,27 @@
         // NOTE : the widget MUST be visible and have a width and height when calling this
         _resize: function() {
             var pos = this.options.availableListPosition.toLowerCase();         // shortcut
-            var sSize = ('left,right'.indexOf(pos) >= 0) ? 'Width' : 'Height';  // split size fn
-            var tSize = ('left,right'.indexOf(pos) >= 0) ? 'Height' : 'Width';  // total size fn
-            var cSl = this.element['outer'+sSize]() * this.options.splitRatio;  // list container size selected
-            var cAv = this.element['outer'+sSize]() - cSl;                      // ... available
-            var hSl = (tSize === 'Width') ? cSl : this.element.outerHeight();   // scrollable area size selected
-            var hAv = (tSize === 'Width') ? cAv : this.element.outerHeight();   // ... available
+            var cSl = this.options.width * this.options.splitRatio;  // list container size selected
+            var cAv = this.options.width - cSl;                      // ... available
             var styleRule = ('left,right'.indexOf(pos) >= 0) ? 'left' : 'top';  // CSS rule for offsetting
-            var swap = ('left,top'.indexOf(pos) >= 0);                          // true if we swap left-right or top-bottom
             var headerBordersBoth = 'ui-corner-tl ui-corner-tr ui-corner-bl ui-corner-br ui-corner-top';
-            var hSlCls = (tSize === 'Width') ? (swap ? '' : 'ui-corner-top') : (swap ? 'ui-corner-tr' : 'ui-corner-tl');
-            var hAvCls = (tSize === 'Width') ? (swap ? 'ui-corner-top' : '') : (swap ? 'ui-corner-tl' : 'ui-corner-tr');
 
             // calculate outer lists dimensions
             this._elementWrapper.find('.multiselect-available-list')
-                [sSize.toLowerCase()](cAv).css(styleRule, swap ? 0 : cSl)
-                [tSize.toLowerCase()](this.element['outer'+tSize]() + 1);  // account for borders
+                ['width'](cAv).css(styleRule, cSl)
+                ['height'](this.options.height + 1);  // account for borders
             this._elementWrapper.find('.multiselect-selected-list')
-                [sSize.toLowerCase()](cSl).css(styleRule, swap ? cAv : 0)
-                [tSize.toLowerCase()](this.element['outer'+tSize]() + 1); // account for borders
+                ['width'](cSl).css(styleRule, 0)
+                ['height'](this.options.height + 1); // account for borders
 
             // selection all button
             this._buttons['selectAll'].button('option', 'icons', {primary: transferIcon(pos, 'ui-icon-arrowthickstop-1-', false) });
             this._buttons['deselectAll'].button('option', 'icons', {primary: transferIcon(pos, 'ui-icon-arrowthickstop-1-', true) });
 
-            // header borders
-            this._headers['available'].parent().removeClass(headerBordersBoth).addClass(hAvCls);
-            this._headers['selected'].parent().removeClass(headerBordersBoth).addClass(hSlCls);
-
             // calculate inner lists height
-            this._lists['available'].height(hAv - this._headers['available'].parent().outerHeight() - 2);  // account for borders
-            this._lists['selected'].height(hSl - this._headers['selected'].parent().outerHeight() - 2);    // account for borders
+            // 22 = this._headers['available'].parent().outerHeight()  cached value to save one reflow
+            this._lists['available'].height(this.options.height - 22 - 2);  // account for borders
+            this._lists['selected'].height(this.options.height - 22 - 2);    // account for borders
         },
 
         /**
@@ -356,9 +348,8 @@
                 return grpElement ? grpElement.attr('label') : that._widget.options.defaultGroupName;
             };
 
-            var labelCount = $(document.createElement('span')).addClass('label')
-                .text(getGroupName() + ' (0)')
-                .attr('title', getGroupName() + ' (0)');
+            var labelCount = $(document.createElement('span')).addClass('label');
+                // .text(getGroupName() + ' (0)');
 
             var fnUpdateCount = function() {
                 var gDataDst = getLocalData()[selected?'selected':'available'];
@@ -366,7 +357,7 @@
                 gDataDst.listElement[(!selected && (gDataDst.count || that._widget.options.showEmptyGroups)) || (gDataDst.count && ((gData.optionGroup != DEF_OPTGROUP) || that._widget.options.showDefaultGroupHeader)) ? 'show' : 'hide']();
 
                 var t = getGroupName() + ' (' + gDataDst.count + ')';
-                labelCount.text(t).attr('title', t);
+                labelCount.text(t);
             };
 
             var e = $(document.createElement('div'))
@@ -452,8 +443,10 @@
         },
 
         _createElement: function(optElement, optGroup) {
-            var e = $(document.createElement('div')).text(optElement.text()).addClass('ui-state-default option-element');
-            return e;
+            var d = document.createElement('div');
+            d.appendChild(document.createTextNode(optElement.text()));
+            d.setAttribute('class', 'ui-state-default option-element');
+            return $(d);
         },
 
         _isOptionCollapsed: function(eData) {
@@ -482,16 +475,6 @@
 
             var gDataDst = gData[eData.selected?'selected':'available'];
 
-            if ((eData.optionGroup != this._widget.options.defaultGroupName) || this._widget.options.showDefaultGroupHeader) {
-                gDataDst.listElement.show();
-            }
-
-            if (gDataDst.collapsed) {
-                //gDataDst.listElement.data('fnToggle')(); // animate show?
-            } else {
-                //gDataDst.listContainer.show();
-            }
-
             var insertIndex = eData.index - 1;
             while ((insertIndex >= gData.startIndex) &&
                    (this._elements[insertIndex].selected != eData.selected)) {
@@ -502,16 +485,7 @@
                 gDataDst.listContainer.prepend(eData.listElement);
             } else {
                 var prev = this._elements[insertIndex].listElement;
-                // FIX : if previous element is animated, get it's animated parent as reference
-                if (prev.parent().hasClass('ui-effects-wrapper')) {
-                    prev = prev.parent();
-                }
                 eData.listElement.insertAfter(prev);
-            }
-            eData.listElement[(eData.selected?'add':'remove')+'Class']('option-selected');
-
-            if ((eData.selected) && !this._isOptionCollapsed(eData) && this._moveEffect && this._moveEffect.fn) {
-                eData.listElement.hide().show(this._moveEffect.fn, this._moveEffect.options, this._moveEffect.speed);
             }
         },
 
@@ -548,22 +522,14 @@
         // prepare option element to be rendered (must call reIndex after this!)
         // If optGroup is defined, prepareGroup(optGroup) should have been called already
         prepareOption: function(optElement, optGroup) {
-            var e;
-            if (optElement.data('element-index') === undefined) {
-                optGroup = optGroup || DEF_OPTGROUP;
-                this._elements.push(e = {
-                    index: -1,
-                    selected: false,
-                    listElement: this._createElement(optElement, optGroup),
-                    optionElement: optElement,
-                    optionGroup: optGroup
-                });
-            } else {
-                this._elements[optElement.data('element-index')]
-                    .listElement[(optElement.prop('disabled') ? "add" : "remove") + "Class"]('ui-state-disabled')
-                ;
-            }
-
+            optGroup = optGroup || DEF_OPTGROUP;
+            this._elements.push({
+                index: -1,
+                //selected: false,
+                listElement: this._createElement(optElement, optGroup),
+                optionElement: optElement,
+                optionGroup: optGroup
+            });
         },
 
         reIndex: function() {
@@ -576,7 +542,7 @@
 
                     var wrapper_selected = $(document.createElement('div')).addClass('multiselect-element-wrapper').data('option-group', g);
                     var wrapper_available = $(document.createElement('div')).addClass('multiselect-element-wrapper').data('option-group', g);
-                    wrapper_selected.append(v.selected.listElement.hide());
+                    wrapper_selected.append(v.selected.listElement/*.hide()*/);
                     if (g != DEF_OPTGROUP || (g == DEF_OPTGROUP && showDefGroupName)) {
                         wrapper_available.append(v['available'].listElement.show());
                     }
@@ -630,10 +596,6 @@
         },
 
         setSelected: function(eData, selected, silent) {
-            if (eData.optionElement.attr('disabled') && selected) {
-                return;
-            }
-
             eData.optionElement.prop('selected', eData.selected = selected);
 
             this._appendToList(eData);
@@ -652,7 +614,7 @@
 
             for (var i=0, eData, len=this._elements.length; i<len; i++) {
                 eData = this._elements[i];
-                if (!((eData.selected == selected) || (eData.optionElement.attr('disabled') || (selected && eData.selected)))) {
+                if (!((eData.selected == selected) || (selected && eData.selected))) {
                     this.setSelected(eData, selected, true);
                     _transferedOptions.push(eData.optionElement[0]);
                     _modifiedGroups[eData.optionGroup] = true;
