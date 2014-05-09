@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails',                '3.2.18'
-gem 'sqlite3',              '1.3.7'
+gem 'sqlite3'
 gem 'thin',                 '1.5.0'
 gem 'active_enum',          '0.9.12'
 gem 'nokogiri'
