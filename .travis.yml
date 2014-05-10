@@ -1,6 +1,7 @@
 language: ruby
 rvm:
   - 1.9.3
+  - 2.1.1
 script:
   - RAILS_ENV=test bundle exec rake db:migrate
   - RAILS_ENV=test bundle exec rake test
@@ -15,6 +16,7 @@ before_install:
   - "export COVERAGE=true"
   - "export COVERALLS=true"
   - "sh -e /etc/init.d/xvfb start"
+  - "./script/get_bundler.sh"
 bundler_args: --without development --deployment
 cache:
   - bundler
