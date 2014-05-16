@@ -43,7 +43,7 @@
     <%
       groups = Category.root_categories.group_by do |c|
         c.title_split[0]
-      end.sort_by { |a, b| a[0] <=> b[0] }
+      end.sort_by { |c| c[0] }
     %>
 
     <% groups.each do |g| %>
