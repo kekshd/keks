@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_csp
 
   def set_csp
-    mathjax      = "https://c328740.ssl.cf1.rackcdn.com"
+    mathjax      = "https://cdn.mathjax.org"
     fontFileURL  = "https://themes.googleusercontent.com"
     fontStyleURL = "https://fonts.googleapis.com"
     xkcdComicURL = "https://imgs.xkcd.com"
