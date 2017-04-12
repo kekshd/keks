@@ -16,7 +16,7 @@ before_install:
   - "export COVERAGE=true"
   - "export COVERALLS=true"
   - "sh -e /etc/init.d/xvfb start"
-  - "./script/get_bundler.sh"
+  - gem install bundler
 bundler_args: --without development --deployment
 cache:
   - bundler

@@ -321,3 +321,6 @@ DEPENDENCIES
   will_paginate
   zeus
   zeus-parallel_tests
+
+BUNDLED WITH
+   1.14.6
