@@ -1,3 +1,3 @@
 #!/bin/sh
 
-ab -n 500 -k -q -S -d -t 10 http://0.0.0.0:10001/main/questions?count=5 > /dev/null 2> /dev/null
+ab -n 1 -k -q -S -d http://0.0.0.0:10001/main/questions?count=5 > /dev/null 2> /dev/null
