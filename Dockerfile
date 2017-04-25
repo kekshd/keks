@@ -13,6 +13,5 @@ RUN apt-get update && apt-get install -y qt5-default libqt5webkit5-dev postgresq
 RUN git clone https://github.com/breunigs/keks.git .
 RUN bundle install --deployment --without development
 RUN echo "GIT_REVISION='$(git rev-parse HEAD)'" > config/initializers/git_revision.rb
-RUN bundle exec rake assets:precompile
 
 
