@@ -20,21 +20,21 @@
     <%= f.label :difficulty, "Schwierigkeit" %>
     <div class="slider-box">
       <i>einfach</i>
-      <%= f.number_field :difficulty, {"data-slider" => true} %>
+      <%= f.number_field :difficulty, {"data-slider" => true, "data-slider-range" => "0,1", "data-slider-step" => 0.25, "data-slider-snap" => true, "step" => "any"} %>
       <i>schwer</i>
     </div>
 
     <%= f.label :learneffect, "Lerneffekt" %>
     <div class="slider-box">
       <i>niedrig</i>
-      <%= f.text_field :learneffect, {"data-slider" => true} %>
+      <%= f.number_field :learneffect, {"data-slider" => true, "data-slider-range" => "0,1", "data-slider-step" => 0.25, "data-slider-snap" => true, "step" => "any"} %>
       <i>hoch</i>
     </div>
 
     <%= f.label :fun, "Spaß" %>
     <div class="slider-box">
       <i>frustrierend</i>
-      <%= f.text_field :fun, {"data-slider" => true} %>
+      <%= f.number_field :fun, {"data-slider" => true, "data-slider-range" => "0,1", "data-slider-step" => 0.25, "data-slider-snap" => true, "step" => "any"} %>
       <i>interessant</i>
     </div>
 
