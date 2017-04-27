@@ -22,4 +22,10 @@ test:
   timeout: 5000
 
 production:
-  url: <%= ENV["PRODUCTION_DATABASE_URL"] %>
+  adapter: <%= ENV['PRODUCTION_DATABASE_ADAPTER'] %>
+  encoding: <%= ENV['PRODUCTION_DATABASE_ENCODING'] %>
+  database: <%= ENV['PRODUCTION_DATABASE_DATABASE'] %>
+  username: <%= ENV['PRODUCTION_DATABASE_USERNAME'] %>
+  password: <%= ENV['PRODUCTION_DATABASE_PASSWORD'] %>
+  host: <%= ENV['PRODUCTION_DATABASE_HOST'] %>
+  port: <%= ENV['PRODUCTION_DATABASE_PORT'] %>  

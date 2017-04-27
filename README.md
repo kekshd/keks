@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/kekshd/keks.png?branch=master)](https://travis-ci.org/kekshd/keks)
-[![Coverage Status](https://coveralls.io/repos/breunigs/keks/badge.png?branch=master)](https://coveralls.io/r/breunigs/keks?branch=master)
-[![Code Climate](https://codeclimate.com/github/breunigs/keks.png)](https://codeclimate.com/github/breunigs/keks)
+[![Coverage Status](https://coveralls.io/repos/github/kekshd/keks/badge.svg?branch=master)](https://coveralls.io/github/kekshd/keks?branch=master)
+[![Code Climate](https://codeclimate.com/github/kekshd/keks/badges/gpa.svg)](https://codeclimate.com/github/kekshd/keks)
+
 
 KeKs is a common Rails application and may be installed like any other Rails app. The project is currently available in German only. The following describes one way to set it up on Debian stable.
 

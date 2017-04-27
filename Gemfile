@@ -24,6 +24,8 @@ gem 'bcrypt-ruby',          '~> 3.0.0'
 gem 'sunspot_rails'
 gem 'sunspot_solr',                       require: false
 
+gem 'pg'
+
 group :development, :test do
   gem 'pry-rails'
   gem 'awesome_print'       # console highlighting
