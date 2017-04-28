@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131126220455) do
+ActiveRecord::Schema.define(:version => 20170428141251) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
@@ -49,11 +49,11 @@ ActiveRecord::Schema.define(:version => 20131126220455) do
   end
 
   create_table "perfs", :force => true do |t|
-    t.string   "agent"
-    t.string   "url"
+    t.text     "agent"
+    t.text     "url"
     t.integer  "load_time"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.integer  "user_id"
   end
 
