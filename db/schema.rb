@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170428141251) do
+ActiveRecord::Schema.define(:version => 20170508115414) do
 
   create_table "answers", :force => true do |t|
     t.text     "text"
@@ -51,9 +51,9 @@ ActiveRecord::Schema.define(:version => 20170428141251) do
   create_table "perfs", :force => true do |t|
     t.text     "agent"
     t.text     "url"
-    t.integer  "load_time"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.integer  "load_time",  :limit => 8
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
     t.integer  "user_id"
   end
 
