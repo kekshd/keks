@@ -77,7 +77,7 @@ class MainController < ApplicationController
     return render(status: 400, text: "invalid id") if id.blank?
 
     begin
-      html = open("http://xkcd.com/#{id}/").read
+      html = open("https://xkcd.com/#{id}/").read
 
       comic_only = Nokogiri::HTML(html).at_css("#comic").to_s
       comic_only.gsub!("http://", "https://")
