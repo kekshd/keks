@@ -30,7 +30,7 @@
 
       <th>Reviews</th>
       <td>
-        <% cnt = @question.reviews.group(:okay).count %>
+        <% cnt = Review.unscoped.where(:question_id => @question.id).group(:okay).count %>
         <span class="correct">✓ <%=cnt[true] || 0%></span>&nbsp;&nbsp;
         <span class="wrong">✗ <%=cnt[false] || 0%></span>&nbsp;&nbsp;
         <%=link_to "Reviews anzeigen", question_review_path(@question) %>
