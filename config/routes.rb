@@ -53,7 +53,7 @@ Keks::Application.routes.draw do
       match "copy", to: "questions#copy", as: "copy", via: :get
       match "copy_to", to: "questions#copy_to", as: "copy_to", via: :post
       get "list_cat/:category_id", to: "questions#list_cat", on: :collection, as: "list_cat"
-
+      get "select", to: "questions#select", on: :collection, as: "select"
       get :search, on: :collection
     end
 

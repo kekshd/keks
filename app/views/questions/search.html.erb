@@ -21,19 +21,25 @@
       <%= will_paginate @questions, container: false, params: { query: params[:query] } %>
     </div>
 
-    <ul>
+    <%= form_tag select_questions_path, :method => :get do %>
+    <table style="width:100%">
       <% @search.hits.each do |hit| %>
-        <li>
-          <%=link_to search_highlight(hit, :ident, true), question_path(hit.primary_key) %><br/>
+        <tr>
+          <td><%= check_box_tag "question_ids[]", hit.primary_key %></td>
+          <td>
+          <%= link_to search_highlight(hit, :ident, true), question_path(hit.primary_key) %><br/>
           <%=
             snip = [:text, :answers, :hints, :reviews, :parent].map do |f|
               search_snippet(hit, f)
             end.join
             raw snip.blank? ? search_snippet(hit, :text, true) : snip
           %>
-        </li>
+          </td>
+        </tr>
       <% end %>
-    </ul>
+      <tr><td colspan="2"><%= submit_tag "Select" %></td></tr>
+    <% end %>
+    </table>
 
     <div class="pagination">
       <%= will_paginate @questions, container: false, params: { query: params[:query] } %>
