@@ -88,9 +88,13 @@ class QuestionsController < ApplicationController
         boost_fields answers: 1.1
         phrase_slop 2
       end
-      paginate page: page, per_page: 15
+      paginate page: page, per_page: 30
     end
     @questions = @search.results
+  end
+
+  def select
+    @questions = Question.where(:id => params[:question_ids])
   end
 
   def new
@@ -205,7 +209,8 @@ class QuestionsController < ApplicationController
 
   private
   def find_question
-    id = params[:question_id] ? params[:question_id] : params[:id]
+#    id = params[:question_id] ? params[:question_id] : params[:id]
+    id = params[:question_id] ? params[:question_id] : params[:question_ids] ? params[:question_ids] : params[:id]
     @question = Question.find(id)
   end
 
