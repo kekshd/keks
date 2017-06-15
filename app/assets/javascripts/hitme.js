@@ -440,6 +440,9 @@ H.Hitme.prototype = {
     } else {
       code += this._renderAnswersForQuestion(q);
     }
+    if (q.video_link) {
+      code += '<br class="clear"/><div class="initiallyHidden"><strong>Video Link</strong><a href="q.video_link">'+q.video_link+'</a></div>';
+    }
     code += '</div>'; // answer-chooser
 
     code += '<br/><div class="answer-submit button-group">';
