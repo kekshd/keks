@@ -47,6 +47,12 @@ class MainController < ApplicationController
     render json: [JsonResolver.new(q, 0).resolve]
   end
 
+  def multiple_question
+    ids = params[:id].split(",")
+    qs = Question.where(id: ids).includes(:answers, :reviews, :parent, :hints)
+    render json: JsonResolver.resolve_efficiently(qs, qs.count, current_user)
+  end
+
   def random_xkcd
     url = nil
     err = nil
