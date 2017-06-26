@@ -94,7 +94,9 @@ class QuestionsController < ApplicationController
   end
 
   def select
-    @questions = Question.where(:id => params[:question_ids])
+    ids = params['question_ids']*","
+    
+    redirect_to main_hitme_url + "#hide-options" + "#hide-categories" + "#question=" + ids
   end
 
   def new

@@ -210,6 +210,16 @@ function getSingleQuestion(questionId, context, successCallback) {
   });
 }
 
+function getMultipleQuestion(questionIds, context, successCallback) {
+  $.ajax({
+    url: Routes.main_multiple_question_path({id: questionIds}),
+  }).done(function(data) {
+    successCallback(context, data);
+  }).fail(function() {
+    alert("Die Anfrage konnte leider nicht bearbeitet werden. Möglicherweise hat der Server ein Problem.");
+  });
+}
+
 function answersGivenCount() {
   var a = window.H.answersGiven;
   return a.fail.length + a.correct.length + a.skip.length;
@@ -294,15 +304,22 @@ H.Hitme.prototype = {
   },
 
   setupSingleQuestionMode: function() {
-    $("#quantity").val(1);
-    getSingleQuestion(getHash("question"), this, this.rootQuestionsAvailable);
+    var question = getHash("question");
+    var ids = question.split(",");
+    var length = ids.length;
+
+    $("#quantity").val(length);
+    if (length == 1) {
+      getSingleQuestion(question, this, this.rootQuestionsAvailable);
+    } else {
+      getMultipleQuestion(question, this, this.rootQuestionsAvailable);
+    }
 
     this.questPositionPointer = -1;
     this.nagAboutSkippedQuestions = false;
     this.skippedQuestionsData = [];
     this.answersGiven = {correct: [], fail: [], skip: []};
   },
-
 
   giveMore: function() {
     $('.hideMeOnMore').remove();
@@ -440,9 +457,11 @@ H.Hitme.prototype = {
     } else {
       code += this._renderAnswersForQuestion(q);
     }
-    if (q.video_link) {
-      code += '<br class="clear"/><div class="initiallyHidden"><strong>Video Link</strong><a href="q.video_link">'+q.video_link+'</a></div>';
+
+    if (q.video) {
+      code += '<br class="clear"/><div class="initiallyHidden"><strong>Video Link</strong><a href="'+q.video+'">'+q.video+'</a></div>';
     }
+
     code += '</div>'; // answer-chooser
 
     code += '<br/><div class="answer-submit button-group">';
