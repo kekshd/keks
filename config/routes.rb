@@ -53,7 +53,7 @@ Keks::Application.routes.draw do
       match "copy", to: "questions#copy", as: "copy", via: :get
       match "copy_to", to: "questions#copy_to", as: "copy_to", via: :post
       get "list_cat/:category_id", to: "questions#list_cat", on: :collection, as: "list_cat"
-
+      get "select", to: "questions#select", on: :collection, as: "select"
       get :search, on: :collection
     end
 
@@ -77,6 +77,7 @@ Keks::Application.routes.draw do
   #~ match "category/:id/questions", to: "categories#questions", :as => "category_question", via: :get
   match "main/questions", to: "main#questions", :as => "main_question", via: :get
   match "main/single_question", to: "main#single_question", :as => "main_single_question", via: :get
+  match "main/multiple_question", to: "main#multiple_question", :as => "main_multiple_question", via: :get
   match "feedback", to: "main#feedback", :as => "feedback", via: :get
   match "feedback_send", to: "main#feedback_send", :as => "feedback_send", via: :post
   match "random_xkcd", to: "main#random_xkcd", :as => "random_xkcd", via: :get

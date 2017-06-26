@@ -34,37 +34,40 @@
 
 
   <h2>Kategorien</h2>
-  Aus welchen Kategorien möchtest Du Fragen erhalten?<br/><br/>
+  <div class="toggle clear smallform" id="categories">
+    <script>if(hasHash("hide-categories")) $("#categories").hide(); </script>
+    Aus welchen Kategorien möchtest Du Fragen erhalten?<br/><br/>
+
+    <% cache("chooser/#{Category.maximum(:updated_at)}") do %>
+    <ul class="inline-chooser" id="categories">
+      <%
+        groups = Category.root_categories.group_by do |c|
+          c.title_split[0]
+        end.sort_by { |c| c[0] }    
+      %>
+
+      <% groups.each do |g| %>
+        <li>
+          <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
+          <div class="toggle" style="display: none"><ul>
+            <% g[1].sort { |a, b| a.ident <=> b.ident }.each do |r| %>
+              <li>
+                <div>
+                  <a class="button big toggleable" onclick="$(this).toggleClass('active');" data-id="<%=r.id%>">
+                    <%=render_tex r.title_split[1] %>
+                  </a>
+                </div>
+                <%=render_tex r.text %>
+              </li>
+            <% end %>
+          </ul></div>
+        </li>
+      <% end %>
+    </ul>
+    <% end %>
+  </div>
 
   <% end ############################################################ %>
-
-  <% cache("chooser/#{Category.maximum(:updated_at)}") do %>
-  <ul class="inline-chooser" id="categories">
-    <%
-      groups = Category.root_categories.group_by do |c|
-        c.title_split[0]
-      end.sort_by { |c| c[0] }
-    %>
-
-    <% groups.each do |g| %>
-      <li>
-        <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
-        <div class="toggle" style="display: none"><ul>
-          <% g[1].sort { |a, b| a.ident <=> b.ident }.each do |r| %>
-            <li>
-              <div>
-                <a class="button big toggleable" onclick="$(this).toggleClass('active');" data-id="<%=r.id%>">
-                  <%=render_tex r.title_split[1] %>
-                </a>
-              </div>
-              <%=render_tex r.text %>
-            </li>
-          <% end %>
-        </ul></div>
-      </li>
-    <% end %>
-  </ul>
-  <% end %>
 
   <h3>Alles Fertig?</h3>
   <a class="button huge" onclick="H.hitme()" id="start-button">Los geht’s! <!--Whatever--></a>

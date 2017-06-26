@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class Question < ActiveRecord::Base
-  attr_accessible :text, :answers, :ident, :released
+  attr_accessible :text, :answers, :ident, :video_link, :released
   validates :ident, :uniqueness => true, :presence => true
   validates :text, :presence => true
 

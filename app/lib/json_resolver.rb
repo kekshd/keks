@@ -56,6 +56,7 @@ class JsonResolver
     @qjson = {
       answers:   answers,
       id:        @q.id,
+      video:     @q.video_link,
       html:      add_newlines(@q.text)
     }
 
