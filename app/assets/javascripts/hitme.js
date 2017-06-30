@@ -459,7 +459,7 @@ H.Hitme.prototype = {
     }
 
     if (q.video) {
-      code += '<br class="clear"/><div class="initiallyHidden"><strong>Video Link</strong><a href="'+q.video+'" target="_blank">'+q.video+'</a></div>';
+      code += '<br class="clear"/><div class="initiallyHidden"><strong>Video Link</strong><a href="'+q.video+'" target="_blank">Erklärungsvideo zur Lösung ansehen</a></div>';
     }
 
     code += '</div>'; // answer-chooser
