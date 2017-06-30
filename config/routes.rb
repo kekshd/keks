@@ -63,6 +63,8 @@ Keks::Application.routes.draw do
       get "index_details/:category_ids", to: "categories#index_details", on: :collection, as: "index_details"
     end
     match "categories/:id/release", to: "categories#release", :as => "release_category", via: :get
+    match "categories/:group_title/activate", to: "categories#activate", :as => "activate_category", via: :get
+    match "categories/:group_title/deactivate", to: "categories#deactivate", :as => "deactivate_category", via: :get
     match "suspicious_assocations", to: "categories#suspicious_associations", :as => "suspicious_associations", via: :get
     match "category_report", to: "stats#category_report", :as => "stat_category_report", via: :get
     match "activity_report", to: "stats#activity_report", :as => "stat_activity_report", via: :get

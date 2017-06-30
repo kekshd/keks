@@ -2,7 +2,7 @@
 
 class CategoriesController < ApplicationController
   before_filter :require_admin
-  before_filter :def_etag, only: [:index, :index_details, :new, :show, :edit, :suspicious_associations]
+  before_filter :def_etag, only: [:index, :index_details, :new, :show, :edit, :activate, :deactivate, :suspicious_associations]
 
   def index
     @categories = Category.with_questions.select([:id, :title])
@@ -37,13 +37,52 @@ class CategoriesController < ApplicationController
       ok = q.save && ok
     end
     if ok
-      flash[:success] = "Kategorie und alle direkten Unterfragen wurden freigegeben"
+      flash[:success] = "Kategorie und alle direkten Unterfragen wurden freigegeben."
     else
       flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen freigegeben."
     end
     redirect_to @category
   end
 
+  def activate
+    group_title = params[:group_title]
+    ok = true
+    @categories = Category.find(:all, :conditions => ["title LIKE ?", "#{group_title}%"])
+    @categories.each do |cat|
+      cat.released = true
+      ok = cat.save && ok
+      cat.questions.each do |q|
+        q.released = true
+        ok = q.save && ok
+      end
+    end
+    if ok
+      flash[:success] = "Kategorie und alle direkten Unterfragen wurden freigegeben."
+    else
+      flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen freigegeben."
+    end
+    redirect_to action: "index"
+  end
+
+  def deactivate
+    group_title = params[:group_title]
+    ok = true
+    @categories = Category.find(:all, :conditions => ["title LIKE ?", "#{group_title}%"])
+    @categories.each do |cat|
+      cat.released = false
+      ok = cat.save && ok
+      cat.questions.each do |q|
+        q.released = false
+        ok = q.save && ok
+      end
+    end
+    if ok
+      flash[:success] = "Kategorie und alle direkten Unterfragen wurden gesperrt."
+    else
+      flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen gesperrt."
+    end
+    redirect_to action: "index"
+  end
 
   def suspicious_associations
     # fcategories and all associated answers (ignoring subquests)
