@@ -49,7 +49,9 @@ class MainController < ApplicationController
 
   def multiple_question
     ids = params[:id].split(",")
-    qs = Question.where(id: ids).includes(:answers, :reviews, :parent, :hints)
+    qs_sorted = Question.where(id: ids).includes(:answers, :reviews, :parent, :hints)
+    temp = qs_sorted.index_by(&:id)
+    qs = ids.collect {|id| temp[id.to_i]}
     render json: JsonResolver.resolve_efficiently(qs, qs.count, current_user)
   end
 
