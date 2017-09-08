@@ -49,7 +49,9 @@ class MainController < ApplicationController
 
   def multiple_question
     ids = params[:id].split(",")
-    qs = Question.where(id: ids).includes(:answers, :reviews, :parent, :hints)
+    qs_sorted = Question.where(id: ids).includes(:answers, :reviews, :parent, :hints)
+    temp = qs_sorted.index_by(&:id)
+    qs = ids.collect {|id| temp[id.to_i]}
     render json: JsonResolver.resolve_efficiently(qs, qs.count, current_user)
   end
 
@@ -83,7 +85,7 @@ class MainController < ApplicationController
     return render(status: 400, text: "invalid id") if id.blank?
 
     begin
-      html = open("http://xkcd.com/#{id}/").read
+      html = open("https://xkcd.com/#{id}/").read
 
       comic_only = Nokogiri::HTML(html).at_css("#comic").to_s
       comic_only.gsub!("http://", "https://")

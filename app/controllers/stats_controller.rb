@@ -81,8 +81,8 @@ class StatsController < ApplicationController
     quests = stats.group("date(created_at)").count
 
     users_inner = stats.group('user_id, date(created_at)').select("date(created_at) AS date").to_sql
-    users_outer = "SELECT date, COUNT(*) FROM (#{users_inner}) GROUP BY date"
-    users = Hash[ActiveRecord::Base.connection.select_rows(users_outer)]
+    users_outer = "SELECT date, COUNT(*) FROM (#{users_inner}) as users_inner GROUP BY date"
+    users = Hash[ActiveRecord::Base.connection.select_rows(users_outer).map { |r| [r[0], r[1].to_i] }]
 
     @g_quests = render_date_to_count_graph('beantwortete Fragen', quests,  @range)
     @g_users  = render_date_to_count_graph('aktive Nutzer',       users,   @range)
