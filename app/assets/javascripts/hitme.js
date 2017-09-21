@@ -163,6 +163,10 @@ function animateVisibilityHiddenShow(elms) {
   elms.css('visibility','visible').hide().fadeIn('slow');
 }
 
+function animateDisplayNoneShow(elms) {
+  elms.css('display','inline');
+}
+
 function disableLinks(selector) {
   $(selector).each(function(ind, s) {
     s = $(s);
@@ -458,10 +462,6 @@ H.Hitme.prototype = {
       code += this._renderAnswersForQuestion(q);
     }
 
-    if (q.video) {
-      code += '<br class="clear"/><div class="initiallyHidden"><strong>Video Link</strong><a href="'+q.video+'" target="_blank">Erklärungsvideo zur Lösung ansehen</a></div>';
-    }
-
     code += '</div>'; // answer-chooser
 
     code += '<br/><div class="answer-submit button-group">';
@@ -469,6 +469,9 @@ H.Hitme.prototype = {
     code += '<a class="button big" data-qid="'+q.id+'" data-action="skip">Frage überspringen</a>';
     code += '</div>';
 
+    if (q.video) {
+      code += '<br class="clear"/><div class="displayHidden">' + q.video + '</div>'
+    }
 
     code += '</div>'; // box
 
@@ -557,7 +560,8 @@ H.Hitme.prototype = {
 
     $(code).appendTo('body').animate(CONST.showAnimation, CONST.stayAtBottom);
 
-    animateVisibilityHiddenShow($('.reveal .answer-chooser > div > span:nth-child(2), .reveal .initiallyHidden'));
+    animateVisibilityHiddenShow($('.reveal .answer-chooser > div > span:nth-child(2), .reveal .initiallyHidden .displayHidden'));
+    animateDisplayNoneShow($('.displayHidden'));
 
     var allCorr = this.answersGiven.correct.diff(this.answersGiven.fail).join(',');
     var anyFail = this.answersGiven.fail.join(',');
