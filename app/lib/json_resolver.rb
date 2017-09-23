@@ -11,7 +11,8 @@ class JsonResolver
       # present a subquestion, regardless if it has one. Therefore, no
       # need to query for them.
       c = root_count - idx - 1
-      r = JsonResolver.new(q, [c, 5].min, qs_data[q.id.to_s])
+      meta = qs_data.empty? ? {} : qs_data[q.id.to_s]
+      r = JsonResolver.new(q, [c, 5].min, meta)
       r.current_user = current_user
       tmp = r.resolve
 
