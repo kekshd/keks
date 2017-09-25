@@ -44,7 +44,9 @@ class MainController < ApplicationController
   # question given
   def single_question
     q = Question.find(params[:id])
-    render json: [JsonResolver.new(q, 0).resolve]
+    api = ApiConsumer.new
+    meta = api.mampf(params[:id].split(","))
+    render json: [JsonResolver.new(q, 0, meta[params[:id]]).resolve]
   end
 
   def multiple_question
@@ -52,7 +54,9 @@ class MainController < ApplicationController
     qs_sorted = Question.where(id: ids).includes(:answers, :reviews, :parent, :hints)
     temp = qs_sorted.index_by(&:id)
     qs = ids.collect {|id| temp[id.to_i]}
-    render json: JsonResolver.resolve_efficiently(qs, qs.count, current_user)
+    api = ApiConsumer.new
+    meta = api.mampf(ids)
+    render json: JsonResolver.resolve_efficiently(qs, qs.count, current_user, meta)
   end
 
   def random_xkcd

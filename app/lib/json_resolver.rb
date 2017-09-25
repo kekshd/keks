@@ -4,14 +4,15 @@ class JsonResolver
   include CacheTools
   @@app_controller = ApplicationController.new
 
-  def self.resolve_efficiently(question_ids, root_count, current_user)
+  def self.resolve_efficiently(question_ids, root_count, current_user, qs_data = [])
     question_ids.map.with_index do |q, idx|
       # maximum depth of 5 questions. However, avoid going too deep for
       # later questions. For example, the last question never will
       # present a subquestion, regardless if it has one. Therefore, no
       # need to query for them.
       c = root_count - idx - 1
-      r = JsonResolver.new(q, [c, 5].min)
+      meta = qs_data.empty? ? {} : qs_data[q.id.to_s]
+      r = JsonResolver.new(q, [c, 5].min, meta)
       r.current_user = current_user
       tmp = r.resolve
 
@@ -29,8 +30,9 @@ class JsonResolver
   end
 
 
-  def initialize(question, max_depth = 5)
+  def initialize(question, max_depth = 5, meta = {})
     @q = question
+    @meta = meta
     @max_depth = max_depth
     @qjson = {}
   end
@@ -52,11 +54,20 @@ class JsonResolver
 
   private
 
+  def embed_video_str(opts, width=640, height=390)
+    s = "<video width=\"%s\", height=\"%s\" controls><source src=\"%s\" type=\"video/mp4\"></video>"
+    url = opts['video_file_link']
+    w = opts['width'].nil? || opts['width'] > width ? width.to_s : opts['width'].to_s
+    h = opts['height'].nil? || opts['height'] > height ? height.to_s : opts['height'].to_s
+
+    s % [w, h, url]
+  end
+
   def json_for_question
     @qjson = {
       answers:   answers,
       id:        @q.id,
-      video:     @q.video_link,
+      video:     !@meta.empty? ? (@meta["embedded_video"] ? @meta["embedded_video"] : (@meta['video_file_link'] ? embed_video_str(@meta) : nil)) : nil,
       html:      add_newlines(@q.text)
     }
 

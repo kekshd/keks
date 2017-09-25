@@ -51,8 +51,9 @@
       <td><%= tt = @question.avg_time_taken; "#{(tt/60).floor}m #{(tt%60).round}s" %></td>
     </tr>
 
-    <tr><th>Video Link</th><td colspan="5"><%=@question.video_link%></td></tr>
-    <tr><td span="6"></td></tr>
+    <!--
+    <tr><th>Video Link</th><td colspan="5"><%#=@question.video_link%></td></tr>
+    <tr><td span="6"></td></tr>-->
 
     <tr><th>Text</th><td colspan="5"><%=@question.text%></td></tr>
     <% if @question.text.include?("§") or @question.answers.any? { |a| a.text.include?("§") } %>
