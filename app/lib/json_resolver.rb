@@ -54,9 +54,10 @@ class JsonResolver
 
   private
 
-  def embed_video_str(opts, width=640, height=390)
-    s = "<video width=\"%s\", height=\"%s\" controls><source src=\"%s\" type=\"video/mp4\"></video>"
-    url = opts['video_file_link']
+  # freezeframe = time of first frame, used for thumbnail
+  def embed_video_str(opts, width=240, height=240, freezeframe="#t=0.1")
+    s = "<video width=\"%s\", height=\"%s\" controls=\"controls\" preload=\"metadata\"><source src=\"%s\" type=\"video/mp4\"></video>"
+    url = opts['video_file_link'] + ""
     w = opts['width'].nil? || opts['width'] > width ? width.to_s : opts['width'].to_s
     h = opts['height'].nil? || opts['height'] > height ? height.to_s : opts['height'].to_s
 
