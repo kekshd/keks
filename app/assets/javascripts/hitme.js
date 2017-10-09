@@ -429,8 +429,14 @@ H.Hitme.prototype = {
     var code = '<div style="display:none" id="'+getUniqId(q.id)+'" class="box hideMeOnMore">'; // outer box
 
     code += '<h3 class="count">Frage</h3>';
-    code += '<div>';                                        // inner box
-    code += '<div style="float:left;width: 70%;" class="tex">'+q.html+'</div>'
+
+    if (q.video) { // inner box
+      code += '<div style="float:left;width: 70%;" >';
+    } else {
+      code += '<div>';
+    }
+    
+    code += '<div class="tex">'+q.html+'</div>'
     code += '<br/>';
 
     if(q.hints && q.hints.length >= 1) {
@@ -460,7 +466,7 @@ H.Hitme.prototype = {
       code += '<div style="float:right;width: 45%" class="initiallyHidden">';
       code += '<strong>Unsere Lösung</strong><br class="clear"/>';
       code += '<div class="tex">'+a.html+'</div></div>';
-      code += '<br style="clear;"/>';
+      code += '<br class="clear"/>';
     } else {
       code += this._renderAnswersForQuestion(q);
     }
@@ -473,6 +479,11 @@ H.Hitme.prototype = {
     code += '</div>';
 
     code += '</div>'; // inner box
+
+    if (q.video) {
+      code += '<div style="float:right;width: 30%" class="displayHidden">' + q.video + '</div><br class="clear"/>';
+    }
+
     code += '</div>'; // outer box
 
     $(code).appendTo('body');

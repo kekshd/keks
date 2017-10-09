@@ -55,9 +55,9 @@ class JsonResolver
   private
 
   # freezeframe = time of first frame, used for thumbnail
-  def embed_video_str(opts, width=240, height=240, freezeframe="#t=0.1")
+  def embed_video_str(opts, width=240, height=240, freezeframe="#t=0.5")
     s = "<video width=\"%s\", height=\"%s\" controls=\"controls\" preload=\"metadata\"><source src=\"%s\" type=\"video/mp4\"></video>"
-    url = opts['video_file_link'] + ""
+    url = opts['video_file_link'] + freezeframe
     w = opts['width'].nil? || opts['width'] > width ? width.to_s : opts['width'].to_s
     h = opts['height'].nil? || opts['height'] > height ? height.to_s : opts['height'].to_s
 
@@ -68,7 +68,7 @@ class JsonResolver
     @qjson = {
       answers:   answers,
       id:        @q.id,
-      video:     !@meta.empty? ? (@meta["embedded_video"] ? @meta["embedded_video"] : (@meta['video_file_link'] ? embed_video_str(@meta) : nil)) : nil,
+      video:     !@meta.empty? ? embed_video_str(@meta) : nil,
       html:      add_newlines(@q.text)
     }
 
