@@ -426,9 +426,18 @@ H.Hitme.prototype = {
   _showNextQuestion: function() {
     this.questPositionPointer++;
     var q = window.currentQuestion = this.questions[this.questPositionPointer];
-    var code = '<div style="display:none" id="'+getUniqId(q.id)+'" class="box hideMeOnMore">'
-      + '<h3 class="count">Frage</h3><div class="tex">'+q.html+'</div>'
-      + '<br/>';
+    var code = '<div style="display:none" id="'+getUniqId(q.id)+'" class="box hideMeOnMore">'; // outer box
+
+    code += '<h3 class="count">Frage</h3>';
+
+    if (q.video) { // inner box
+      code += '<div style="float:left;width: 70%;" >';
+    } else {
+      code += '<div>';
+    }
+    
+    code += '<div class="tex">'+q.html+'</div>'
+    code += '<br/>';
 
     if(q.hints && q.hints.length >= 1) {
       code += '<div>'
@@ -469,11 +478,13 @@ H.Hitme.prototype = {
     code += '<a class="button big" data-qid="'+q.id+'" data-action="skip">Frage überspringen</a>';
     code += '</div>';
 
+    code += '</div>'; // inner box
+
     if (q.video) {
-      code += '<br class="clear"/><div class="displayHidden">' + q.video + '</div>'
+      code += '<div style="float:right;width: 30%" class="displayHidden">' + q.video + '</div><br class="clear"/>';
     }
 
-    code += '</div>'; // box
+    code += '</div>'; // outer box
 
     $(code).appendTo('body');
     $('.answer-submit:last').one('click', 'a', this._handleQuestionSubmit);
