@@ -7,8 +7,6 @@ gem 'active_enum',          '~> 0.9.12'
 gem 'nokogiri'
 gem 'will_paginate'
 
-gem 'active_model_serializers', '0.9.3'
-
 # nested eager loading through polymorphic associations
 gem 'activerecord_lax_includes', :git => 'https://github.com/unixcharles/active-record-lax-includes.git'
 

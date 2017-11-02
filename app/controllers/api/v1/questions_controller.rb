@@ -1,7 +1,7 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
   def show
-    qs = Question.find(params[:id])
+    @qs = Question.includes(:answers).find(params[:id])
 
-    render(json: Api::V1::QuestionSerializer.new(qs).to_json)
+    render json: @qs.as_json(:only => [:text], include: { answers: {:only => [:text, :correct]}})
   end
 end
