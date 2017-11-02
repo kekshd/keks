@@ -63,7 +63,6 @@ class JsonResolver
     w = opts['width'].nil? || opts['width'] > width ? width.to_s : opts['width'].to_s
     h = opts['height'].nil? || opts['height'] > height ? height.to_s : opts['height'].to_s
 
-    Rails.logger.warn "ALEJ" + s
     s % [w, h, url]
   end
 
