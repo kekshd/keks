@@ -9,7 +9,7 @@ class ApiConsumer
 
   def mampf(ids, width="240")
     res = {}
-    base_url = "https://mampf-dev.mathi.uni-heidelberg.de/api/v1/keks_questions/%s" + (width.length > 0 ? "?width=" + width : "")
+    base_url = "https://mampf.mathi.uni-heidelberg.de/api/v1/keks_questions/%s" + (width.length > 0 ? "?width=" + width : "")
     ids.each do |id|
       url = base_url % [id]
       uri = URI(url)

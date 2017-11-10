@@ -56,13 +56,13 @@ class JsonResolver
 
   # freezeframe = time of first frame, used for thumbnail
   def embed_video_str(opts, width=240, height=240, freezeframe="#t=0.5")
+
     return nil if opts['video_file_link'].nil?
 
     s = "<video class=\"video\" width=\"%s\", height=\"%s\" controls=\"controls\" preload=\"metadata\"><source src=\"%s\" type=\"video/mp4\"></video>"
     url = opts['video_file_link'] + freezeframe
     w = opts['width'].nil? || opts['width'] > width ? width.to_s : opts['width'].to_s
     h = opts['height'].nil? || opts['height'] > height ? height.to_s : opts['height'].to_s
-
     s % [w, h, url]
   end
 
