@@ -230,14 +230,20 @@ class Question < ActiveRecord::Base
     require 'set'
 
     res = []
-    sql = 'select min(q.id), q2.id from questions as q
-          join questions as q2 on q.text = q2.text and q.text is not null and
-          q2.text is not null and q.id < q2.id group by q2.id order by q.id'
-    results = ActiveRecord::Base.connection.execute(sql)
+    results = Question.select(:text).group(:text).having("count(text) > 1").count.keys
     if results.present?
         results.each do |row|
-          res << {'original' => row[0], 'duplicate' => row[1]}
+          min_id = Question.where(text: row).minimum(:id)
+
+          dup = []
+          results1 = Question.where(text: row).where('id != ?', min_id).select(:id)
+          results1.each do |row1|
+            dup <<  row1["id"]
+          end
+
+          res << {"original" => min_id, "duplicate" => dup}
         end
+
         return res
     else
         return nil
@@ -248,35 +254,47 @@ class Question < ActiveRecord::Base
     require 'set'
 
     same = [], diff = []
-    sql = 'select min(q.id), q2.id from questions as q
-          join questions as q2 on q.text = q2.text and q.text is not null and
-          q2.text is not null and q.id < q2.id group by q2.id order by q.id'
-    results = ActiveRecord::Base.connection.execute(sql)
+    results = Question.select(:text).group(:text).having("count(text) > 1").count.keys
     if results.present?
-        realid = 0, real_ans = []
-        dupid = 0, dup_ans = []
         results.each do |row|
-          if realid == 0 or realid != row[0]
-            realid = row[0]
-            real_ans.clear
-            ActiveRecord::Base.connection.execute("select text, correct from answers where question_id=#{realid}").each do |a|
-              real_ans << {'text' => a['text'], 'correct' => a['correct']}
+          real_id = Question.where(text: row).minimum(:id)
+
+          real_ans = []
+          results1 = Answer.where(question_id: real_id)
+          results1.each do |a|
+            real_ans << {'text' => a['text'], 'correct' => a['correct']}
+          end
+
+          dup = []
+          maybe = []
+          results1 = Question.where(text: row).where('id != ?', real_id).select(:id)
+          results1.each do |row1|
+            dup_id = row1['id']
+            dup_ans = []
+            results2 = Answer.where(question_id: dup_id)
+            results2.each do |a|
+              dup_ans << {'text' => a['text'], 'correct' => a['correct']}
+            end
+
+            if (real_ans.length > 0) && (real_ans.length == dup_ans.length) && (real_ans.to_set == dup_ans.to_set)
+              dup << dup_id
+            else
+              maybe << dup_id
             end
           end
-          dupid = row[1]
-          dup_ans.clear
-          ActiveRecord::Base.connection.execute("select text, correct from answers where question_id=#{dupid}").each do |a|
-            dup_ans << {'text' => a['text'], 'correct' => a['correct']}
+
+          if dup.length > 0
+            same << {"original" => real_id, "duplicate" => dup}
           end
-          if (real_ans.length > 0) && (real_ans.length == dup_ans.length) && (real_ans.to_set == dup_ans.to_set)
-            same << {'original' => realid, 'duplicate' => dupid}
-          else
-            diff << {'orignal' => realid, 'maybe' => dupid}
+          if maybe.length > 0
+            diff << {"original" => real_id, "maybe" => maybe}
           end
         end
+
         return same, diff
     else
         return nil
     end
   end
+
 end
