@@ -1,0 +1,40 @@
+<% provide(:title, "Kategorie Aktivieren") %>
+
+<%= render "admin/action_menu" %>
+
+<div>
+
+  <h2>Kategorien</h2>
+  <div class="toggle clear smallform" id="categories">
+    <script>if(hasHash("hide-categories")) $("#categories").hide(); </script>
+
+    <% cache("chooser/#{Category.maximum(:updated_at)}") do %>
+    <ul class="inline-chooser" id="categories">
+      <%
+        groups = @categories.group_by do |c|
+          c.title_split[0]
+        end.sort_by { |c| c[0] }
+      %>
+
+      <% groups.each do |g| %>
+        <li>
+          <%= content_tag "h3", (g[0].empty? ? "Sonstige" : g[0]) %>
+          <div class="toggle" style="display: none"><ul>
+            <% g[1].sort { |a, b| a.ident <=> b.ident }.each do |r| %>
+              <li>
+                <div>
+                  <a class="button big toggleable" onclick="$(this).toggleClass('active');" data-id="<%=r.id%>">
+                    <%=render_tex r.title_split[1] %>
+                  </a>
+                </div>
+              </li>
+            <% end %>
+          </ul></div>
+        </li>
+      <% end %>
+    </ul>
+    <% end %>
+  </div>
+
+  <a class="button huge" id="start-button" onclick="H.hitme()">Aktivieren</a>
+</div>

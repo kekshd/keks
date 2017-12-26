@@ -7,6 +7,7 @@
 //= require toggle
 //= require correctness_text
 //= require hitme
+//= require activate
 //= require mathjax.cfg
 //= require no-effects-for-mobile
 //= require tools
