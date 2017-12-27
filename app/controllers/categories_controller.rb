@@ -36,12 +36,47 @@ class CategoriesController < ApplicationController
   end
 
   def activate
-    logger.debug("ALEJ")
-    logger.debug params[:id].inspect
-    redirect_to action: "index"
+    cats = params[:categories].split('_').map(&:to_i)
+
+    ok = true
+    @categories = Category.find(cats)
+    @categories.each do |cat|
+      cat.released = true
+      ok = cat.save && ok
+      cat.questions.each do |q|
+        q.released = true
+        ok = q.save && ok
+      end
+    end
+    if ok
+      flash[:success] = "Kategorie und alle direkten Unterfragen wurden freigegeben."
+    else
+      flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen freigegeben."
+    end
+
+    render js: %(window.location.href='categories') and return
   end
 
   def deactivate
+    cats = params[:categories].split('_').map(&:to_i)
+
+    ok = true
+    @categories = Category.find(cats)
+    @categories.each do |cat|
+      cat.released = false
+      ok = cat.save && ok
+      cat.questions.each do |q|
+        q.released = false
+        ok = q.save && ok
+      end
+    end
+    if ok
+      flash[:success] = "Kategorie und alle direkten Unterfragen wurden gesperrt."
+    else
+      flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen gesperrt."
+    end
+
+    render js: %(window.location.href='categories') and return
   end
 
   def release
@@ -60,46 +95,6 @@ class CategoriesController < ApplicationController
     end
     redirect_to @category
   end
-
-  # def activate
-  #   group_title = params[:group_title]
-  #   ok = true
-  #   @categories = Category.find(:all, :conditions => ["title LIKE ?", "#{group_title}%"])
-  #   @categories.each do |cat|
-  #     cat.released = true
-  #     ok = cat.save && ok
-  #     cat.questions.each do |q|
-  #       q.released = true
-  #       ok = q.save && ok
-  #     end
-  #   end
-  #   if ok
-  #     flash[:success] = "Kategorie und alle direkten Unterfragen wurden freigegeben."
-  #   else
-  #     flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen freigegeben."
-  #   end
-  #   redirect_to action: "index"
-  # end
-  #
-  # def deactivate
-  #   group_title = params[:group_title]
-  #   ok = true
-  #   @categories = Category.find(:all, :conditions => ["title LIKE ?", "#{group_title}%"])
-  #   @categories.each do |cat|
-  #     cat.released = false
-  #     ok = cat.save && ok
-  #     cat.questions.each do |q|
-  #       q.released = false
-  #       ok = q.save && ok
-  #     end
-  #   end
-  #   if ok
-  #     flash[:success] = "Kategorie und alle direkten Unterfragen wurden gesperrt."
-  #   else
-  #     flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen gesperrt."
-  #   end
-  #   redirect_to action: "index"
-  # end
 
   def suspicious_associations
     # fcategories and all associated answers (ignoring subquests)

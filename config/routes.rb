@@ -69,6 +69,7 @@ Keks::Application.routes.draw do
     match "categories_listactivate", to: "categories#listactivate", :as => "categories_listactivate", via: :get
     match "categories_listdeactivate", to: "categories#listdeactivate", :as => "categories_listdeactivate", via: :get
     match "categories_activate", to: "categories#activate", :as => "categories_activate", via: :get
+    match "categories_deactivate", to: "categories#deactivate", :as => "categories_deactivate", via: :get
     match "category_report", to: "stats#category_report", :as => "stat_category_report", via: :get
     match "activity_report", to: "stats#activity_report", :as => "stat_activity_report", via: :get
     match "report/:enrollment_key", to: "stats#report", :as => "stat_report", via: :get
