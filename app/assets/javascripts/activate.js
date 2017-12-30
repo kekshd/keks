@@ -15,6 +15,12 @@ function deactivateCategoriesURL(categoryIds) {
   return Routes.categories_deactivate_path(h);
 }
 
+function moveCategoriesURL(categoryIds) {
+  var moveto_category = $('#moveto_category').val();
+  var h = {categories: categoryIds.join("_"), new_category: moveto_category}
+
+  return Routes.categories_move_path(h);
+}
 
 
 function activateCategories(categoryIds, context, successCallback) {
@@ -30,6 +36,16 @@ function activateCategories(categoryIds, context, successCallback) {
 function deactivateCategories(categoryIds, context, successCallback) {
   $.ajax({
     url: deactivateCategoriesURL(categoryIds),
+  }).done(function(data) {
+    successCallback(context, data);
+  }).fail(function() {
+    alert("Die Anfrage konnte leider nicht bearbeitet werden. Möglicherweise hat der Server ein Problem.");
+  });
+}
+
+function moveCategories(categoryIds, context, successCallback) {
+  $.ajax({
+    url: moveCategoriesURL(categoryIds),
   }).done(function(data) {
     successCallback(context, data);
   }).fail(function() {
@@ -55,6 +71,10 @@ A.Activate.prototype = {
     deactivateCategories(this.cats, this, this.end)
   },
 
+  moveCategoryMode: function() {
+    moveCategories(this.cats, this, this.end)
+  },
+
   end: function(_this, data) {
   }
 }
@@ -71,5 +91,13 @@ A.deactivate = function() {
   var a = new A.Activate();
   window.currentHitme = a;
   a.deactivateCategoryMode();
+  return a;
+}
+
+
+A.move = function() {
+  var a = new A.Activate();
+  window.currentHitme = a;
+  a.moveCategoryMode();
   return a;
 }
