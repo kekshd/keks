@@ -4,6 +4,8 @@
 <div>
   <h2>Kategorienliste</h2>
   <%=link_to "Neue Kategorie anlegen", new_category_path %> |
+  <%=link_to "Aktivieren", categories_listactivate_path %> |
+  <%=link_to "Deaktivieren", categories_listdeactivate_path %> |
   <%=link_to "Kategorien mit möglicherweise fehlenden Verknüpfungen anzeigen", suspicious_associations_path %>
 </div>
 
@@ -14,10 +16,8 @@
     <div class="toggle search-content-urls" style="display: none">
       <div data-content-url="<%=index_details_categories_path(cats.map(&:id).join(","))%>">…lädt…</div>
     </div>
-    <%= link_to "Aktivieren", activate_category_path(group_title), :confirm => "Are you sure? All categories and questions under #{group_title} will be activated." %> |
-    <%= link_to "Deaktivieren", deactivate_category_path(group_title), :confirm => "Are you sure? All categories and questions under #{group_title} will be deactivated." %>
   </div>
-<% end %>
+<% end  %>
 
 <div>
   <h2>Leere Kategorien</h2>
