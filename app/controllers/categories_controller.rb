@@ -27,6 +27,31 @@ class CategoriesController < ApplicationController
     @category = Category.find(params[:id])
   end
 
+  def listmove
+    @categories = Category.with_questions.select([:id, :title, :ident])
+  end
+
+  def move
+    cats = params[:categories].split('_').map(&:to_i)
+    new_cat = params[:new_category]
+
+    ok = true
+    @categories = Category.find(cats)
+    @categories.each do |cat|
+      old_title = cat.title_split
+      new_title = (new_cat.empty? ? old_title[1] : (new_cat + ":" + old_title[1]))
+      cat.title = new_title
+      ok = cat.save && ok
+    end
+    if ok
+      flash[:success] = "Kategorien wurden verschoben."
+    else
+      flash[:warning] = "Es sind Fehler aufgetreten. Möglicherweise wurden gar keine oder nur einige Sachen verschoben."
+    end
+
+    render js: %(window.location.href='categories') and return
+  end
+
   def listactivate
     @categories = Category.with_questions.where(released: false).select([:id, :title, :ident])
   end
