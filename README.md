@@ -2,6 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/kekshd/keks/badge.svg?branch=master)](https://coveralls.io/github/kekshd/keks?branch=master)
 [![Code Climate](https://codeclimate.com/github/kekshd/keks/badges/gpa.svg)](https://codeclimate.com/github/kekshd/keks)
 
+Note: KeKs has been depracated. Its functionality has been integrated to [mampf](https://github.com/fosterfarrell9/mampf).  
 
 KeKs is a common Rails application and may be installed like any other Rails app. The project is currently available in German only. The following describes one way to set it up on Debian stable.
 
